@@ -375,9 +375,9 @@ def render_the_pick(bundle: dict[str, Any]) -> None:
         "Reasonable range for the favorite",
     )
     col4.metric(
-        "Games simulated",
+        "Simulations run",
         f"{series['simulations']:,}",
-        "Monte Carlo runs to estimate odds",
+        "Series paths modelled to build these odds",
     )
 
     st.markdown("---")
@@ -1416,17 +1416,8 @@ def render_dashboard() -> None:
     st.sidebar.caption("Predictions powered by ML + real NBA data")
     st.sidebar.divider()
 
-    series_simulations = st.sidebar.number_input(
-        "Simulations to run",
-        min_value=1000, max_value=250000,
-        value=configured_simulations, step=1000,
-        help="More simulations = more accurate odds, but slower to load.",
-    )
-    scenario_simulations = st.sidebar.number_input(
-        "Scenario simulations",
-        min_value=1000, max_value=100000,
-        value=min(DEFAULT_SCENARIO_SIMULATIONS, configured_simulations), step=1000,
-    )
+    series_simulations = configured_simulations
+    scenario_simulations = min(DEFAULT_SCENARIO_SIMULATIONS, configured_simulations)
 
     st.sidebar.divider()
     st.sidebar.subheader("What-if scenarios")

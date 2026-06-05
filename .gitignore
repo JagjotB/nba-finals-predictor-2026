@@ -18,9 +18,12 @@ env/
 # Keep the stats cache (pre-fetched NBA API data for deployment)
 # data/processed/stats_cache/ is intentionally committed
 
-# Large training caches that can be re-fetched
+# Large training caches - re-fetch with: python scripts/train_game_model.py --refresh
 data/processed/stats_cache/historical_playoff_logs.json
 data/processed/stats_cache/historical_team_ratings.json
+
+# Duplicate combined cache (individual 2-man/5-man files are kept)
+data/processed/stats_cache/lineup_stats_all_*.json
 
 # IDE
 .vscode/

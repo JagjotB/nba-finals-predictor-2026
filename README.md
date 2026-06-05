@@ -2,6 +2,29 @@
 
 An ML-powered NBA Finals prediction engine for the 2026 Finals matchup between the New York Knicks (`NYK`) and San Antonio Spurs (`SAS`).
 
+## Quick Start
+
+**Requirements:** Python 3.11+
+
+```bash
+git clone https://github.com/JagjotB/nba-finals-predictor-2026.git
+cd nba-finals-predictor-2026
+pip install -r requirements.txt
+
+# Train the game model (fetches 10 seasons of playoff data from NBA API)
+python scripts/train_game_model.py
+
+# Run the dashboard
+streamlit run src/app/streamlit_app.py
+```
+
+After each Finals game, import the box score and update predictions:
+
+```bash
+python -m src.finals_data.update_after_finals_game --game 1
+python -m src.models.update_after_game --game 1
+```
+
 ## What The Project Does
 
 The goal is not just to predict the series winner. The project builds a full basketball explanation layer:
