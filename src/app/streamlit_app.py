@@ -1419,7 +1419,6 @@ def render_dashboard() -> None:
     series_simulations = configured_simulations
     scenario_simulations = min(DEFAULT_SCENARIO_SIMULATIONS, configured_simulations)
 
-    st.sidebar.divider()
     st.sidebar.subheader("What-if scenarios")
     selected = []
     for label, sid in SCENARIO_TOGGLES.items():
