@@ -1,0 +1,27 @@
+team,player,role,projected_minutes,minutes_floor,minutes_ceiling,is_starter,is_closer,rotation_confidence,notes
+NYK,Jalen Brunson,Starter,36.5,31.5,41.5,True,True,high,G1 actual: 37.1. On track with projections.
+NYK,OG Anunoby,Starter,32.5,27.5,37.5,True,True,high,G1 actual: 31.1. Slightly less than projected.
+NYK,Josh Hart,Starter,31.0,26.0,36.0,True,True,high,G1 actual: 26.8. Possible foul trouble; adjusted down.
+NYK,Mikal Bridges,Starter,30.5,25.5,35.5,True,True,high,G1 actual: 28.2. Slight reduction observed.
+NYK,Karl-Anthony Towns,Starter,31.5,26.5,36.5,True,True,high,G1 actual: 34.4. Used more than expected.
+NYK,Miles McBride,Bench,19.2,14.2,24.2,False,False,medium,G1 actual: 19.5. Right on projection.
+NYK,Mitchell Robinson,Bench,13.5,8.5,18.5,False,False,medium,G1 actual: 13.2. On track.
+NYK,Landry Shamet,Bench,25.0,20.0,30.0,False,True,high,G1 actual: 33.3. Major rotation bump — 13 pts on 3/6 from 3; now a key bench weapon.
+NYK,Jordan Clarkson,Reserve,9.0,4.0,14.0,False,False,low,G1 actual: 5.7. Lost minutes to Shamet; reduced role.
+NYK,Jose Alvarado,Reserve,10.0,5.0,15.0,False,False,low,G1 actual: 11.0. Slight uptick from projection.
+NYK,Ariel Hukporti,Reserve,6.0,1.0,11.0,False,False,low,Did not play G1 (DNP).
+NYK,Mohamed Diawara,Reserve,5.0,0.0,10.0,False,False,low,Did not play G1 (DNP).
+NYK,Tyler Kolek,Reserve,5.0,0.0,10.0,False,False,low,Did not play G1 (DNP).
+SAS,Devin Vassell,Starter,34.5,29.5,39.5,True,True,high,G1 actual: 36.0. Played heavy minutes; 9 pts 4 reb.
+SAS,Stephon Castle,Starter,34.0,29.0,39.0,True,True,high,G1 actual: 34.5. On track; 17 pts.
+SAS,De'Aaron Fox,Starter,35.0,30.0,40.0,True,True,high,G1 actual: 37.9. Heavy load but poor game (7 pts 3/13); rode hard to close gap.
+SAS,Victor Wembanyama,Starter,34.5,29.5,39.5,True,True,high,G1 actual: 37.8. Heavy load; 26 pts 6/21 FG but 12/13 FT.
+SAS,Julian Champagnie,Starter,31.0,26.0,36.0,True,True,high,G1 actual: 31.2. On track; 16 pts 5/10 from 3.
+SAS,Dylan Harper,Bench,27.0,22.0,32.0,False,True,high,G1 actual: 27.5. On track; 16 pts off bench.
+SAS,Keldon Johnson,Bench,13.5,8.5,18.5,False,False,medium,G1 actual: 8.3. Reduced usage; blended projection.
+SAS,Luke Kornet,Bench,12.5,7.5,17.5,False,False,medium,G1 actual: 10.2. Slight reduction from projection.
+SAS,Harrison Barnes,Reserve,10.5,5.5,15.5,False,False,low,G1 actual: 12.1. Slightly more usage than projected.
+SAS,Carter Bryant,Reserve,7.0,2.0,12.0,False,False,low,G1 actual: 4.4. Reduced to mop-up role.
+SAS,Jordan McLaughlin,Reserve,4.6,0.0,9.6,False,False,low,Did not play G1 (DNP).
+SAS,Kelly Olynyk,Reserve,3.9,0.0,8.9,False,False,low,Did not play G1 (DNP).
+SAS,Lindy Waters III,Reserve,3.8,0.0,8.8,False,False,low,Did not play G1 (DNP).

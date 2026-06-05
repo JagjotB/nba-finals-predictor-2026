@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+venv/
+.venv/
+env/
+
+# Secrets / env
+.env
+*.env
+
+# Keep the stats cache (pre-fetched NBA API data for deployment)
+# data/processed/stats_cache/ is intentionally committed
+
+# Large training caches that can be re-fetched
+data/processed/stats_cache/historical_playoff_logs.json
+data/processed/stats_cache/historical_team_ratings.json
+
+# IDE
+.vscode/
+.idea/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db

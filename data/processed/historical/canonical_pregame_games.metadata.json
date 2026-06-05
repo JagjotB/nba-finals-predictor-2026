@@ -1,0 +1,25 @@
+{
+  "schema_version": "canonical-pregame-v1",
+  "rows": 1830,
+  "games": 915,
+  "seasons": [
+    "2014-15",
+    "2015-16",
+    "2016-17",
+    "2017-18",
+    "2018-19",
+    "2019-20",
+    "2020-21",
+    "2021-22",
+    "2022-23",
+    "2023-24",
+    "2024-25"
+  ],
+  "sha256": "4a85d45c04da4e96b9d745e8fb4dbab8e2ad3ca3d577cc7c7cf22765b4492d33",
+  "source_policy": "regular-season priors plus playoff games strictly before tipoff",
+  "unavailable_historical_sources": [
+    "injuries",
+    "expected_rotations",
+    "lineups"
+  ]
+}

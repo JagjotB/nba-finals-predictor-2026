@@ -1,0 +1,5 @@
+gameId,teamId,teamCity,teamName,teamTricode,teamSlug,minutes,fieldGoalsMade,fieldGoalsAttempted,fieldGoalsPercentage,threePointersMade,threePointersAttempted,threePointersPercentage,freeThrowsMade,freeThrowsAttempted,freeThrowsPercentage,reboundsOffensive,reboundsDefensive,reboundsTotal,assists,steals,blocks,turnovers,foulsPersonal,points,startersBench
+0042500401,1610612759,San Antonio,Spurs,SAS,spurs,177:24,25,72,0.347,9,34,0.265,16,19,0.842,13,30,43,14,2,4,12,13,75,Starters
+0042500401,1610612759,San Antonio,Spurs,SAS,spurs,177:24,7,17,0.412,2,9,0.222,4,6,0.667,1,10,11,2,2,0,1,10,20,Bench
+0042500401,1610612752,New York,Knicks,NYK,knicks,157:31,28,69,0.406,5,20,0.25,16,17,0.941,9,27,36,15,7,3,7,13,77,Starters
+0042500401,1610612752,New York,Knicks,NYK,knicks,157:31,11,25,0.44,6,16,0.375,0,1,0.0,1,12,13,5,1,1,1,10,28,Bench

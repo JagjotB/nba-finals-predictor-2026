@@ -1,0 +1,1095 @@
+{
+  "generated_at_utc": "2026-06-05T05:14:46+00:00",
+  "game_number": 2,
+  "series": "2026 NBA Finals",
+  "teams": [
+    "NYK",
+    "SAS"
+  ],
+  "provenance": {
+    "model_version": "calibrated-finals-v3",
+    "game_model_sha256": "bdfc7d534929a3ad93b49a535661f144029dc0524ac9ef2b4c50648c5e889531",
+    "meta_model_sha256": "06f08060baffe51642940c96189a256d3f88e14df491dedd74a22009025c08e6",
+    "canonical_dataset_sha256": "4a85d45c04da4e96b9d745e8fb4dbab8e2ad3ca3d577cc7c7cf22765b4492d33",
+    "canonical_schema_version": "canonical-pregame-v1",
+    "validation_report": "B:\\Coding\\Projects\\nba-finals-predictor-2026\\outputs\\reports\\walk_forward_backtest.json"
+  },
+  "manual_assumptions": {
+    "rotations": {
+      "NYK": [
+        {
+          "player": "Jalen Brunson",
+          "role": "Starter",
+          "projected_minutes": 36.5,
+          "minutes_floor": 31.5,
+          "minutes_ceiling": 41.5,
+          "is_starter": true,
+          "is_closer": true,
+          "rotation_confidence": "high",
+          "notes": "G1 actual: 37.1. On track with projections."
+        },
+        {
+          "player": "OG Anunoby",
+          "role": "Starter",
+          "projected_minutes": 32.5,
+          "minutes_floor": 27.5,
+          "minutes_ceiling": 37.5,
+          "is_starter": true,
+          "is_closer": true,
+          "rotation_confidence": "high",
+          "notes": "G1 actual: 31.1. Slightly less than projected."
+        },
+        {
+          "player": "Josh Hart",
+          "role": "Starter",
+          "projected_minutes": 29.5,
+          "minutes_floor": 22.0,
+          "minutes_ceiling": 35.0,
+          "is_starter": true,
+          "is_closer": true,
+          "rotation_confidence": "medium",
+          "notes": "G1 actual: 26.8. Picked up 4 fouls in G1; SAS may target him at rim in G2. Floor lowered; confidence downgraded."
+        },
+        {
+          "player": "Mikal Bridges",
+          "role": "Starter",
+          "projected_minutes": 30.5,
+          "minutes_floor": 25.5,
+          "minutes_ceiling": 35.5,
+          "is_starter": true,
+          "is_closer": true,
+          "rotation_confidence": "high",
+          "notes": "G1 actual: 28.2. Slight reduction observed."
+        },
+        {
+          "player": "Karl-Anthony Towns",
+          "role": "Starter",
+          "projected_minutes": 31.5,
+          "minutes_floor": 26.5,
+          "minutes_ceiling": 36.5,
+          "is_starter": true,
+          "is_closer": true,
+          "rotation_confidence": "high",
+          "notes": "G1 actual: 34.4. Used more than expected."
+        },
+        {
+          "player": "Miles McBride",
+          "role": "Bench",
+          "projected_minutes": 19.2,
+          "minutes_floor": 14.2,
+          "minutes_ceiling": 24.2,
+          "is_starter": false,
+          "is_closer": false,
+          "rotation_confidence": "medium",
+          "notes": "G1 actual: 19.5. Right on projection."
+        },
+        {
+          "player": "Mitchell Robinson",
+          "role": "Bench",
+          "projected_minutes": 13.5,
+          "minutes_floor": 8.5,
+          "minutes_ceiling": 18.5,
+          "is_starter": false,
+          "is_closer": false,
+          "rotation_confidence": "medium",
+          "notes": "G1 actual: 13.2. On track."
+        },
+        {
+          "player": "Landry Shamet",
+          "role": "Bench",
+          "projected_minutes": 25.0,
+          "minutes_floor": 20.0,
+          "minutes_ceiling": 30.0,
+          "is_starter": false,
+          "is_closer": true,
+          "rotation_confidence": "high",
+          "notes": "G1 actual: 33.3. Major rotation bump \u2014 13 pts on 3/6 from 3; now a key bench weapon."
+        },
+        {
+          "player": "Jordan Clarkson",
+          "role": "Reserve",
+          "projected_minutes": 9.0,
+          "minutes_floor": 4.0,
+          "minutes_ceiling": 14.0,
+          "is_starter": false,
+          "is_closer": false,
+          "rotation_confidence": "low",
+          "notes": "G1 actual: 5.7. Lost minutes to Shamet; reduced role."
+        },
+        {
+          "player": "Jose Alvarado",
+          "role": "Reserve",
+          "projected_minutes": 10.0,
+          "minutes_floor": 5.0,
+          "minutes_ceiling": 15.0,
+          "is_starter": false,
+          "is_closer": false,
+          "rotation_confidence": "low",
+          "notes": "G1 actual: 11.0. Slight uptick from projection."
+        },
+        {
+          "player": "Jeremy Sochan",
+          "role": "Reserve",
+          "projected_minutes": 4.0,
+          "minutes_floor": 0.0,
+          "minutes_ceiling": 12.0,
+          "is_starter": false,
+          "is_closer": false,
+          "rotation_confidence": "low",
+          "notes": "On NYK roster (confirmed NBA API G1 box score); DNP G1. Traded from SAS to NYK during season. Versatile defender \u2014 potential role if injuries hit."
+        },
+        {
+          "player": "Pacome Dadiet",
+          "role": "Reserve",
+          "projected_minutes": 4.0,
+          "minutes_floor": 0.0,
+          "minutes_ceiling": 10.0,
+          "is_starter": false,
+          "is_closer": false,
+          "rotation_confidence": "low",
+          "notes": "Did not play G1 (DNP)."
+        },
+        {
+          "player": "Ariel Hukporti",
+          "role": "Reserve",
+          "projected_minutes": 6.0,
+          "minutes_floor": 1.0,
+          "minutes_ceiling": 11.0,
+          "is_starter": false,
+          "is_closer": false,
+          "rotation_confidence": "low",
+          "notes": "Did not play G1 (DNP)."
+        },
+        {
+          "player": "Mohamed Diawara",
+          "role": "Reserve",
+          "projected_minutes": 5.0,
+          "minutes_floor": 0.0,
+          "minutes_ceiling": 10.0,
+          "is_starter": false,
+          "is_closer": false,
+          "rotation_confidence": "low",
+          "notes": "Did not play G1 (DNP)."
+        },
+        {
+          "player": "Tyler Kolek",
+          "role": "Reserve",
+          "projected_minutes": 5.0,
+          "minutes_floor": 0.0,
+          "minutes_ceiling": 10.0,
+          "is_starter": false,
+          "is_closer": false,
+          "rotation_confidence": "low",
+          "notes": "Did not play G1 (DNP)."
+        }
+      ],
+      "SAS": [
+        {
+          "player": "Devin Vassell",
+          "role": "Starter",
+          "projected_minutes": 34.5,
+          "minutes_floor": 29.5,
+          "minutes_ceiling": 39.5,
+          "is_starter": true,
+          "is_closer": true,
+          "rotation_confidence": "high",
+          "notes": "G1 actual: 36.0. Played heavy minutes; 9 pts 4 reb."
+        },
+        {
+          "player": "Stephon Castle",
+          "role": "Starter",
+          "projected_minutes": 34.0,
+          "minutes_floor": 29.0,
+          "minutes_ceiling": 39.0,
+          "is_starter": true,
+          "is_closer": true,
+          "rotation_confidence": "high",
+          "notes": "G1 actual: 34.5. On track; 17 pts."
+        },
+        {
+          "player": "De'Aaron Fox",
+          "role": "Starter",
+          "projected_minutes": 35.0,
+          "minutes_floor": 30.0,
+          "minutes_ceiling": 40.0,
+          "is_starter": true,
+          "is_closer": true,
+          "rotation_confidence": "high",
+          "notes": "G1 actual: 37.9. Heavy load but poor game (7 pts 3/13); rode hard to close gap."
+        },
+        {
+          "player": "Victor Wembanyama",
+          "role": "Starter",
+          "projected_minutes": 34.5,
+          "minutes_floor": 29.5,
+          "minutes_ceiling": 39.5,
+          "is_starter": true,
+          "is_closer": true,
+          "rotation_confidence": "high",
+          "notes": "G1 actual: 37.8. Heavy load; 26 pts 6/21 FG but 12/13 FT."
+        },
+        {
+          "player": "Julian Champagnie",
+          "role": "Starter",
+          "projected_minutes": 31.0,
+          "minutes_floor": 26.0,
+          "minutes_ceiling": 36.0,
+          "is_starter": true,
+          "is_closer": true,
+          "rotation_confidence": "high",
+          "notes": "G1 actual: 31.2. On track; 16 pts 5/10 from 3."
+        },
+        {
+          "player": "Dylan Harper",
+          "role": "Bench",
+          "projected_minutes": 27.0,
+          "minutes_floor": 22.0,
+          "minutes_ceiling": 32.0,
+          "is_starter": false,
+          "is_closer": true,
+          "rotation_confidence": "high",
+          "notes": "G1 actual: 27.5. On track; 16 pts off bench."
+        },
+        {
+          "player": "Keldon Johnson",
+          "role": "Bench",
+          "projected_minutes": 13.5,
+          "minutes_floor": 8.5,
+          "minutes_ceiling": 18.5,
+          "is_starter": false,
+          "is_closer": false,
+          "rotation_confidence": "medium",
+          "notes": "G1 actual: 8.3. Reduced usage; blended projection."
+        },
+        {
+          "player": "Luke Kornet",
+          "role": "Bench",
+          "projected_minutes": 12.5,
+          "minutes_floor": 7.5,
+          "minutes_ceiling": 17.5,
+          "is_starter": false,
+          "is_closer": false,
+          "rotation_confidence": "medium",
+          "notes": "G1 actual: 10.2. Slight reduction from projection."
+        },
+        {
+          "player": "Harrison Barnes",
+          "role": "Reserve",
+          "projected_minutes": 10.5,
+          "minutes_floor": 5.5,
+          "minutes_ceiling": 15.5,
+          "is_starter": false,
+          "is_closer": false,
+          "rotation_confidence": "low",
+          "notes": "G1 actual: 12.1. Slightly more usage than projected."
+        },
+        {
+          "player": "Carter Bryant",
+          "role": "Reserve",
+          "projected_minutes": 7.0,
+          "minutes_floor": 2.0,
+          "minutes_ceiling": 12.0,
+          "is_starter": false,
+          "is_closer": false,
+          "rotation_confidence": "low",
+          "notes": "G1 actual: 4.4. Reduced to mop-up role."
+        },
+        {
+          "player": "Jordan McLaughlin",
+          "role": "Reserve",
+          "projected_minutes": 4.6,
+          "minutes_floor": 0.0,
+          "minutes_ceiling": 9.6,
+          "is_starter": false,
+          "is_closer": false,
+          "rotation_confidence": "low",
+          "notes": "Did not play G1 (DNP)."
+        },
+        {
+          "player": "Kelly Olynyk",
+          "role": "Reserve",
+          "projected_minutes": 3.9,
+          "minutes_floor": 0.0,
+          "minutes_ceiling": 8.9,
+          "is_starter": false,
+          "is_closer": false,
+          "rotation_confidence": "low",
+          "notes": "Did not play G1 (DNP)."
+        },
+        {
+          "player": "Lindy Waters III",
+          "role": "Reserve",
+          "projected_minutes": 3.8,
+          "minutes_floor": 0.0,
+          "minutes_ceiling": 8.8,
+          "is_starter": false,
+          "is_closer": false,
+          "rotation_confidence": "low",
+          "notes": "Did not play G1 (DNP)."
+        },
+        {
+          "player": "Bismack Biyombo",
+          "role": "Reserve",
+          "projected_minutes": 2.0,
+          "minutes_floor": 0.0,
+          "minutes_ceiling": 6.0,
+          "is_starter": false,
+          "is_closer": false,
+          "rotation_confidence": "low",
+          "notes": "Did not play G1 (DNP). On SAS roster per NBA API."
+        },
+        {
+          "player": "Mason Plumlee",
+          "role": "Reserve",
+          "projected_minutes": 2.0,
+          "minutes_floor": 0.0,
+          "minutes_ceiling": 6.0,
+          "is_starter": false,
+          "is_closer": false,
+          "rotation_confidence": "low",
+          "notes": "Did not play G1 (DNP). On SAS roster per NBA API."
+        }
+      ]
+    },
+    "injuries": {
+      "NYK": [
+        {
+          "date": "2026-06-04",
+          "player": "Jalen Brunson",
+          "status": "Available",
+          "injury": null,
+          "notes": "No limitation",
+          "expected_minutes_adjustment": 0
+        },
+        {
+          "date": "2026-06-04",
+          "player": "OG Anunoby",
+          "status": "Available",
+          "injury": null,
+          "notes": "No limitation",
+          "expected_minutes_adjustment": 0
+        },
+        {
+          "date": "2026-06-04",
+          "player": "Josh Hart",
+          "status": "Available",
+          "injury": null,
+          "notes": "No limitation",
+          "expected_minutes_adjustment": 0
+        },
+        {
+          "date": "2026-06-04",
+          "player": "Mikal Bridges",
+          "status": "Available",
+          "injury": null,
+          "notes": "No limitation",
+          "expected_minutes_adjustment": 0
+        },
+        {
+          "date": "2026-06-04",
+          "player": "Karl-Anthony Towns",
+          "status": "Available",
+          "injury": null,
+          "notes": "No limitation",
+          "expected_minutes_adjustment": 0
+        },
+        {
+          "date": "2026-06-04",
+          "player": "Miles McBride",
+          "status": "Available",
+          "injury": null,
+          "notes": "No limitation",
+          "expected_minutes_adjustment": 0
+        },
+        {
+          "date": "2026-06-04",
+          "player": "Mitchell Robinson",
+          "status": "Available",
+          "injury": null,
+          "notes": "No limitation",
+          "expected_minutes_adjustment": 0
+        },
+        {
+          "date": "2026-06-04",
+          "player": "Jordan Clarkson",
+          "status": "Available",
+          "injury": null,
+          "notes": "No limitation",
+          "expected_minutes_adjustment": 0
+        },
+        {
+          "date": "2026-06-04",
+          "player": "Landry Shamet",
+          "status": "Available",
+          "injury": null,
+          "notes": "No limitation",
+          "expected_minutes_adjustment": 0
+        },
+        {
+          "date": "2026-06-04",
+          "player": "Jose Alvarado",
+          "status": "Available",
+          "injury": null,
+          "notes": "No limitation",
+          "expected_minutes_adjustment": 0
+        },
+        {
+          "date": "2026-06-04",
+          "player": "Jeremy Sochan",
+          "status": "Available",
+          "injury": null,
+          "notes": "No limitation",
+          "expected_minutes_adjustment": 0
+        },
+        {
+          "date": "2026-06-04",
+          "player": "Pacome Dadiet",
+          "status": "Available",
+          "injury": null,
+          "notes": "No limitation",
+          "expected_minutes_adjustment": 0
+        }
+      ],
+      "SAS": [
+        {
+          "date": "2026-06-04",
+          "player": "Victor Wembanyama",
+          "status": "Available",
+          "injury": null,
+          "notes": "No limitation",
+          "expected_minutes_adjustment": 0
+        },
+        {
+          "date": "2026-06-04",
+          "player": "De'Aaron Fox",
+          "status": "Available",
+          "injury": null,
+          "notes": "No limitation",
+          "expected_minutes_adjustment": 0
+        },
+        {
+          "date": "2026-06-04",
+          "player": "Devin Vassell",
+          "status": "Available",
+          "injury": null,
+          "notes": "No limitation",
+          "expected_minutes_adjustment": 0
+        },
+        {
+          "date": "2026-06-04",
+          "player": "Stephon Castle",
+          "status": "Available",
+          "injury": null,
+          "notes": "No limitation",
+          "expected_minutes_adjustment": 0
+        },
+        {
+          "date": "2026-06-04",
+          "player": "Dylan Harper",
+          "status": "Available",
+          "injury": null,
+          "notes": "No limitation",
+          "expected_minutes_adjustment": 0
+        },
+        {
+          "date": "2026-06-04",
+          "player": "Julian Champagnie",
+          "status": "Available",
+          "injury": null,
+          "notes": "No limitation",
+          "expected_minutes_adjustment": 0
+        },
+        {
+          "date": "2026-06-04",
+          "player": "Keldon Johnson",
+          "status": "Available",
+          "injury": null,
+          "notes": "No limitation",
+          "expected_minutes_adjustment": 0
+        },
+        {
+          "date": "2026-06-04",
+          "player": "Luke Kornet",
+          "status": "Available",
+          "injury": null,
+          "notes": "No limitation",
+          "expected_minutes_adjustment": 0
+        },
+        {
+          "date": "2026-06-04",
+          "player": "Harrison Barnes",
+          "status": "Available",
+          "injury": null,
+          "notes": "No limitation",
+          "expected_minutes_adjustment": 0
+        },
+        {
+          "date": "2026-06-04",
+          "player": "Carter Bryant",
+          "status": "Available",
+          "injury": null,
+          "notes": "No limitation",
+          "expected_minutes_adjustment": 0
+        }
+      ]
+    },
+    "player_matchups": null,
+    "coaching_notes": null
+  },
+  "predictions": [
+    {
+      "model_version": "calibrated-finals-v3",
+      "prediction_generated_at_utc": "2026-06-05T05:14:46+00:00",
+      "game_number": 1,
+      "date": "2026-06-03",
+      "home_team": "SAS",
+      "away_team": "NYK",
+      "team_a": "NYK",
+      "team_b": "SAS",
+      "team_a_win_probability": 0.4292,
+      "team_b_win_probability": 0.5708,
+      "expected_score_team_a": 109,
+      "expected_score_team_b": 112,
+      "projected_pace": 97.9,
+      "projected_team_a_off_rating": 111.2,
+      "projected_team_b_off_rating": 114.4,
+      "top_edges": [
+        "NYK has a strong advantage in offensive rebounding vs defensive rebounding because its offensive rebounding rates as strong offensive rebounding (96.4/100), while SAS's defensive rebounding grades as weaker defensive rebounding (10.0/100).",
+        "SAS faces a strong disadvantage in ball security vs forced turnovers because its ball security rates as shaky ball security (27.1/100), and NYK's forced turnovers counters it with high forced turnovers (76.7/100).",
+        "SAS has a strong advantage in free throw pressure vs foul discipline because its free throw pressure rates as high free throw pressure (76.2/100), while NYK's foul discipline grades as high foul risk (31.3/100).",
+        "SAS has a slight advantage in offensive rebounding vs defensive rebounding because its offensive rebounding rates as strong offensive rebounding (76.4/100), while NYK's defensive rebounding grades as moderate defensive rebounding (54.0/100).",
+        "NYK closing lineup projects slightly better.",
+        "SAS has a close-game edge of +0.4 per 100 possessions."
+      ],
+      "x_factors": [
+        "SAS Victor Wembanyama foul trouble",
+        "SAS Stephon Castle foul trouble",
+        "NYK Karl-Anthony Towns foul trouble",
+        "NYK non-star minutes",
+        "SAS non-star minutes",
+        "NYK Jalen Brunson minutes uncertainty"
+      ],
+      "component_margins": {
+        "player_projection": -1.157,
+        "matchup_edge": 0.256,
+        "lineup_edge": 0.794,
+        "clutch_edge": -0.37,
+        "injury_edge": 0.0,
+        "foul_trouble_risk": 2.016
+      },
+      "baseline_probability_team_a": 0.5614,
+      "net_rating_probability_team_a": 0.4469,
+      "baseline_model_predictions": [
+        {
+          "team": "NYK",
+          "baseline_win_probability": 0.5614,
+          "model_probabilities": {
+            "ml_ensemble": 0.5614
+          }
+        },
+        {
+          "team": "SAS",
+          "baseline_win_probability": 0.4386,
+          "model_probabilities": {
+            "ml_ensemble": 0.4386
+          }
+        }
+      ],
+      "weights": {
+        "team_baseline": 1.0,
+        "player_projection": 0.45,
+        "matchup_edge": 0.2,
+        "lineup_edge": 0.25,
+        "clutch_edge": 0.1,
+        "injury_edge": 0.0,
+        "foul_trouble_risk": 0.0
+      },
+      "combination_method": "learned_meta"
+    },
+    {
+      "model_version": "calibrated-finals-v3",
+      "prediction_generated_at_utc": "2026-06-05T05:14:46+00:00",
+      "game_number": 2,
+      "date": "2026-06-05",
+      "home_team": "SAS",
+      "away_team": "NYK",
+      "team_a": "NYK",
+      "team_b": "SAS",
+      "team_a_win_probability": 0.3853,
+      "team_b_win_probability": 0.6147,
+      "expected_score_team_a": 106,
+      "expected_score_team_b": 111,
+      "projected_pace": 97.9,
+      "projected_team_a_off_rating": 108.3,
+      "projected_team_b_off_rating": 113.7,
+      "top_edges": [
+        "NYK has a strong advantage in offensive rebounding vs defensive rebounding because its offensive rebounding rates as strong offensive rebounding (96.4/100), while SAS's defensive rebounding grades as weaker defensive rebounding (10.0/100).",
+        "SAS faces a strong disadvantage in ball security vs forced turnovers because its ball security rates as shaky ball security (27.1/100), and NYK's forced turnovers counters it with high forced turnovers (76.7/100).",
+        "SAS has a strong advantage in free throw pressure vs foul discipline because its free throw pressure rates as high free throw pressure (76.2/100), while NYK's foul discipline grades as high foul risk (31.3/100).",
+        "SAS has a slight advantage in offensive rebounding vs defensive rebounding because its offensive rebounding rates as strong offensive rebounding (76.4/100), while NYK's defensive rebounding grades as moderate defensive rebounding (54.0/100).",
+        "NYK closing lineup projects slightly better.",
+        "SAS has a close-game edge of +0.4 per 100 possessions."
+      ],
+      "x_factors": [
+        "SAS Victor Wembanyama foul trouble",
+        "SAS Stephon Castle foul trouble",
+        "NYK Karl-Anthony Towns foul trouble",
+        "NYK non-star minutes",
+        "SAS non-star minutes",
+        "NYK Jalen Brunson minutes uncertainty"
+      ],
+      "component_margins": {
+        "player_projection": -1.157,
+        "matchup_edge": 0.256,
+        "lineup_edge": 0.794,
+        "clutch_edge": -0.37,
+        "injury_edge": 0.0,
+        "foul_trouble_risk": 2.016
+      },
+      "baseline_probability_team_a": 0.5236,
+      "net_rating_probability_team_a": 0.4097,
+      "baseline_model_predictions": [
+        {
+          "team": "NYK",
+          "baseline_win_probability": 0.5236,
+          "model_probabilities": {
+            "ml_ensemble": 0.5236
+          }
+        },
+        {
+          "team": "SAS",
+          "baseline_win_probability": 0.4764,
+          "model_probabilities": {
+            "ml_ensemble": 0.4764
+          }
+        }
+      ],
+      "weights": {
+        "team_baseline": 1.0,
+        "player_projection": 0.45,
+        "matchup_edge": 0.2,
+        "lineup_edge": 0.25,
+        "clutch_edge": 0.1,
+        "injury_edge": 0.0,
+        "foul_trouble_risk": 0.0
+      },
+      "combination_method": "learned_meta"
+    },
+    {
+      "model_version": "calibrated-finals-v3",
+      "prediction_generated_at_utc": "2026-06-05T05:14:46+00:00",
+      "game_number": 3,
+      "date": "2026-06-08",
+      "home_team": "NYK",
+      "away_team": "SAS",
+      "team_a": "NYK",
+      "team_b": "SAS",
+      "team_a_win_probability": 0.4977,
+      "team_b_win_probability": 0.5023,
+      "expected_score_team_a": 108,
+      "expected_score_team_b": 109,
+      "projected_pace": 97.9,
+      "projected_team_a_off_rating": 111.3,
+      "projected_team_b_off_rating": 111.5,
+      "top_edges": [
+        "NYK has a strong advantage in offensive rebounding vs defensive rebounding because its offensive rebounding rates as strong offensive rebounding (96.4/100), while SAS's defensive rebounding grades as weaker defensive rebounding (10.0/100).",
+        "SAS faces a strong disadvantage in ball security vs forced turnovers because its ball security rates as shaky ball security (27.1/100), and NYK's forced turnovers counters it with high forced turnovers (76.7/100).",
+        "SAS has a strong advantage in free throw pressure vs foul discipline because its free throw pressure rates as high free throw pressure (76.2/100), while NYK's foul discipline grades as high foul risk (31.3/100).",
+        "SAS has a slight advantage in offensive rebounding vs defensive rebounding because its offensive rebounding rates as strong offensive rebounding (76.4/100), while NYK's defensive rebounding grades as moderate defensive rebounding (54.0/100).",
+        "NYK closing lineup projects slightly better.",
+        "SAS has a close-game edge of +0.4 per 100 possessions."
+      ],
+      "x_factors": [
+        "SAS Victor Wembanyama foul trouble",
+        "SAS Stephon Castle foul trouble",
+        "NYK Karl-Anthony Towns foul trouble",
+        "NYK non-star minutes",
+        "SAS non-star minutes",
+        "NYK Jalen Brunson minutes uncertainty"
+      ],
+      "component_margins": {
+        "player_projection": -1.157,
+        "matchup_edge": 0.256,
+        "lineup_edge": 0.794,
+        "clutch_edge": -0.37,
+        "injury_edge": 0.0,
+        "foul_trouble_risk": 2.016
+      },
+      "baseline_probability_team_a": 0.6171,
+      "net_rating_probability_team_a": 0.5043,
+      "baseline_model_predictions": [
+        {
+          "team": "NYK",
+          "baseline_win_probability": 0.6171,
+          "model_probabilities": {
+            "ml_ensemble": 0.6171
+          }
+        },
+        {
+          "team": "SAS",
+          "baseline_win_probability": 0.3829,
+          "model_probabilities": {
+            "ml_ensemble": 0.3829
+          }
+        }
+      ],
+      "weights": {
+        "team_baseline": 1.0,
+        "player_projection": 0.45,
+        "matchup_edge": 0.2,
+        "lineup_edge": 0.25,
+        "clutch_edge": 0.1,
+        "injury_edge": 0.0,
+        "foul_trouble_risk": 0.0
+      },
+      "combination_method": "learned_meta"
+    },
+    {
+      "model_version": "calibrated-finals-v3",
+      "prediction_generated_at_utc": "2026-06-05T05:14:46+00:00",
+      "game_number": 4,
+      "date": "2026-06-10",
+      "home_team": "NYK",
+      "away_team": "SAS",
+      "team_a": "NYK",
+      "team_b": "SAS",
+      "team_a_win_probability": 0.4977,
+      "team_b_win_probability": 0.5023,
+      "expected_score_team_a": 108,
+      "expected_score_team_b": 108,
+      "projected_pace": 97.9,
+      "projected_team_a_off_rating": 110.9,
+      "projected_team_b_off_rating": 111.1,
+      "top_edges": [
+        "NYK has a strong advantage in offensive rebounding vs defensive rebounding because its offensive rebounding rates as strong offensive rebounding (96.4/100), while SAS's defensive rebounding grades as weaker defensive rebounding (10.0/100).",
+        "SAS faces a strong disadvantage in ball security vs forced turnovers because its ball security rates as shaky ball security (27.1/100), and NYK's forced turnovers counters it with high forced turnovers (76.7/100).",
+        "SAS has a strong advantage in free throw pressure vs foul discipline because its free throw pressure rates as high free throw pressure (76.2/100), while NYK's foul discipline grades as high foul risk (31.3/100).",
+        "SAS has a slight advantage in offensive rebounding vs defensive rebounding because its offensive rebounding rates as strong offensive rebounding (76.4/100), while NYK's defensive rebounding grades as moderate defensive rebounding (54.0/100).",
+        "NYK closing lineup projects slightly better.",
+        "SAS has a close-game edge of +0.4 per 100 possessions."
+      ],
+      "x_factors": [
+        "SAS Victor Wembanyama foul trouble",
+        "SAS Stephon Castle foul trouble",
+        "NYK Karl-Anthony Towns foul trouble",
+        "NYK non-star minutes",
+        "SAS non-star minutes",
+        "NYK Jalen Brunson minutes uncertainty"
+      ],
+      "component_margins": {
+        "player_projection": -1.157,
+        "matchup_edge": 0.256,
+        "lineup_edge": 0.794,
+        "clutch_edge": -0.37,
+        "injury_edge": 0.0,
+        "foul_trouble_risk": 2.016
+      },
+      "baseline_probability_team_a": 0.6171,
+      "net_rating_probability_team_a": 0.5043,
+      "baseline_model_predictions": [
+        {
+          "team": "NYK",
+          "baseline_win_probability": 0.6171,
+          "model_probabilities": {
+            "ml_ensemble": 0.6171
+          }
+        },
+        {
+          "team": "SAS",
+          "baseline_win_probability": 0.3829,
+          "model_probabilities": {
+            "ml_ensemble": 0.3829
+          }
+        }
+      ],
+      "weights": {
+        "team_baseline": 1.0,
+        "player_projection": 0.45,
+        "matchup_edge": 0.2,
+        "lineup_edge": 0.25,
+        "clutch_edge": 0.1,
+        "injury_edge": 0.0,
+        "foul_trouble_risk": 0.0
+      },
+      "combination_method": "learned_meta"
+    },
+    {
+      "model_version": "calibrated-finals-v3",
+      "prediction_generated_at_utc": "2026-06-05T05:14:46+00:00",
+      "game_number": 5,
+      "date": "2026-06-13",
+      "home_team": "SAS",
+      "away_team": "NYK",
+      "team_a": "NYK",
+      "team_b": "SAS",
+      "team_a_win_probability": 0.3853,
+      "team_b_win_probability": 0.6147,
+      "expected_score_team_a": 105,
+      "expected_score_team_b": 111,
+      "projected_pace": 97.9,
+      "projected_team_a_off_rating": 108.7,
+      "projected_team_b_off_rating": 114.1,
+      "top_edges": [
+        "NYK has a strong advantage in offensive rebounding vs defensive rebounding because its offensive rebounding rates as strong offensive rebounding (96.4/100), while SAS's defensive rebounding grades as weaker defensive rebounding (10.0/100).",
+        "SAS faces a strong disadvantage in ball security vs forced turnovers because its ball security rates as shaky ball security (27.1/100), and NYK's forced turnovers counters it with high forced turnovers (76.7/100).",
+        "SAS has a strong advantage in free throw pressure vs foul discipline because its free throw pressure rates as high free throw pressure (76.2/100), while NYK's foul discipline grades as high foul risk (31.3/100).",
+        "SAS has a slight advantage in offensive rebounding vs defensive rebounding because its offensive rebounding rates as strong offensive rebounding (76.4/100), while NYK's defensive rebounding grades as moderate defensive rebounding (54.0/100).",
+        "NYK closing lineup projects slightly better.",
+        "SAS has a close-game edge of +0.4 per 100 possessions."
+      ],
+      "x_factors": [
+        "SAS Victor Wembanyama foul trouble",
+        "SAS Stephon Castle foul trouble",
+        "NYK Karl-Anthony Towns foul trouble",
+        "NYK non-star minutes",
+        "SAS non-star minutes",
+        "NYK Jalen Brunson minutes uncertainty"
+      ],
+      "component_margins": {
+        "player_projection": -1.157,
+        "matchup_edge": 0.256,
+        "lineup_edge": 0.794,
+        "clutch_edge": -0.37,
+        "injury_edge": 0.0,
+        "foul_trouble_risk": 2.016
+      },
+      "baseline_probability_team_a": 0.5236,
+      "net_rating_probability_team_a": 0.4097,
+      "baseline_model_predictions": [
+        {
+          "team": "NYK",
+          "baseline_win_probability": 0.5236,
+          "model_probabilities": {
+            "ml_ensemble": 0.5236
+          }
+        },
+        {
+          "team": "SAS",
+          "baseline_win_probability": 0.4764,
+          "model_probabilities": {
+            "ml_ensemble": 0.4764
+          }
+        }
+      ],
+      "weights": {
+        "team_baseline": 1.0,
+        "player_projection": 0.45,
+        "matchup_edge": 0.2,
+        "lineup_edge": 0.25,
+        "clutch_edge": 0.1,
+        "injury_edge": 0.0,
+        "foul_trouble_risk": 0.0
+      },
+      "combination_method": "learned_meta"
+    },
+    {
+      "model_version": "calibrated-finals-v3",
+      "prediction_generated_at_utc": "2026-06-05T05:14:46+00:00",
+      "game_number": 6,
+      "date": "2026-06-16",
+      "home_team": "NYK",
+      "away_team": "SAS",
+      "team_a": "NYK",
+      "team_b": "SAS",
+      "team_a_win_probability": 0.4977,
+      "team_b_win_probability": 0.5023,
+      "expected_score_team_a": 108,
+      "expected_score_team_b": 108,
+      "projected_pace": 97.9,
+      "projected_team_a_off_rating": 111.3,
+      "projected_team_b_off_rating": 111.5,
+      "top_edges": [
+        "NYK has a strong advantage in offensive rebounding vs defensive rebounding because its offensive rebounding rates as strong offensive rebounding (96.4/100), while SAS's defensive rebounding grades as weaker defensive rebounding (10.0/100).",
+        "SAS faces a strong disadvantage in ball security vs forced turnovers because its ball security rates as shaky ball security (27.1/100), and NYK's forced turnovers counters it with high forced turnovers (76.7/100).",
+        "SAS has a strong advantage in free throw pressure vs foul discipline because its free throw pressure rates as high free throw pressure (76.2/100), while NYK's foul discipline grades as high foul risk (31.3/100).",
+        "SAS has a slight advantage in offensive rebounding vs defensive rebounding because its offensive rebounding rates as strong offensive rebounding (76.4/100), while NYK's defensive rebounding grades as moderate defensive rebounding (54.0/100).",
+        "NYK closing lineup projects slightly better.",
+        "SAS has a close-game edge of +0.4 per 100 possessions."
+      ],
+      "x_factors": [
+        "SAS Victor Wembanyama foul trouble",
+        "SAS Stephon Castle foul trouble",
+        "NYK Karl-Anthony Towns foul trouble",
+        "NYK non-star minutes",
+        "SAS non-star minutes",
+        "NYK Jalen Brunson minutes uncertainty"
+      ],
+      "component_margins": {
+        "player_projection": -1.157,
+        "matchup_edge": 0.256,
+        "lineup_edge": 0.794,
+        "clutch_edge": -0.37,
+        "injury_edge": 0.0,
+        "foul_trouble_risk": 2.016
+      },
+      "baseline_probability_team_a": 0.6171,
+      "net_rating_probability_team_a": 0.5043,
+      "baseline_model_predictions": [
+        {
+          "team": "NYK",
+          "baseline_win_probability": 0.6171,
+          "model_probabilities": {
+            "ml_ensemble": 0.6171
+          }
+        },
+        {
+          "team": "SAS",
+          "baseline_win_probability": 0.3829,
+          "model_probabilities": {
+            "ml_ensemble": 0.3829
+          }
+        }
+      ],
+      "weights": {
+        "team_baseline": 1.0,
+        "player_projection": 0.45,
+        "matchup_edge": 0.2,
+        "lineup_edge": 0.25,
+        "clutch_edge": 0.1,
+        "injury_edge": 0.0,
+        "foul_trouble_risk": 0.0
+      },
+      "combination_method": "learned_meta"
+    },
+    {
+      "model_version": "calibrated-finals-v3",
+      "prediction_generated_at_utc": "2026-06-05T05:14:46+00:00",
+      "game_number": 7,
+      "date": "2026-06-19",
+      "home_team": "SAS",
+      "away_team": "NYK",
+      "team_a": "NYK",
+      "team_b": "SAS",
+      "team_a_win_probability": 0.3853,
+      "team_b_win_probability": 0.6147,
+      "expected_score_team_a": 105,
+      "expected_score_team_b": 110,
+      "projected_pace": 97.9,
+      "projected_team_a_off_rating": 108.7,
+      "projected_team_b_off_rating": 114.1,
+      "top_edges": [
+        "NYK has a strong advantage in offensive rebounding vs defensive rebounding because its offensive rebounding rates as strong offensive rebounding (96.4/100), while SAS's defensive rebounding grades as weaker defensive rebounding (10.0/100).",
+        "SAS faces a strong disadvantage in ball security vs forced turnovers because its ball security rates as shaky ball security (27.1/100), and NYK's forced turnovers counters it with high forced turnovers (76.7/100).",
+        "SAS has a strong advantage in free throw pressure vs foul discipline because its free throw pressure rates as high free throw pressure (76.2/100), while NYK's foul discipline grades as high foul risk (31.3/100).",
+        "SAS has a slight advantage in offensive rebounding vs defensive rebounding because its offensive rebounding rates as strong offensive rebounding (76.4/100), while NYK's defensive rebounding grades as moderate defensive rebounding (54.0/100).",
+        "NYK closing lineup projects slightly better.",
+        "SAS has a close-game edge of +0.4 per 100 possessions."
+      ],
+      "x_factors": [
+        "SAS Victor Wembanyama foul trouble",
+        "SAS Stephon Castle foul trouble",
+        "NYK Karl-Anthony Towns foul trouble",
+        "NYK non-star minutes",
+        "SAS non-star minutes",
+        "NYK Jalen Brunson minutes uncertainty"
+      ],
+      "component_margins": {
+        "player_projection": -1.157,
+        "matchup_edge": 0.256,
+        "lineup_edge": 0.794,
+        "clutch_edge": -0.37,
+        "injury_edge": 0.0,
+        "foul_trouble_risk": 2.016
+      },
+      "baseline_probability_team_a": 0.5236,
+      "net_rating_probability_team_a": 0.4097,
+      "baseline_model_predictions": [
+        {
+          "team": "NYK",
+          "baseline_win_probability": 0.5236,
+          "model_probabilities": {
+            "ml_ensemble": 0.5236
+          }
+        },
+        {
+          "team": "SAS",
+          "baseline_win_probability": 0.4764,
+          "model_probabilities": {
+            "ml_ensemble": 0.4764
+          }
+        }
+      ],
+      "weights": {
+        "team_baseline": 1.0,
+        "player_projection": 0.45,
+        "matchup_edge": 0.2,
+        "lineup_edge": 0.25,
+        "clutch_edge": 0.1,
+        "injury_edge": 0.0,
+        "foul_trouble_risk": 0.0
+      },
+      "combination_method": "learned_meta"
+    }
+  ],
+  "focus_game_predictions": [
+    {
+      "model_version": "calibrated-finals-v3",
+      "prediction_generated_at_utc": "2026-06-05T05:14:46+00:00",
+      "game_number": 2,
+      "date": "2026-06-05",
+      "home_team": "SAS",
+      "away_team": "NYK",
+      "team_a": "NYK",
+      "team_b": "SAS",
+      "team_a_win_probability": 0.3853,
+      "team_b_win_probability": 0.6147,
+      "expected_score_team_a": 106,
+      "expected_score_team_b": 111,
+      "projected_pace": 97.9,
+      "projected_team_a_off_rating": 108.3,
+      "projected_team_b_off_rating": 113.7,
+      "top_edges": [
+        "NYK has a strong advantage in offensive rebounding vs defensive rebounding because its offensive rebounding rates as strong offensive rebounding (96.4/100), while SAS's defensive rebounding grades as weaker defensive rebounding (10.0/100).",
+        "SAS faces a strong disadvantage in ball security vs forced turnovers because its ball security rates as shaky ball security (27.1/100), and NYK's forced turnovers counters it with high forced turnovers (76.7/100).",
+        "SAS has a strong advantage in free throw pressure vs foul discipline because its free throw pressure rates as high free throw pressure (76.2/100), while NYK's foul discipline grades as high foul risk (31.3/100).",
+        "SAS has a slight advantage in offensive rebounding vs defensive rebounding because its offensive rebounding rates as strong offensive rebounding (76.4/100), while NYK's defensive rebounding grades as moderate defensive rebounding (54.0/100).",
+        "NYK closing lineup projects slightly better.",
+        "SAS has a close-game edge of +0.4 per 100 possessions."
+      ],
+      "x_factors": [
+        "SAS Victor Wembanyama foul trouble",
+        "SAS Stephon Castle foul trouble",
+        "NYK Karl-Anthony Towns foul trouble",
+        "NYK non-star minutes",
+        "SAS non-star minutes",
+        "NYK Jalen Brunson minutes uncertainty"
+      ],
+      "component_margins": {
+        "player_projection": -1.157,
+        "matchup_edge": 0.256,
+        "lineup_edge": 0.794,
+        "clutch_edge": -0.37,
+        "injury_edge": 0.0,
+        "foul_trouble_risk": 2.016
+      },
+      "baseline_probability_team_a": 0.5236,
+      "net_rating_probability_team_a": 0.4097,
+      "baseline_model_predictions": [
+        {
+          "team": "NYK",
+          "baseline_win_probability": 0.5236,
+          "model_probabilities": {
+            "ml_ensemble": 0.5236
+          }
+        },
+        {
+          "team": "SAS",
+          "baseline_win_probability": 0.4764,
+          "model_probabilities": {
+            "ml_ensemble": 0.4764
+          }
+        }
+      ],
+      "weights": {
+        "team_baseline": 1.0,
+        "player_projection": 0.45,
+        "matchup_edge": 0.2,
+        "lineup_edge": 0.25,
+        "clutch_edge": 0.1,
+        "injury_edge": 0.0,
+        "foul_trouble_risk": 0.0
+      },
+      "combination_method": "learned_meta"
+    }
+  ]
+}

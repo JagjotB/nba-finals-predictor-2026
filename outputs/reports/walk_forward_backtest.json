@@ -1,0 +1,218 @@
+{
+  "validation": "chronological_walk_forward",
+  "splits": [
+    {
+      "test_season": "2021-22",
+      "train_seasons": [
+        "2014-15",
+        "2015-16",
+        "2016-17",
+        "2017-18",
+        "2018-19",
+        "2019-20",
+        "2020-21"
+      ],
+      "model": {
+        "games": 174,
+        "accuracy": 0.5977,
+        "log_loss": 0.6681,
+        "brier_score": 0.2376,
+        "roc_auc": 0.6276,
+        "expected_calibration_error": 0.0178
+      },
+      "net_rating_baseline": {
+        "games": 174,
+        "accuracy": 0.6322,
+        "log_loss": 0.6642,
+        "brier_score": 0.2357,
+        "roc_auc": 0.6521,
+        "expected_calibration_error": 0.0654
+      },
+      "elo_baseline": {
+        "games": 174,
+        "accuracy": 0.5287,
+        "log_loss": 0.6838,
+        "brier_score": 0.2453,
+        "roc_auc": 0.5927,
+        "expected_calibration_error": 0.1003
+      }
+    },
+    {
+      "test_season": "2022-23",
+      "train_seasons": [
+        "2014-15",
+        "2015-16",
+        "2016-17",
+        "2017-18",
+        "2018-19",
+        "2019-20",
+        "2020-21",
+        "2021-22"
+      ],
+      "model": {
+        "games": 168,
+        "accuracy": 0.5357,
+        "log_loss": 0.7159,
+        "brier_score": 0.2578,
+        "roc_auc": 0.5927,
+        "expected_calibration_error": 0.1428
+      },
+      "net_rating_baseline": {
+        "games": 168,
+        "accuracy": 0.5476,
+        "log_loss": 0.6907,
+        "brier_score": 0.2487,
+        "roc_auc": 0.5519,
+        "expected_calibration_error": 0.0197
+      },
+      "elo_baseline": {
+        "games": 168,
+        "accuracy": 0.5714,
+        "log_loss": 0.6767,
+        "brier_score": 0.2415,
+        "roc_auc": 0.6145,
+        "expected_calibration_error": 0.0393
+      }
+    },
+    {
+      "test_season": "2023-24",
+      "train_seasons": [
+        "2014-15",
+        "2015-16",
+        "2016-17",
+        "2017-18",
+        "2018-19",
+        "2019-20",
+        "2020-21",
+        "2021-22",
+        "2022-23"
+      ],
+      "model": {
+        "games": 164,
+        "accuracy": 0.6951,
+        "log_loss": 0.6253,
+        "brier_score": 0.2167,
+        "roc_auc": 0.7237,
+        "expected_calibration_error": 0.0931
+      },
+      "net_rating_baseline": {
+        "games": 164,
+        "accuracy": 0.6341,
+        "log_loss": 0.6428,
+        "brier_score": 0.2259,
+        "roc_auc": 0.6791,
+        "expected_calibration_error": 0.0506
+      },
+      "elo_baseline": {
+        "games": 164,
+        "accuracy": 0.6341,
+        "log_loss": 0.6667,
+        "brier_score": 0.2364,
+        "roc_auc": 0.6365,
+        "expected_calibration_error": 0.0821
+      }
+    },
+    {
+      "test_season": "2024-25",
+      "train_seasons": [
+        "2014-15",
+        "2015-16",
+        "2016-17",
+        "2017-18",
+        "2018-19",
+        "2019-20",
+        "2020-21",
+        "2021-22",
+        "2022-23",
+        "2023-24"
+      ],
+      "model": {
+        "games": 168,
+        "accuracy": 0.619,
+        "log_loss": 0.6811,
+        "brier_score": 0.2414,
+        "roc_auc": 0.6327,
+        "expected_calibration_error": 0.0612
+      },
+      "net_rating_baseline": {
+        "games": 168,
+        "accuracy": 0.5714,
+        "log_loss": 0.6704,
+        "brier_score": 0.2386,
+        "roc_auc": 0.629,
+        "expected_calibration_error": 0.0357
+      },
+      "elo_baseline": {
+        "games": 168,
+        "accuracy": 0.5,
+        "log_loss": 0.6876,
+        "brier_score": 0.2469,
+        "roc_auc": 0.5893,
+        "expected_calibration_error": 0.1381
+      }
+    }
+  ],
+  "overall": {
+    "model": {
+      "games": 674,
+      "accuracy": 0.6113,
+      "log_loss": 0.6728,
+      "brier_score": 0.2385,
+      "roc_auc": 0.641,
+      "expected_calibration_error": 0.0355,
+      "opening_series_winner": {
+        "series": 60,
+        "accuracy": 0.65
+      }
+    },
+    "net_rating_baseline": {
+      "games": 674,
+      "accuracy": 0.5964,
+      "log_loss": 0.6672,
+      "brier_score": 0.2373,
+      "roc_auc": 0.6274,
+      "expected_calibration_error": 0.0178,
+      "opening_series_winner": {
+        "series": 60,
+        "accuracy": 0.6667
+      }
+    },
+    "elo_baseline": {
+      "games": 674,
+      "accuracy": 0.5579,
+      "log_loss": 0.6788,
+      "brier_score": 0.2426,
+      "roc_auc": 0.6112,
+      "expected_calibration_error": 0.06,
+      "opening_series_winner": {
+        "series": 60,
+        "accuracy": 0.65
+      }
+    }
+  },
+  "dataset": {
+    "schema_version": "canonical-pregame-v1",
+    "rows": 1830,
+    "games": 915,
+    "seasons": [
+      "2014-15",
+      "2015-16",
+      "2016-17",
+      "2017-18",
+      "2018-19",
+      "2019-20",
+      "2020-21",
+      "2021-22",
+      "2022-23",
+      "2023-24",
+      "2024-25"
+    ],
+    "sha256": "4a85d45c04da4e96b9d745e8fb4dbab8e2ad3ca3d577cc7c7cf22765b4492d33",
+    "source_policy": "regular-season priors plus playoff games strictly before tipoff",
+    "unavailable_historical_sources": [
+      "injuries",
+      "expected_rotations",
+      "lineups"
+    ]
+  }
+}

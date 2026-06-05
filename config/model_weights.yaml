@@ -1,0 +1,12 @@
+combination_mode: learned_meta
+
+# These weights are retained for experiments. Production predictions use the
+# learned meta-model unless combination_mode is changed to experimental_yaml.
+final_game_prediction_weights:
+  team_baseline: 1.00
+  player_projection: 0.45
+  matchup_edge: 0.20
+  lineup_edge: 0.25
+  clutch_edge: 0.10
+  injury_edge: 0.00
+  foul_trouble_risk: 0.00

@@ -1,0 +1,683 @@
+{
+  "series": "2026 NBA Finals",
+  "team_a": "NYK",
+  "team_b": "SAS",
+  "schedule": [
+    {
+      "game_number": 1,
+      "date": "2026-06-03",
+      "home_team": "SAS",
+      "away_team": "NYK",
+      "neutral_site": false,
+      "game_id": 42500401
+    },
+    {
+      "game_number": 2,
+      "date": "2026-06-05",
+      "home_team": "SAS",
+      "away_team": "NYK",
+      "neutral_site": false,
+      "game_id": 42500402
+    },
+    {
+      "game_number": 3,
+      "date": "2026-06-08",
+      "home_team": "NYK",
+      "away_team": "SAS",
+      "neutral_site": false,
+      "game_id": 42500403
+    },
+    {
+      "game_number": 4,
+      "date": "2026-06-10",
+      "home_team": "NYK",
+      "away_team": "SAS",
+      "neutral_site": false,
+      "game_id": 42500404
+    },
+    {
+      "game_number": 5,
+      "date": "2026-06-13",
+      "home_team": "SAS",
+      "away_team": "NYK",
+      "neutral_site": false,
+      "game_id": 42500405
+    },
+    {
+      "game_number": 6,
+      "date": "2026-06-16",
+      "home_team": "NYK",
+      "away_team": "SAS",
+      "neutral_site": false,
+      "game_id": 42500406
+    },
+    {
+      "game_number": 7,
+      "date": "2026-06-19",
+      "home_team": "SAS",
+      "away_team": "NYK",
+      "neutral_site": false,
+      "game_id": 42500407
+    }
+  ],
+  "rotations": {
+    "NYK": [
+      {
+        "team": "NYK",
+        "player": "Jalen Brunson",
+        "role": "Starter",
+        "projected_minutes": 36.5,
+        "minutes_floor": 31.5,
+        "minutes_ceiling": 41.5,
+        "is_starter": true,
+        "is_closer": true,
+        "rotation_confidence": "high",
+        "notes": "G1 actual: 37.1. On track with projections."
+      },
+      {
+        "team": "NYK",
+        "player": "OG Anunoby",
+        "role": "Starter",
+        "projected_minutes": 32.5,
+        "minutes_floor": 27.5,
+        "minutes_ceiling": 37.5,
+        "is_starter": true,
+        "is_closer": true,
+        "rotation_confidence": "high",
+        "notes": "G1 actual: 31.1. Slightly less than projected."
+      },
+      {
+        "team": "NYK",
+        "player": "Josh Hart",
+        "role": "Starter",
+        "projected_minutes": 31.0,
+        "minutes_floor": 26.0,
+        "minutes_ceiling": 36.0,
+        "is_starter": true,
+        "is_closer": true,
+        "rotation_confidence": "high",
+        "notes": "G1 actual: 26.8. Possible foul trouble; adjusted down."
+      },
+      {
+        "team": "NYK",
+        "player": "Mikal Bridges",
+        "role": "Starter",
+        "projected_minutes": 30.5,
+        "minutes_floor": 25.5,
+        "minutes_ceiling": 35.5,
+        "is_starter": true,
+        "is_closer": true,
+        "rotation_confidence": "high",
+        "notes": "G1 actual: 28.2. Slight reduction observed."
+      },
+      {
+        "team": "NYK",
+        "player": "Karl-Anthony Towns",
+        "role": "Starter",
+        "projected_minutes": 31.5,
+        "minutes_floor": 26.5,
+        "minutes_ceiling": 36.5,
+        "is_starter": true,
+        "is_closer": true,
+        "rotation_confidence": "high",
+        "notes": "G1 actual: 34.4. Used more than expected."
+      },
+      {
+        "team": "NYK",
+        "player": "Miles McBride",
+        "role": "Bench",
+        "projected_minutes": 19.2,
+        "minutes_floor": 14.2,
+        "minutes_ceiling": 24.2,
+        "is_starter": false,
+        "is_closer": false,
+        "rotation_confidence": "medium",
+        "notes": "G1 actual: 19.5. Right on projection."
+      },
+      {
+        "team": "NYK",
+        "player": "Mitchell Robinson",
+        "role": "Bench",
+        "projected_minutes": 13.5,
+        "minutes_floor": 8.5,
+        "minutes_ceiling": 18.5,
+        "is_starter": false,
+        "is_closer": false,
+        "rotation_confidence": "medium",
+        "notes": "G1 actual: 13.2. On track."
+      },
+      {
+        "team": "NYK",
+        "player": "Landry Shamet",
+        "role": "Bench",
+        "projected_minutes": 25.0,
+        "minutes_floor": 20.0,
+        "minutes_ceiling": 30.0,
+        "is_starter": false,
+        "is_closer": true,
+        "rotation_confidence": "high",
+        "notes": "G1 actual: 33.3. Major rotation bump \u2014 13 pts on 3/6 from 3; now a key bench weapon."
+      },
+      {
+        "team": "NYK",
+        "player": "Jordan Clarkson",
+        "role": "Reserve",
+        "projected_minutes": 9.0,
+        "minutes_floor": 4.0,
+        "minutes_ceiling": 14.0,
+        "is_starter": false,
+        "is_closer": false,
+        "rotation_confidence": "low",
+        "notes": "G1 actual: 5.7. Lost minutes to Shamet; reduced role."
+      },
+      {
+        "team": "NYK",
+        "player": "Jose Alvarado",
+        "role": "Reserve",
+        "projected_minutes": 10.0,
+        "minutes_floor": 5.0,
+        "minutes_ceiling": 15.0,
+        "is_starter": false,
+        "is_closer": false,
+        "rotation_confidence": "low",
+        "notes": "G1 actual: 11.0. Slight uptick from projection."
+      },
+      {
+        "team": "NYK",
+        "player": "Ariel Hukporti",
+        "role": "Reserve",
+        "projected_minutes": 6.0,
+        "minutes_floor": 1.0,
+        "minutes_ceiling": 11.0,
+        "is_starter": false,
+        "is_closer": false,
+        "rotation_confidence": "low",
+        "notes": "Did not play G1 (DNP)."
+      },
+      {
+        "team": "NYK",
+        "player": "Mohamed Diawara",
+        "role": "Reserve",
+        "projected_minutes": 5.0,
+        "minutes_floor": 0.0,
+        "minutes_ceiling": 10.0,
+        "is_starter": false,
+        "is_closer": false,
+        "rotation_confidence": "low",
+        "notes": "Did not play G1 (DNP)."
+      },
+      {
+        "team": "NYK",
+        "player": "Tyler Kolek",
+        "role": "Reserve",
+        "projected_minutes": 5.0,
+        "minutes_floor": 0.0,
+        "minutes_ceiling": 10.0,
+        "is_starter": false,
+        "is_closer": false,
+        "rotation_confidence": "low",
+        "notes": "Did not play G1 (DNP)."
+      }
+    ],
+    "SAS": [
+      {
+        "team": "SAS",
+        "player": "Devin Vassell",
+        "role": "Starter",
+        "projected_minutes": 34.5,
+        "minutes_floor": 29.5,
+        "minutes_ceiling": 39.5,
+        "is_starter": true,
+        "is_closer": true,
+        "rotation_confidence": "high",
+        "notes": "G1 actual: 36.0. Played heavy minutes; 9 pts 4 reb."
+      },
+      {
+        "team": "SAS",
+        "player": "Stephon Castle",
+        "role": "Starter",
+        "projected_minutes": 34.0,
+        "minutes_floor": 29.0,
+        "minutes_ceiling": 39.0,
+        "is_starter": true,
+        "is_closer": true,
+        "rotation_confidence": "high",
+        "notes": "G1 actual: 34.5. On track; 17 pts."
+      },
+      {
+        "team": "SAS",
+        "player": "De'Aaron Fox",
+        "role": "Starter",
+        "projected_minutes": 35.0,
+        "minutes_floor": 30.0,
+        "minutes_ceiling": 40.0,
+        "is_starter": true,
+        "is_closer": true,
+        "rotation_confidence": "high",
+        "notes": "G1 actual: 37.9. Heavy load but poor game (7 pts 3/13); rode hard to close gap."
+      },
+      {
+        "team": "SAS",
+        "player": "Victor Wembanyama",
+        "role": "Starter",
+        "projected_minutes": 34.5,
+        "minutes_floor": 29.5,
+        "minutes_ceiling": 39.5,
+        "is_starter": true,
+        "is_closer": true,
+        "rotation_confidence": "high",
+        "notes": "G1 actual: 37.8. Heavy load; 26 pts 6/21 FG but 12/13 FT."
+      },
+      {
+        "team": "SAS",
+        "player": "Julian Champagnie",
+        "role": "Starter",
+        "projected_minutes": 31.0,
+        "minutes_floor": 26.0,
+        "minutes_ceiling": 36.0,
+        "is_starter": true,
+        "is_closer": true,
+        "rotation_confidence": "high",
+        "notes": "G1 actual: 31.2. On track; 16 pts 5/10 from 3."
+      },
+      {
+        "team": "SAS",
+        "player": "Dylan Harper",
+        "role": "Bench",
+        "projected_minutes": 27.0,
+        "minutes_floor": 22.0,
+        "minutes_ceiling": 32.0,
+        "is_starter": false,
+        "is_closer": true,
+        "rotation_confidence": "high",
+        "notes": "G1 actual: 27.5. On track; 16 pts off bench."
+      },
+      {
+        "team": "SAS",
+        "player": "Keldon Johnson",
+        "role": "Bench",
+        "projected_minutes": 13.5,
+        "minutes_floor": 8.5,
+        "minutes_ceiling": 18.5,
+        "is_starter": false,
+        "is_closer": false,
+        "rotation_confidence": "medium",
+        "notes": "G1 actual: 8.3. Reduced usage; blended projection."
+      },
+      {
+        "team": "SAS",
+        "player": "Luke Kornet",
+        "role": "Bench",
+        "projected_minutes": 12.5,
+        "minutes_floor": 7.5,
+        "minutes_ceiling": 17.5,
+        "is_starter": false,
+        "is_closer": false,
+        "rotation_confidence": "medium",
+        "notes": "G1 actual: 10.2. Slight reduction from projection."
+      },
+      {
+        "team": "SAS",
+        "player": "Harrison Barnes",
+        "role": "Reserve",
+        "projected_minutes": 10.5,
+        "minutes_floor": 5.5,
+        "minutes_ceiling": 15.5,
+        "is_starter": false,
+        "is_closer": false,
+        "rotation_confidence": "low",
+        "notes": "G1 actual: 12.1. Slightly more usage than projected."
+      },
+      {
+        "team": "SAS",
+        "player": "Carter Bryant",
+        "role": "Reserve",
+        "projected_minutes": 7.0,
+        "minutes_floor": 2.0,
+        "minutes_ceiling": 12.0,
+        "is_starter": false,
+        "is_closer": false,
+        "rotation_confidence": "low",
+        "notes": "G1 actual: 4.4. Reduced to mop-up role."
+      },
+      {
+        "team": "SAS",
+        "player": "Jordan McLaughlin",
+        "role": "Reserve",
+        "projected_minutes": 4.6,
+        "minutes_floor": 0.0,
+        "minutes_ceiling": 9.6,
+        "is_starter": false,
+        "is_closer": false,
+        "rotation_confidence": "low",
+        "notes": "Did not play G1 (DNP)."
+      },
+      {
+        "team": "SAS",
+        "player": "Kelly Olynyk",
+        "role": "Reserve",
+        "projected_minutes": 3.9,
+        "minutes_floor": 0.0,
+        "minutes_ceiling": 8.9,
+        "is_starter": false,
+        "is_closer": false,
+        "rotation_confidence": "low",
+        "notes": "Did not play G1 (DNP)."
+      },
+      {
+        "team": "SAS",
+        "player": "Lindy Waters III",
+        "role": "Reserve",
+        "projected_minutes": 3.8,
+        "minutes_floor": 0.0,
+        "minutes_ceiling": 8.8,
+        "is_starter": false,
+        "is_closer": false,
+        "rotation_confidence": "low",
+        "notes": "Did not play G1 (DNP)."
+      }
+    ]
+  },
+  "injuries": {
+    "NYK": [
+      {
+        "date": "2026-06-03",
+        "team": "NYK",
+        "player": "Jalen Brunson",
+        "status": "Available",
+        "injury": null,
+        "notes": "No limitation",
+        "expected_minutes_adjustment": 0
+      },
+      {
+        "date": "2026-06-03",
+        "team": "NYK",
+        "player": "OG Anunoby",
+        "status": "Available",
+        "injury": null,
+        "notes": "No limitation",
+        "expected_minutes_adjustment": 0
+      },
+      {
+        "date": "2026-06-03",
+        "team": "NYK",
+        "player": "Josh Hart",
+        "status": "Available",
+        "injury": null,
+        "notes": "No limitation",
+        "expected_minutes_adjustment": 0
+      },
+      {
+        "date": "2026-06-03",
+        "team": "NYK",
+        "player": "Mikal Bridges",
+        "status": "Available",
+        "injury": null,
+        "notes": "No limitation",
+        "expected_minutes_adjustment": 0
+      },
+      {
+        "date": "2026-06-03",
+        "team": "NYK",
+        "player": "Karl-Anthony Towns",
+        "status": "Available",
+        "injury": null,
+        "notes": "No limitation",
+        "expected_minutes_adjustment": 0
+      },
+      {
+        "date": "2026-06-03",
+        "team": "NYK",
+        "player": "Miles McBride",
+        "status": "Available",
+        "injury": null,
+        "notes": "No limitation",
+        "expected_minutes_adjustment": 0
+      },
+      {
+        "date": "2026-06-03",
+        "team": "NYK",
+        "player": "Mitchell Robinson",
+        "status": "Available",
+        "injury": null,
+        "notes": "No limitation",
+        "expected_minutes_adjustment": 0
+      },
+      {
+        "date": "2026-06-03",
+        "team": "NYK",
+        "player": "Jordan Clarkson",
+        "status": "Available",
+        "injury": null,
+        "notes": "No limitation",
+        "expected_minutes_adjustment": 0
+      },
+      {
+        "date": "2026-06-03",
+        "team": "NYK",
+        "player": "Landry Shamet",
+        "status": "Available",
+        "injury": null,
+        "notes": "No limitation",
+        "expected_minutes_adjustment": 0
+      }
+    ],
+    "SAS": [
+      {
+        "date": "2026-06-03",
+        "team": "SAS",
+        "player": "Victor Wembanyama",
+        "status": "Available",
+        "injury": null,
+        "notes": "No limitation",
+        "expected_minutes_adjustment": 0
+      },
+      {
+        "date": "2026-06-03",
+        "team": "SAS",
+        "player": "De'Aaron Fox",
+        "status": "Available",
+        "injury": null,
+        "notes": "No limitation",
+        "expected_minutes_adjustment": 0
+      },
+      {
+        "date": "2026-06-03",
+        "team": "SAS",
+        "player": "Devin Vassell",
+        "status": "Available",
+        "injury": null,
+        "notes": "No limitation",
+        "expected_minutes_adjustment": 0
+      },
+      {
+        "date": "2026-06-03",
+        "team": "SAS",
+        "player": "Stephon Castle",
+        "status": "Available",
+        "injury": null,
+        "notes": "No limitation",
+        "expected_minutes_adjustment": 0
+      },
+      {
+        "date": "2026-06-03",
+        "team": "SAS",
+        "player": "Dylan Harper",
+        "status": "Available",
+        "injury": null,
+        "notes": "No limitation",
+        "expected_minutes_adjustment": 0
+      },
+      {
+        "date": "2026-06-03",
+        "team": "SAS",
+        "player": "Julian Champagnie",
+        "status": "Available",
+        "injury": null,
+        "notes": "No limitation",
+        "expected_minutes_adjustment": 0
+      },
+      {
+        "date": "2026-06-03",
+        "team": "SAS",
+        "player": "Keldon Johnson",
+        "status": "Available",
+        "injury": null,
+        "notes": "No limitation",
+        "expected_minutes_adjustment": 0
+      },
+      {
+        "date": "2026-06-03",
+        "team": "SAS",
+        "player": "Luke Kornet",
+        "status": "Available",
+        "injury": null,
+        "notes": "No limitation",
+        "expected_minutes_adjustment": 0
+      }
+    ]
+  },
+  "player_matchups": [
+    {
+      "offensive_team": "NYK",
+      "offensive_player": "Jalen Brunson",
+      "defensive_team": "SAS",
+      "primary_defender": "De'Aaron Fox",
+      "matchup_type": "pick_and_roll",
+      "expected_impact": 0.5,
+      "notes": "Brunson elite at PnR creation; Fox active but undersized for him"
+    },
+    {
+      "offensive_team": "NYK",
+      "offensive_player": "Karl-Anthony Towns",
+      "defensive_team": "SAS",
+      "primary_defender": "Victor Wembanyama",
+      "matchup_type": "rim_pressure",
+      "expected_impact": -1.5,
+      "notes": "Wembanyama best rim protector in league; KAT avoids driving"
+    },
+    {
+      "offensive_team": "NYK",
+      "offensive_player": "Mikal Bridges",
+      "defensive_team": "SAS",
+      "primary_defender": "Stephon Castle",
+      "matchup_type": "isolation",
+      "expected_impact": 0.5,
+      "notes": "Castle is a rookie defender; Bridges can attack off movement"
+    },
+    {
+      "offensive_team": "NYK",
+      "offensive_player": "OG Anunoby",
+      "defensive_team": "SAS",
+      "primary_defender": "Devin Vassell",
+      "matchup_type": "isolation",
+      "expected_impact": -0.5,
+      "notes": "Vassell solid on-ball defender; neutralizes Anunoby mid-range"
+    },
+    {
+      "offensive_team": "NYK",
+      "offensive_player": "Josh Hart",
+      "defensive_team": "SAS",
+      "primary_defender": "Julian Champagnie",
+      "matchup_type": "rebounding",
+      "expected_impact": 0.8,
+      "notes": "Hart elite offensive rebounder; Champagnie gives up position"
+    },
+    {
+      "offensive_team": "NYK",
+      "offensive_player": "Miles McBride",
+      "defensive_team": "SAS",
+      "primary_defender": "Dylan Harper",
+      "matchup_type": "pick_and_roll",
+      "expected_impact": 0.3,
+      "notes": "Harper bigger but McBride quick enough to limit damage"
+    },
+    {
+      "offensive_team": "SAS",
+      "offensive_player": "Victor Wembanyama",
+      "defensive_team": "NYK",
+      "primary_defender": "Karl-Anthony Towns",
+      "matchup_type": "rim_pressure",
+      "expected_impact": 1.5,
+      "notes": "KAT soft rim protector; Wembanyama scores at will at the rim"
+    },
+    {
+      "offensive_team": "SAS",
+      "offensive_player": "De'Aaron Fox",
+      "defensive_team": "NYK",
+      "primary_defender": "Jalen Brunson",
+      "matchup_type": "pick_and_roll",
+      "expected_impact": 0.5,
+      "notes": "Fox speed advantage; Brunson gives up penetration off screens"
+    },
+    {
+      "offensive_team": "SAS",
+      "offensive_player": "Devin Vassell",
+      "defensive_team": "NYK",
+      "primary_defender": "Mikal Bridges",
+      "matchup_type": "isolation",
+      "expected_impact": -1.0,
+      "notes": "Bridges elite wing defender; Vassell struggles to create off dribble"
+    },
+    {
+      "offensive_team": "SAS",
+      "offensive_player": "Stephon Castle",
+      "defensive_team": "NYK",
+      "primary_defender": "OG Anunoby",
+      "matchup_type": "isolation",
+      "expected_impact": -1.0,
+      "notes": "Anunoby top-5 wing defender; Castle has to work for everything"
+    },
+    {
+      "offensive_team": "SAS",
+      "offensive_player": "Dylan Harper",
+      "defensive_team": "NYK",
+      "primary_defender": "Miles McBride",
+      "matchup_type": "pick_and_roll",
+      "expected_impact": 0.7,
+      "notes": "Harper size/strength advantage over McBride in PnR actions"
+    },
+    {
+      "offensive_team": "SAS",
+      "offensive_player": "Julian Champagnie",
+      "defensive_team": "NYK",
+      "primary_defender": "Josh Hart",
+      "matchup_type": "three_point",
+      "expected_impact": 0.5,
+      "notes": "Champagnie 39% from three this playoffs; Hart has to close hard"
+    },
+    {
+      "offensive_team": "SAS",
+      "offensive_player": "Keldon Johnson",
+      "defensive_team": "NYK",
+      "primary_defender": "OG Anunoby",
+      "matchup_type": "isolation",
+      "expected_impact": -0.8,
+      "notes": "Anunoby locks down physical wings; Johnson limited to catch-and-shoot"
+    }
+  ],
+  "coaching_notes": [
+    {
+      "game_number": 1,
+      "team": "NYK",
+      "adjustment_type": "coverage",
+      "description": "May blitz star guard more often",
+      "expected_impact": -1
+    },
+    {
+      "game_number": 1,
+      "team": "SAS",
+      "adjustment_type": "lineup",
+      "description": "Could close smaller for spacing",
+      "expected_impact": 1
+    }
+  ],
+  "data_sources": {
+    "regular_season": true,
+    "playoffs": true,
+    "manual_schedule": true,
+    "manual_rotations": true,
+    "manual_injuries": true
+  },
+  "validation_warnings": []
+}

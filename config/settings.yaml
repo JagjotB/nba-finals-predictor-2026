@@ -1,0 +1,31 @@
+project:
+  name: nba-finals-predictor-2026
+  season: "2025-26"
+  random_seed: 42
+
+finals:
+  team_a: "New York Knicks"
+  team_b: "San Antonio Spurs"
+  team_a_abbr: "NYK"
+  team_b_abbr: "SAS"
+  series_name: "2026 NBA Finals"
+  best_of: 7
+  simulations: 100000
+
+modeling:
+  train_start_season: "2014-15"
+  train_end_season: "2025-26"
+  use_player_projections: true
+  use_matchup_features: true
+  use_lineups: true
+  use_injuries: true
+  use_clutch_model: true
+  use_foul_simulation: true
+  use_scenarios: true
+
+data:
+  cache_enabled: true
+  use_nba_api: true
+  use_basketball_reference_optional: true
+  use_manual_injuries: true
+  use_manual_rotations: true

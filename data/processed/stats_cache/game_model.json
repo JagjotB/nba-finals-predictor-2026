@@ -1,0 +1,40 @@
+{
+  "feature_cols": [
+    "regular_net_rating_diff",
+    "blended_net_rating_diff",
+    "regular_efg_pct_diff",
+    "blended_efg_pct_diff",
+    "regular_tov_pct_diff",
+    "blended_tov_pct_diff",
+    "regular_oreb_pct_diff",
+    "blended_oreb_pct_diff",
+    "regular_fta_rate_diff",
+    "blended_fta_rate_diff",
+    "regular_pace_diff",
+    "blended_pace_diff",
+    "recent_net_rating_diff",
+    "travel_miles_diff",
+    "travel_data_available",
+    "home_court"
+  ],
+  "metrics": {
+    "train_size": 1830,
+    "test_size": 0,
+    "holdout_seasons": []
+  },
+  "validation_metrics": {
+    "games": 674,
+    "accuracy": 0.6113,
+    "log_loss": 0.6728,
+    "brier_score": 0.2385,
+    "roc_auc": 0.641,
+    "expected_calibration_error": 0.0355,
+    "opening_series_winner": {
+      "series": 60,
+      "accuracy": 0.65
+    }
+  },
+  "dataset_sha256": "4a85d45c04da4e96b9d745e8fb4dbab8e2ad3ca3d577cc7c7cf22765b4492d33",
+  "model_format": "joblib_calibrated_classifier",
+  "binary_artifact": "game_model.joblib"
+}

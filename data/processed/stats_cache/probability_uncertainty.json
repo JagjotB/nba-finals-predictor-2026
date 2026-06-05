@@ -1,0 +1,55 @@
+{
+  "method": "walk_forward_probability_bucket_residuals",
+  "probability_key": "net_rating_probability",
+  "rows": 674,
+  "bins": [
+    {
+      "low": 0.2,
+      "high": 0.3,
+      "count": 16,
+      "mean_prediction": 0.2874,
+      "observed_rate": 0.3125,
+      "half_width": 0.12
+    },
+    {
+      "low": 0.3,
+      "high": 0.4,
+      "count": 82,
+      "mean_prediction": 0.3445,
+      "observed_rate": 0.3415,
+      "half_width": 0.0859
+    },
+    {
+      "low": 0.4,
+      "high": 0.5,
+      "count": 239,
+      "mean_prediction": 0.4533,
+      "observed_rate": 0.431,
+      "half_width": 0.0525
+    },
+    {
+      "low": 0.5,
+      "high": 0.6,
+      "count": 239,
+      "mean_prediction": 0.5467,
+      "observed_rate": 0.569,
+      "half_width": 0.0525
+    },
+    {
+      "low": 0.6,
+      "high": 0.7,
+      "count": 82,
+      "mean_prediction": 0.6555,
+      "observed_rate": 0.6585,
+      "half_width": 0.0859
+    },
+    {
+      "low": 0.7,
+      "high": 0.8,
+      "count": 16,
+      "mean_prediction": 0.7126,
+      "observed_rate": 0.6875,
+      "half_width": 0.12
+    }
+  ]
+}

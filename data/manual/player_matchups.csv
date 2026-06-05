@@ -1,0 +1,15 @@
+offensive_team,offensive_player,defensive_team,primary_defender,matchup_type,expected_impact,notes
+NYK,Jalen Brunson,SAS,De'Aaron Fox,pick_and_roll,0.5,Brunson elite at PnR creation; Fox active but undersized for him
+NYK,Karl-Anthony Towns,SAS,Victor Wembanyama,rim_pressure,-0.8,Wembanyama best rim protector but KAT found mid-range solutions in G1 (7/15 18pts 12reb +14); revised from -1.5
+NYK,Mikal Bridges,SAS,Stephon Castle,isolation,0.5,Castle is a rookie defender; Bridges can attack off movement
+NYK,OG Anunoby,SAS,Devin Vassell,isolation,0.2,Vassell solid defender but OG had a good G1 (5/12 3/6 from 3 17pts); Vassell struggled offensively too — revised from -0.5
+NYK,Josh Hart,SAS,Julian Champagnie,rebounding,0.8,Hart elite offensive rebounder; Champagnie gives up position
+NYK,Miles McBride,SAS,Dylan Harper,pick_and_roll,0.3,Harper bigger but McBride quick enough to limit damage
+NYK,Landry Shamet,SAS,Julian Champagnie,three_point,0.6,Shamet proved in G1 (3/6 from 3 33min) he is a real catch-and-shoot threat; SAS will sag or switch — if they sag NYK can run Brunson/Shamet PnR
+SAS,Victor Wembanyama,NYK,Karl-Anthony Towns,rim_pressure,1.0,KAT soft rim protector but NYK crowded Wemby at the rim in G1 (6/21 FG); 26 pts came via FTs (12/13) not rim finishes — revised from 1.5
+SAS,De'Aaron Fox,NYK,Jalen Brunson,pick_and_roll,0.3,Fox speed advantage; Brunson gives up penetration off screens — G1 Fox went 3/13 (7 pts); impact trimmed until bounce-back confirmed
+SAS,Devin Vassell,NYK,Mikal Bridges,isolation,-1.0,Bridges elite wing defender; G1 confirmed (Vassell 4/11 9pts -13)
+SAS,Stephon Castle,NYK,OG Anunoby,isolation,-0.5,Anunoby top-5 wing defender but Castle showed real creation ability in G1 (7/16 17pts 8reb 3ast); revised from -1.0
+SAS,Dylan Harper,NYK,Miles McBride,pick_and_roll,0.7,Harper size/strength advantage over McBride in PnR actions
+SAS,Julian Champagnie,NYK,Josh Hart,three_point,0.5,Champagnie 39% from three this playoffs; Hart has to close hard
+SAS,Keldon Johnson,NYK,OG Anunoby,isolation,-0.8,Anunoby locks down physical wings; Johnson limited to catch-and-shoot

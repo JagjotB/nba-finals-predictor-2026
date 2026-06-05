@@ -1,0 +1,4 @@
+team,player,role,projected_minutes,minutes_floor,minutes_ceiling,is_starter,is_closer,rotation_confidence,notes
+NYK,Player Name,Starter,39,36,43,true,true,high,Primary creator
+NYK,Player Name,Bench,16,6,24,false,false,medium,Minutes matchup dependent
+SAS,Player Name,Starter,37,34,42,true,true,high,Primary rim protector

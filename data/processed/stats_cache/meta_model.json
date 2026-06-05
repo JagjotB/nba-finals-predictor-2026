@@ -1,0 +1,51 @@
+{
+  "feature_columns": [
+    "baseline_logit",
+    "net_rating_logit",
+    "player_edge",
+    "matchup_edge",
+    "lineup_edge",
+    "clutch_edge",
+    "injury_edge",
+    "coaching_edge",
+    "player_data_available",
+    "matchup_data_available",
+    "lineup_data_available",
+    "clutch_data_available",
+    "injury_data_available",
+    "coaching_data_available"
+  ],
+  "training_rows": 674,
+  "training_seasons": [
+    "2021-22",
+    "2022-23",
+    "2023-24",
+    "2024-25"
+  ],
+  "metrics": {
+    "log_loss": 0.6619,
+    "brier_score": 0.2347,
+    "walk_forward_log_loss": 0.6697,
+    "walk_forward_brier_score": 0.238,
+    "walk_forward_games": 500
+  },
+  "coefficients_standardized": {
+    "baseline_logit": 0.306489,
+    "net_rating_logit": 0.239715,
+    "player_edge": 0.0,
+    "matchup_edge": 0.0,
+    "lineup_edge": 0.0,
+    "clutch_edge": 0.0,
+    "injury_edge": 0.0,
+    "coaching_edge": 0.0,
+    "player_data_available": 0.0,
+    "matchup_data_available": 0.0,
+    "lineup_data_available": 0.0,
+    "clutch_data_available": 0.0,
+    "injury_data_available": 0.0,
+    "coaching_data_available": 0.0
+  },
+  "validated_components": [],
+  "dataset_sha256": "4a85d45c04da4e96b9d745e8fb4dbab8e2ad3ca3d577cc7c7cf22765b4492d33",
+  "model_format": "joblib_regularized_meta_model"
+}
