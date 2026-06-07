@@ -1369,6 +1369,24 @@ def _parse_minutes(minutes_str: Any) -> float:
         return 0.0
 
 
+def _load_pregame_snapshot(game_number: int) -> dict[str, Any] | None:
+    """Return the pre-game prediction dict for game_number from the newest matching snapshot."""
+    import json
+    snaps_dir = PROJECT_ROOT / "outputs" / "predictions" / "snapshots"
+    if not snaps_dir.exists():
+        return None
+    candidates = sorted(snaps_dir.glob(f"*_game_{game_number}.json"), reverse=True)
+    for snap_path in candidates:
+        try:
+            data = json.loads(snap_path.read_text(encoding="utf-8"))
+            for pred in data.get("predictions", []):
+                if isinstance(pred, dict) and int(pred.get("game_number", -1)) == game_number:
+                    return pred
+        except Exception:
+            pass
+    return None
+
+
 def _load_game_box_score(game_number: int) -> dict[str, Any]:
     """Load traditional + advanced box scores for a completed game from CSVs."""
     games_dir = PROJECT_ROOT / "data" / "processed" / "finals_games"
@@ -1452,15 +1470,25 @@ def render_game_findings(bundle: dict[str, Any]) -> None:
         score_a = scores.get(team_a, 0)
         score_b = scores.get(team_b, 0)
 
-        pred_prob_a = float(pred.get("team_a_win_probability", 0.5))
-        pred_score_a = int(pred.get("expected_score_team_a", 0))
-        pred_score_b = int(pred.get("expected_score_team_b", 0))
+        # Use pre-game snapshot if available — current model predictions would be
+        # retroactively recalculated and don't reflect what was actually predicted.
+        snapshot = _load_pregame_snapshot(game_num)
+        has_snapshot = snapshot is not None
+        pred_source = snapshot if has_snapshot else pred
+
+        pred_prob_a = float(pred_source.get("team_a_win_probability", 0.5))
+        pred_score_a = int(pred_source.get("expected_score_team_a", 0))
+        pred_score_b = int(pred_source.get("expected_score_team_b", 0))
         predicted_winner = team_a if pred_prob_a >= 0.5 else team_b
         model_correct = predicted_winner == actual_winner
 
+        if has_snapshot:
+            accuracy_label = "✅ Model correct" if model_correct else "❌ Model missed"
+        else:
+            accuracy_label = "📋 No pre-game snapshot"
+
         expander_label = (
-            f"Game {game_num}  —  "
-            f"{'✅ Model correct' if model_correct else '❌ Model missed'}  —  "
+            f"Game {game_num}  —  {accuracy_label}  —  "
             f"{team_a} {score_a}, {team_b} {score_b}"
         )
         with st.expander(expander_label, expanded=True):
@@ -1468,14 +1496,17 @@ def render_game_findings(bundle: dict[str, Any]) -> None:
             # Model vs actual summary
             c1, c2, c3 = st.columns(3)
             with c1:
-                fav = team_a if pred_prob_a >= 0.5 else team_b
-                fav_conf = _pct(max(pred_prob_a, 1 - pred_prob_a))
-                st.markdown("**Model predicted**")
-                st.markdown(f"Winner: **{fav}** ({fav_conf})")
-                st.markdown(f"Score: {pred_score_a} – {pred_score_b}")
-                pred_pace = pred.get("projected_pace")
-                if pred_pace:
-                    st.caption(f"Projected pace: {float(pred_pace):.1f}")
+                st.markdown("**Pre-game model prediction**" if has_snapshot else "**Pre-game prediction**")
+                if has_snapshot:
+                    fav = team_a if pred_prob_a >= 0.5 else team_b
+                    fav_conf = _pct(max(pred_prob_a, 1 - pred_prob_a))
+                    st.markdown(f"Winner: **{fav}** ({fav_conf})")
+                    st.markdown(f"Score: {pred_score_a} – {pred_score_b}")
+                    pred_pace = pred_source.get("projected_pace")
+                    if pred_pace:
+                        st.caption(f"Projected pace: {float(pred_pace):.1f}")
+                else:
+                    st.caption("No pre-game snapshot was saved for this game.")
             with c2:
                 margin = abs(score_a - score_b)
                 st.markdown("**Actual result**")
@@ -1486,16 +1517,19 @@ def render_game_findings(bundle: dict[str, Any]) -> None:
                     st.caption(f"Actual pace: {actual_pace:.1f}")
             with c3:
                 st.markdown("**Accuracy**")
-                if model_correct:
-                    st.success("✅ Correct pick")
+                if has_snapshot:
+                    if model_correct:
+                        st.success("✅ Correct pick")
+                    else:
+                        st.error("❌ Wrong pick")
+                    err_a = score_a - pred_score_a
+                    err_b = score_b - pred_score_b
+                    st.caption(
+                        f"{team_a} score error: {'+' if err_a >= 0 else ''}{err_a}  \n"
+                        f"{team_b} score error: {'+' if err_b >= 0 else ''}{err_b}"
+                    )
                 else:
-                    st.error("❌ Wrong pick")
-                err_a = score_a - pred_score_a
-                err_b = score_b - pred_score_b
-                st.caption(
-                    f"{team_a} score error: {'+' if err_a >= 0 else ''}{err_a}  \n"
-                    f"{team_b} score error: {'+' if err_b >= 0 else ''}{err_b}"
-                )
+                    st.info("Snapshot needed for accuracy tracking. Future games are saved automatically.")
 
             st.markdown("---")
 
