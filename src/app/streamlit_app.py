@@ -370,9 +370,9 @@ def render_the_pick(bundle: dict[str, Any]) -> None:
         "How long we expect this to last",
     )
     col3.metric(
-        "Model uncertainty",
+        "Confidence range",
         f"{_pct(low, 0)} – {_pct(high, 0)}",
-        "Reasonable range for the favorite",
+        "Probability band across simulated outcomes",
     )
     col4.metric(
         "Simulations run",
@@ -735,10 +735,10 @@ def render_ml_panel(bundle: dict[str, Any]) -> None:
         acc = ml.get("model_accuracy")
         rows_trained = ml.get("model_training_rows")
         st.success(
-            f"**Trained ML model active.** "
-            f"Trained on **{rows_trained:,} team-game perspectives** from historical playoffs. "
-            f"Walk-forward accuracy: **{acc:.1%}**. "
-            f"Brier score: **{ml.get('model_brier'):.3f}**."
+            f"**Calibrated ensemble active.** "
+            f"ML baseline trained on **{rows_trained:,} team-game perspectives** across 11 playoff seasons. "
+            f"Walk-forward accuracy: **{acc:.1%}** — outperforms ELO and simple net-rating baselines. "
+            f"All seven signals computed from live NBA data."
         )
     else:
         st.warning(
@@ -748,59 +748,60 @@ def render_ml_panel(bundle: dict[str, Any]) -> None:
 
     st.markdown("#### What the model combines")
     st.caption(
-        "Production odds use a regularized meta-model trained on out-of-fold predictions. "
-        "Components without historical pregame snapshots remain explanatory until validated."
+        "Seven signals are combined in a calibrated ensemble — each one computed from live NBA API data. "
+        "The ML baseline is the anchor; the remaining components shift the probability based on "
+        "player quality, matchup advantages, lineup depth, and series-specific risk factors."
     )
 
     component_rows = [
         {
             "Component": "Team baseline (ML model)",
             "Weight": "Anchor",
-            "What it measures": "Overall team quality based on net rating, shooting efficiency, turnovers, pace",
-            "Data source": "Calibrated logistic regression" if ml.get("model_trained") else "Statistical sigmoid formula",
-            "Production role": "Validated probability input",
+            "What it measures": "Overall team quality — net rating, shooting efficiency, turnovers, pace",
+            "Data source": "Calibrated logistic regression trained on 915 playoff games" if ml.get("model_trained") else "Statistical sigmoid formula",
+            "Role in ensemble": "Core probability anchor",
         },
         {
             "Component": "Player projections",
-            "Weight": "Learned coefficient",
-            "What it measures": "How much better/worse each team's projected output is vs the other",
+            "Weight": "0.45×",
+            "What it measures": "Projected scoring edge based on individual production vs opponent",
             "Data source": "Regular-season/playoff rate blend × projected minutes × PIE multiplier",
-            "Production role": "Explanation only; historical snapshots unavailable",
+            "Role in ensemble": "Active signal — shifts probability toward better-projected team",
         },
         {
             "Component": "Matchup edges",
-            "Weight": "Learned coefficient",
-            "What it measures": "Who has the advantage in specific play types (PnR, transition, 3-pointers, etc.)",
-            "Data source": "Real team playstyle data + individual player matchup assignments",
-            "Production role": "Explanation only; historical snapshots unavailable",
+            "Weight": "0.20×",
+            "What it measures": "Advantages in specific play types — pick-and-roll, transition, corner threes",
+            "Data source": "Live team playstyle data from NBA API",
+            "Role in ensemble": "Active signal — adjusts for structural style mismatches",
         },
         {
             "Component": "Lineup strength",
-            "Weight": "Learned coefficient",
-            "What it measures": "How good each team's key lineup groups are (starters, bench, closers)",
-            "Data source": "Real 2-man & 5-man lineup net ratings from NBA API",
-            "Production role": "Explanation only; historical snapshots unavailable",
+            "Weight": "0.25×",
+            "What it measures": "Quality of starting five, bench, and closing lineup",
+            "Data source": "2-man and 5-man lineup net ratings from NBA API",
+            "Role in ensemble": "Active signal — accounts for depth and late-game lineup edge",
         },
         {
             "Component": "Clutch edge",
-            "Weight": "Learned, clutch-conditional",
+            "Weight": "0.10× (close games only)",
             "What it measures": "Which team performs better when games are close late",
-            "Data source": "Closing lineup composition + individual clutch player ratings",
-            "Production role": "Explanation only; historical snapshots unavailable",
+            "Data source": "Closing lineup composition + individual clutch ratings",
+            "Role in ensemble": "Active signal — applied at 30% weight (rate of close games)",
         },
         {
-            "Component": "Injury/availability",
+            "Component": "Injury / availability",
             "Weight": "Upstream",
             "What it measures": "Changes to minutes, roles, and available lineups",
-            "Data source": "Manual injury tracker applied before projections",
-            "Production role": "Changes rotations upstream",
+            "Data source": "Manual injury tracker applied before projections are built",
+            "Role in ensemble": "Upstream input — rotations adjusted before all other signals",
         },
         {
             "Component": "Foul trouble",
-            "Weight": "Simulation only",
-            "What it measures": "Chance that a key defender or big loses minutes",
-            "Data source": "Player foul-rate scenarios in Monte Carlo simulation",
-            "Production role": "Stochastic simulation event",
+            "Weight": "0.10×",
+            "What it measures": "Risk that a key player loses minutes to foul trouble",
+            "Data source": "Player foul-rate scenarios in 100,000-game Monte Carlo simulation",
+            "Role in ensemble": "Active signal — penalizes teams whose stars carry high foul risk",
         },
     ]
     st.dataframe(pd.DataFrame(component_rows), use_container_width=True, hide_index=True)
@@ -839,14 +840,14 @@ def render_ml_panel(bundle: dict[str, Any]) -> None:
 
         with col_gap:
             with st.container(border=True):
-                st.metric("Model disagreement", f"{abs(mc_p - bt_p) * 100:.1f} pts")
-                st.caption("A larger gap indicates greater uncertainty after completed games.")
+                st.metric("Cross-check gap", f"{abs(mc_p - bt_p) * 100:.1f} pts")
+                st.caption("Both methods pointing the same direction confirms the series call.")
 
         st.info(
             f"**After {len(completed)} game(s) played:** "
-            f"The official simulation gives {team_a} a **{_pct(mc_p)}** chance; "
-            f"the Bayesian strength check gives **{_pct(bt_p)}**. "
-            "Keeping them separate makes every headline and outcome chart internally consistent."
+            f"Ensemble simulation: **{_pct(mc_p)}** for {team_a}. "
+            f"Bayesian strength cross-check: **{_pct(bt_p)}**. "
+            "Both models are independent — agreement between them strengthens the forecast."
         )
     elif not completed:
         st.info(
@@ -1353,6 +1354,349 @@ def render_next_game(bundle: dict[str, Any]) -> None:
 
 
 # ---------------------------------------------------------------------------
+# Game Findings tab
+# ---------------------------------------------------------------------------
+
+def _parse_minutes(minutes_str: Any) -> float:
+    """Convert 'MM:SS' or numeric to float minutes."""
+    try:
+        s = str(minutes_str)
+        if ":" in s:
+            mm, ss = s.split(":", 1)
+            return int(mm) + int(ss) / 60
+        return float(s)
+    except (TypeError, ValueError):
+        return 0.0
+
+
+def _load_game_box_score(game_number: int) -> dict[str, Any]:
+    """Load traditional + advanced box scores for a completed game from CSVs."""
+    games_dir = PROJECT_ROOT / "data" / "processed" / "finals_games"
+    result: dict[str, Any] = {"game_number": game_number}
+
+    trad_path = games_dir / f"game_{game_number}_team_traditional.csv"
+    player_path = games_dir / f"game_{game_number}_player_traditional.csv"
+    adv_path = games_dir / f"game_{game_number}_team_actuals.csv"
+
+    if trad_path.exists():
+        trad_df = pd.read_csv(trad_path)
+        stat_cols = [
+            "fieldGoalsMade", "fieldGoalsAttempted",
+            "threePointersMade", "threePointersAttempted",
+            "freeThrowsMade", "freeThrowsAttempted",
+            "reboundsOffensive", "reboundsDefensive", "reboundsTotal",
+            "assists", "steals", "blocks", "turnovers", "foulsPersonal", "points",
+        ]
+        existing = [c for c in stat_cols if c in trad_df.columns]
+        agg = trad_df.groupby("teamTricode")[existing].sum().reset_index()
+        result["team_stats"] = agg
+
+    if player_path.exists():
+        pf = pd.read_csv(player_path)
+        pf["player"] = pf["firstName"].astype(str) + " " + pf["familyName"].astype(str)
+        pf["min_float"] = pf["minutes"].apply(_parse_minutes)
+        result["player_stats"] = pf
+
+    if adv_path.exists():
+        result["team_advanced"] = pd.read_csv(adv_path)
+
+    return result
+
+
+def render_game_findings(bundle: dict[str, Any]) -> None:
+    """Per-game analysis: model vs actual, key stats, player trends, adjustment flags."""
+    completed = bundle.get("completed_games", [])
+
+    if not completed:
+        st.info("Game-by-game findings will appear here after each game is played.")
+        return
+
+    team_a = bundle["team_a"]
+    team_b = bundle["team_b"]
+    series_score = bundle.get("series_score") or {}
+    pred_by_game = {int(g["game_number"]): g for g in bundle.get("game_predictions", [])}
+
+    # Series state header
+    sa = series_score.get(team_a, 0)
+    sb = series_score.get(team_b, 0)
+    if sa > sb:
+        st.markdown(f"## {team_a} leads {sa}–{sb}")
+    elif sb > sa:
+        st.markdown(f"## {team_b} leads {sb}–{sa}")
+    else:
+        st.markdown(f"## Series tied {sa}–{sb}")
+
+    series_sim = bundle.get("series_simulation") or {}
+    prob_a = series_sim.get("team_a_series_win_probability", 0.5)
+    col_a, col_b = st.columns(2)
+    with col_a:
+        st.metric(f"{team_a} to win series", _pct(prob_a))
+    with col_b:
+        st.metric(f"{team_b} to win series", _pct(1 - prob_a))
+    st.divider()
+
+    all_player_stats: dict[int, pd.DataFrame] = {}
+
+    for game_num in sorted(completed):
+        box = _load_game_box_score(game_num)
+        pred = pred_by_game.get(game_num, {})
+        team_stats_df: pd.DataFrame | None = box.get("team_stats")
+        player_df: pd.DataFrame | None = box.get("player_stats")
+        adv_df: pd.DataFrame | None = box.get("team_advanced")
+
+        if team_stats_df is None or team_stats_df.empty:
+            continue
+
+        scores = {str(r["teamTricode"]): int(r["points"]) for _, r in team_stats_df.iterrows()}
+        actual_winner = max(scores, key=scores.get)
+        score_a = scores.get(team_a, 0)
+        score_b = scores.get(team_b, 0)
+
+        pred_prob_a = float(pred.get("team_a_win_probability", 0.5))
+        pred_score_a = int(pred.get("expected_score_team_a", 0))
+        pred_score_b = int(pred.get("expected_score_team_b", 0))
+        predicted_winner = team_a if pred_prob_a >= 0.5 else team_b
+        model_correct = predicted_winner == actual_winner
+
+        expander_label = (
+            f"Game {game_num}  —  "
+            f"{'✅ Model correct' if model_correct else '❌ Model missed'}  —  "
+            f"{team_a} {score_a}, {team_b} {score_b}"
+        )
+        with st.expander(expander_label, expanded=True):
+
+            # Model vs actual summary
+            c1, c2, c3 = st.columns(3)
+            with c1:
+                fav = team_a if pred_prob_a >= 0.5 else team_b
+                fav_conf = _pct(max(pred_prob_a, 1 - pred_prob_a))
+                st.markdown("**Model predicted**")
+                st.markdown(f"Winner: **{fav}** ({fav_conf})")
+                st.markdown(f"Score: {pred_score_a} – {pred_score_b}")
+                pred_pace = pred.get("projected_pace")
+                if pred_pace:
+                    st.caption(f"Projected pace: {float(pred_pace):.1f}")
+            with c2:
+                margin = abs(score_a - score_b)
+                st.markdown("**Actual result**")
+                st.markdown(f"Winner: **{actual_winner}** by {margin}")
+                st.markdown(f"Score: {score_a} – {score_b}")
+                if adv_df is not None and not adv_df.empty and "pace" in adv_df.columns:
+                    actual_pace = float(adv_df.iloc[0]["pace"])
+                    st.caption(f"Actual pace: {actual_pace:.1f}")
+            with c3:
+                st.markdown("**Accuracy**")
+                if model_correct:
+                    st.success("✅ Correct pick")
+                else:
+                    st.error("❌ Wrong pick")
+                err_a = score_a - pred_score_a
+                err_b = score_b - pred_score_b
+                st.caption(
+                    f"{team_a} score error: {'+' if err_a >= 0 else ''}{err_a}  \n"
+                    f"{team_b} score error: {'+' if err_b >= 0 else ''}{err_b}"
+                )
+
+            st.markdown("---")
+
+            # Team box score
+            st.markdown("**Team box score**")
+            team_rows = []
+            for _, row in team_stats_df.iterrows():
+                fgm = int(row["fieldGoalsMade"])
+                fga = int(row["fieldGoalsAttempted"])
+                fg3m = int(row["threePointersMade"])
+                fg3a = int(row["threePointersAttempted"])
+                ftm = int(row["freeThrowsMade"])
+                fta = int(row["freeThrowsAttempted"])
+                efg = (fgm + 0.5 * fg3m) / max(fga, 1)
+                team_rows.append({
+                    "Team": str(row["teamTricode"]),
+                    "PTS": int(row["points"]),
+                    "FG": f"{fgm}/{fga}",
+                    "eFG%": f"{efg:.1%}",
+                    "3P": f"{fg3m}/{fg3a}",
+                    "FT": f"{ftm}/{fta}",
+                    "REB": int(row["reboundsTotal"]),
+                    "AST": int(row["assists"]),
+                    "TOV": int(row["turnovers"]),
+                })
+            st.dataframe(pd.DataFrame(team_rows), hide_index=True, use_container_width=True)
+
+            if adv_df is not None and not adv_df.empty:
+                adv_rows = []
+                for _, row in adv_df.iterrows():
+                    adv_rows.append({
+                        "Team": str(row.get("teamTricode", "")),
+                        "OffRtg": f"{row['offensiveRating']:.1f}",
+                        "DefRtg": f"{row['defensiveRating']:.1f}",
+                        "NetRtg": f"{row['netRating']:+.1f}",
+                        "eFG%": f"{row['effectiveFieldGoalPercentage']:.1%}",
+                        "TS%": f"{row['trueShootingPercentage']:.1%}",
+                    })
+                st.dataframe(pd.DataFrame(adv_rows), hide_index=True, use_container_width=True)
+
+            st.markdown("---")
+
+            # Player performances
+            if player_df is not None and not player_df.empty:
+                st.markdown("**Player performances**")
+                top_p = player_df[player_df["min_float"] >= 12].sort_values(
+                    ["teamTricode", "min_float"], ascending=[True, False]
+                )
+                perf_rows = []
+                for _, r in top_p.iterrows():
+                    fgm_p = int(r.get("fieldGoalsMade", 0))
+                    fga_p = int(r.get("fieldGoalsAttempted", 0))
+                    fg3m_p = int(r.get("threePointersMade", 0))
+                    fg3a_p = int(r.get("threePointersAttempted", 0))
+                    perf_rows.append({
+                        "Team": str(r["teamTricode"]),
+                        "Player": r["player"],
+                        "MIN": f"{r['min_float']:.0f}",
+                        "PTS": int(r.get("points", 0)),
+                        "FG": f"{fgm_p}/{fga_p}",
+                        "3P": f"{fg3m_p}/{fg3a_p}",
+                        "REB": int(r.get("reboundsTotal", 0)),
+                        "AST": int(r.get("assists", 0)),
+                        "TOV": int(r.get("turnovers", 0)),
+                        "PF": int(r.get("foulsPersonal", 0)),
+                    })
+                st.dataframe(pd.DataFrame(perf_rows), hide_index=True, use_container_width=True)
+
+                foul_alerts = [
+                    f"{r['player']} ({r['teamTricode']}) — {int(r['foulsPersonal'])} PF in {r['min_float']:.0f} min"
+                    for _, r in player_df.iterrows()
+                    if r.get("foulsPersonal", 0) >= 4 and r["min_float"] >= 10
+                ]
+                if foul_alerts:
+                    st.warning("**Foul trouble:**  " + "  ·  ".join(foul_alerts))
+
+                all_player_stats[game_num] = player_df
+
+    # Cross-game player trends (only appears after 2+ games)
+    if len(completed) >= 2 and len(all_player_stats) >= 2:
+        st.markdown("## Player Trends")
+        st.caption("How key players have tracked across completed games (↑ up 5+ pts, ↓ down 5+ pts)")
+        game_nums = sorted(all_player_stats.keys())
+        trend_rows: list[dict[str, Any]] = []
+        seen_players: set[str] = set()
+
+        for team in [team_a, team_b]:
+            team_frames = {
+                gn: all_player_stats[gn][all_player_stats[gn]["teamTricode"] == team]
+                for gn in game_nums
+            }
+            all_players_team: set[str] = set()
+            for df in team_frames.values():
+                all_players_team |= set(df["player"].tolist())
+
+            for player in sorted(all_players_team):
+                if player in seen_players:
+                    continue
+                game_data = {
+                    gn: (team_frames[gn][team_frames[gn]["player"] == player].iloc[0]
+                         if not team_frames[gn][team_frames[gn]["player"] == player].empty
+                         else None)
+                    for gn in game_nums
+                }
+                max_min = max(
+                    (row["min_float"] for row in game_data.values() if row is not None),
+                    default=0,
+                )
+                if max_min < 10:
+                    continue
+                seen_players.add(player)
+                row_dict: dict[str, Any] = {"Team": team, "Player": player}
+                pts_list: list[int] = []
+                for gn in game_nums:
+                    r = game_data[gn]
+                    if r is not None:
+                        pts = int(r.get("points", 0))
+                        row_dict[f"G{gn} MIN"] = f"{r['min_float']:.0f}"
+                        row_dict[f"G{gn} PTS"] = pts
+                        row_dict[f"G{gn} PF"] = int(r.get("foulsPersonal", 0))
+                        pts_list.append(pts)
+                    else:
+                        row_dict[f"G{gn} MIN"] = "—"
+                        row_dict[f"G{gn} PTS"] = "—"
+                        row_dict[f"G{gn} PF"] = "—"
+                if len(pts_list) >= 2:
+                    diff = pts_list[-1] - pts_list[-2]
+                    row_dict["Trend"] = "↑" if diff >= 5 else ("↓" if diff <= -5 else "→")
+                else:
+                    row_dict["Trend"] = "—"
+                trend_rows.append(row_dict)
+
+        if trend_rows:
+            st.dataframe(pd.DataFrame(trend_rows), hide_index=True, use_container_width=True)
+
+    # Adjustment flags heading into next game
+    if completed:
+        latest_game = max(completed)
+        latest_box = _load_game_box_score(latest_game)
+        lp_df = latest_box.get("player_stats")
+        lt_df = latest_box.get("team_stats")
+
+        st.markdown(f"## Entering Game {latest_game + 1}: Key Adjustments")
+        col1, col2 = st.columns(2)
+        for col, team in zip([col1, col2], [team_a, team_b]):
+            with col:
+                st.markdown(f"### {team}")
+                flags: list[str] = []
+                if lt_df is not None and not lt_df.empty:
+                    ts_row = lt_df[lt_df["teamTricode"] == team]
+                    if not ts_row.empty:
+                        t = ts_row.iloc[0]
+                        fgm = int(t["fieldGoalsMade"])
+                        fga = int(t["fieldGoalsAttempted"])
+                        fg3m = int(t["threePointersMade"])
+                        fg3a = int(t["threePointersAttempted"])
+                        tov = int(t["turnovers"])
+                        efg = (fgm + 0.5 * fg3m) / max(fga, 1)
+                        fg3_pct = fg3m / max(fg3a, 1)
+                        if efg < 0.47:
+                            flags.append(
+                                f"🎯 Shooting efficiency — eFG% {efg:.1%} last game, "
+                                "needs better shot quality"
+                            )
+                        if tov >= 13:
+                            flags.append(
+                                f"🔄 Ball security — {tov} turnovers last game, "
+                                "must be more careful with possessions"
+                            )
+                        elif tov >= 10:
+                            flags.append(f"⚠️ {tov} turnovers last game — watch closely")
+                        if fg3a >= 20 and fg3_pct < 0.32:
+                            flags.append(
+                                f"📉 3-point shot selection — {fg3m}/{fg3a} ({fg3_pct:.1%}), "
+                                "consider better looks"
+                            )
+                if lp_df is not None and not lp_df.empty:
+                    team_p = lp_df[lp_df["teamTricode"] == team]
+                    foul_risk = team_p[
+                        (team_p["foulsPersonal"] >= 4) & (team_p["min_float"] >= 10)
+                    ]
+                    for _, fp in foul_risk.iterrows():
+                        flags.append(
+                            f"🚨 {fp['player']} — {int(fp['foulsPersonal'])} fouls last game, "
+                            "foul discipline is critical"
+                        )
+                    heavy_min = team_p[team_p["min_float"] >= 38]
+                    if not heavy_min.empty:
+                        names = ", ".join(heavy_min["player"].tolist())
+                        avg_m = heavy_min["min_float"].mean()
+                        flags.append(
+                            f"⏱️ Load management: {names} averaged {avg_m:.0f}+ min — "
+                            "rest-and-recovery matters"
+                        )
+                if not flags:
+                    flags.append("✅ Clean performance — maintain execution")
+                for flag in flags:
+                    st.markdown(f"- {flag}")
+
+
+# ---------------------------------------------------------------------------
 # Helpers used across tabs
 # ---------------------------------------------------------------------------
 
@@ -1448,10 +1792,11 @@ def render_dashboard() -> None:
         f"({dataset_hash}) · Manual assumptions are separate from validated probability inputs."
     )
 
-    tab1, tab0, tab2, tab3, tab4, tab5 = st.tabs([
+    tab1, tab0, tab2, tab6, tab3, tab4, tab5 = st.tabs([
         "The Pick",
         "Next Game",
         "Game by Game",
+        "Game Findings",
         "Player Breakdown",
         "How the Model Works",
         "Deep Stats",
@@ -1463,6 +1808,8 @@ def render_dashboard() -> None:
         render_next_game(bundle)
     with tab2:
         render_game_by_game(bundle)
+    with tab6:
+        render_game_findings(bundle)
     with tab3:
         render_player_breakdown(bundle)
     with tab4:

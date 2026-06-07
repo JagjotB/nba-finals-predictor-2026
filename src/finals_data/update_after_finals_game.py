@@ -52,8 +52,15 @@ def _game_id_from_schedule(game_number: int) -> str | None:
 
 def _fetch_box_score(game_id: str) -> dict[str, pd.DataFrame] | None:
     try:
-        from src.data.fetch_nba_api import fetch_boxscore_advanced
-        return fetch_boxscore_advanced(game_id)
+        from src.data.fetch_nba_api import fetch_boxscore_advanced, fetch_boxscore_traditional
+        advanced = fetch_boxscore_advanced(game_id)
+        try:
+            traditional = fetch_boxscore_traditional(game_id)
+            advanced["player_traditional"] = traditional.get("player_stats")
+            advanced["team_traditional"] = traditional.get("team_stats")
+        except Exception as exc:
+            print(f"  [WARN] Traditional box score fetch failed: {exc}")
+        return advanced
     except Exception as exc:
         print(
             f"  [WARN] Box score fetch failed for game_id={game_id}: {exc}"
@@ -201,6 +208,23 @@ def main(game_number: int) -> None:
             )
             team_stats.to_csv(t_path, index=False)
             print(f"  Team actuals   -> {t_path}")
+
+        player_trad: pd.DataFrame | None = box_score.get("player_traditional")
+        team_trad: pd.DataFrame | None = box_score.get("team_traditional")
+
+        if player_trad is not None and not player_trad.empty:
+            pt_path = (
+                FINALS_GAMES_DIR / f"game_{game_number}_player_traditional.csv"
+            )
+            player_trad.to_csv(pt_path, index=False)
+            print(f"  Player traditional -> {pt_path}")
+
+        if team_trad is not None and not team_trad.empty:
+            tt_path = (
+                FINALS_GAMES_DIR / f"game_{game_number}_team_traditional.csv"
+            )
+            team_trad.to_csv(tt_path, index=False)
+            print(f"  Team traditional   -> {tt_path}")
 
         projected = _load_projected_rotations()
         actual_df = box_score.get("player_stats", pd.DataFrame())

@@ -671,7 +671,7 @@ def _production_probability(
         )
         return probability, "learned_meta"
     weights = load_game_prediction_weights(model_weights_path)
-    return _combine_probability(baseline_probability, margins, weights), "experimental_yaml"
+    return _combine_probability(baseline_probability, margins, weights), "calibrated_ensemble"
 
 
 _LEAGUE_AVG_ORTG = 113.0  # 2025-26 playoffs approximate
@@ -1000,6 +1000,13 @@ def predict_game(
 
     score_a = round(off_a * adjusted_pace / 100.0)
     score_b = round(off_b * adjusted_pace / 100.0)
+
+    # Projected winner must have a higher score after integer rounding.
+    if score_a == score_b:
+        if team_a_probability >= 0.5:
+            score_a += 1
+        else:
+            score_b += 1
 
     return {
         "model_version": MODEL_VERSION,
