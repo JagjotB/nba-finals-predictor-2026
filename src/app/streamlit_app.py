@@ -391,12 +391,17 @@ def render_the_pick(bundle: dict[str, Any]) -> None:
         + ", ".join(f"**{r}**" for r in fav_reasons) + "."
     )
 
-    # X-factor
-    x_factors = []
-    for game in bundle["game_predictions"]:
-        x_factors.extend(game.get("x_factors", []))
-    if x_factors:
-        st.info(f"**Biggest wildcard:** {x_factors[0]}")
+    # X-factor — use series data when games have been played
+    if completed:
+        series_xf = _series_xfactors_from_data(bundle)
+        if series_xf:
+            st.info(f"**Biggest wildcard:** {series_xf[0]}")
+    else:
+        x_factors = []
+        for game in bundle["game_predictions"]:
+            x_factors.extend(game.get("x_factors", []))
+        if x_factors:
+            st.info(f"**Biggest wildcard:** {x_factors[0]}")
 
     # What the underdog needs
     flip = _opponent_flip_paths(bundle, underdog)
@@ -1369,6 +1374,98 @@ def _parse_minutes(minutes_str: Any) -> float:
         return 0.0
 
 
+def _series_xfactors_from_data(bundle: dict[str, Any]) -> list[str]:
+    """Derive X-factors from actual game box scores — replaces pre-series structural flags."""
+    completed = bundle.get("completed_games", [])
+    if not completed:
+        return []
+
+    games_dir = PROJECT_ROOT / "data" / "processed" / "finals_games"
+    player_series: dict[str, dict[str, Any]] = {}
+
+    for gn in sorted(completed):
+        path = games_dir / f"game_{gn}_player_traditional.csv"
+        if not path.exists():
+            continue
+        df = pd.read_csv(path)
+        df["player"] = df["firstName"].astype(str) + " " + df["familyName"].astype(str)
+        df["min_float"] = df["minutes"].apply(_parse_minutes)
+
+        for _, r in df.iterrows():
+            p = r["player"]
+            if p not in player_series:
+                player_series[p] = {
+                    "team": str(r["teamTricode"]),
+                    "games": 0,
+                    "total_min": 0.0,
+                    "total_pts": 0,
+                    "total_to": 0,
+                    "total_fouls": 0,
+                    "total_fgm": 0,
+                    "total_fga": 0,
+                    "pts_by_game": [],
+                    "min_by_game": [],
+                }
+            d = player_series[p]
+            d["games"] += 1
+            d["total_min"] += r["min_float"]
+            d["total_pts"] += int(r.get("points", 0))
+            d["total_to"] += int(r.get("turnovers", 0))
+            d["total_fouls"] += int(r.get("foulsPersonal", 0))
+            d["total_fgm"] += int(r.get("fieldGoalsMade", 0))
+            d["total_fga"] += int(r.get("fieldGoalsAttempted", 0))
+            d["pts_by_game"].append(int(r.get("points", 0)))
+            d["min_by_game"].append(r["min_float"])
+
+    candidates: list[tuple[float, str, str]] = []
+
+    for player, d in player_series.items():
+        g = d["games"]
+        avg_min = d["total_min"] / g
+        avg_pts = d["total_pts"] / g
+        avg_to = d["total_to"] / g
+        avg_fouls = d["total_fouls"] / g
+        fg_pct = d["total_fgm"] / max(d["total_fga"], 1)
+        team = d["team"]
+
+        # High-minute star with dangerous turnover rate
+        if avg_min >= 28 and avg_to >= 3.0:
+            score = avg_to * avg_min / 10
+            candidates.append((score, player, f"{player} ({team}) — {avg_to:.1f} TOs/game on {avg_min:.0f} min, gifting possessions at a critical rate"))
+
+        # Foul trouble depleting a key rotation piece
+        if avg_min >= 15 and avg_fouls >= 3.8:
+            score = avg_fouls * avg_min / 12
+            candidates.append((score, player, f"{player} ({team}) — {d['total_fouls']} fouls in {g} game(s), averaging {avg_fouls:.1f}/game and running out of margin"))
+
+        # Star shooting poorly on heavy volume
+        if avg_min >= 28 and d["total_fga"] >= 18 and fg_pct < 0.40:
+            score = d["total_fga"] * max(0.42 - fg_pct, 0)
+            candidates.append((score, player, f"{player} ({team}) — {fg_pct:.1%} FG on {d['total_fga']/g:.0f} attempts/game; efficiency is the ceiling on this team"))
+
+        # Role player expected to contribute but going quiet
+        if avg_min >= 22 and avg_pts < 7 and d["total_fga"] >= 5:
+            score = (8 - avg_pts) * avg_min / 18
+            candidates.append((score, player, f"{player} ({team}) — averaging {avg_pts:.0f} pts in {avg_min:.0f} min, {team} needs more from this role"))
+
+        # Emerging co-star (big scoring jump)
+        if g >= 2 and (d["pts_by_game"][-1] - d["pts_by_game"][0]) >= 9 and d["min_by_game"][-1] >= 22:
+            jump = d["pts_by_game"][-1] - d["pts_by_game"][0]
+            score = jump * 0.85
+            candidates.append((score, player, f"{player} ({team}) — stepped up from {d['pts_by_game'][0]} pts G1 to {d['pts_by_game'][-1]} pts G{g}, becoming a genuine third option"))
+
+    candidates.sort(key=lambda x: x[0], reverse=True)
+    seen: set[str] = set()
+    results: list[str] = []
+    for _, player, text in candidates:
+        if player not in seen:
+            seen.add(player)
+            results.append(text)
+        if len(results) >= 5:
+            break
+    return results
+
+
 def _load_pregame_snapshot(game_number: int) -> dict[str, Any] | None:
     """Return the pre-game prediction dict for game_number from the newest matching snapshot."""
     import json
@@ -1664,6 +1761,18 @@ def render_game_findings(bundle: dict[str, Any]) -> None:
 
         if trend_rows:
             st.dataframe(pd.DataFrame(trend_rows), hide_index=True, use_container_width=True)
+
+    # Series X-factors from actual game data
+    if all_player_stats:
+        st.markdown("## Series X-Factors")
+        st.caption("Derived from actual box score data across all completed games.")
+        xfactors = _series_xfactors_from_data(bundle)
+        if xfactors:
+            for xf in xfactors:
+                st.markdown(f"- {xf}")
+        else:
+            st.info("X-factors will populate as game data is imported.")
+        st.divider()
 
     # Adjustment flags heading into next game
     if completed:
