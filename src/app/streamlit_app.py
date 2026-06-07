@@ -443,7 +443,7 @@ def render_the_pick(bundle: dict[str, Any]) -> None:
 # TAB 2 -Game by Game
 # ---------------------------------------------------------------------------
 
-def _render_game_reasoning(game: dict[str, Any], team_a: str, team_b: str) -> None:
+def _render_game_reasoning(game: dict[str, Any], team_a: str, team_b: str, series_xf: list[str] | None = None) -> None:
     """Plain-English breakdown of what's driving the model's prediction for one game."""
     prob_a = _as_float(game.get("team_a_win_probability"), 0.5)
     baseline = _as_float(game.get("baseline_probability_team_a"), prob_a)
@@ -498,10 +498,10 @@ def _render_game_reasoning(game: dict[str, Any], team_a: str, team_b: str) -> No
         st.caption("No component has a meaningful edge - this game is driven almost entirely by team quality and home court.")
 
     # ── Row 4: x-factors ─────────────────────────────────────────────────────
-    x_factors = game.get("x_factors") or []
-    if x_factors:
+    display_xf = series_xf if series_xf else (game.get("x_factors") or [])
+    if display_xf:
         st.markdown("**Wildcards to watch:**")
-        for xf in x_factors[:3]:
+        for xf in display_xf[:3]:
             st.caption(f"• {xf}")
 
 
@@ -560,7 +560,7 @@ def render_game_by_game(bundle: dict[str, Any]) -> None:
                 )
             if not is_done:
                 with st.expander("Why does the model say this?"):
-                    _render_game_reasoning(game, team_a, team_b)
+                    _render_game_reasoning(game, team_a, team_b, series_xf=_series_xfactors_from_data(bundle))
 
     st.markdown("---")
 
@@ -1299,10 +1299,12 @@ def render_next_game(bundle: dict[str, Any]) -> None:
 
     # --- X-factors ---
     st.markdown("### Biggest X-Factors for This Game")
-    st.caption("Variables that could swing the outcome by 5+ percentage points.")
+    st.caption("Derived from actual game data — variables with the most series impact so far.")
 
-    if x_factors:
-        for i, xf in enumerate(x_factors[:4], 1):
+    completed = bundle.get("completed_games", [])
+    display_xf = _series_xfactors_from_data(bundle) if completed else x_factors
+    if display_xf:
+        for i, xf in enumerate(display_xf[:4], 1):
             st.markdown(f"**{i}.** {xf}")
     else:
         st.caption("No significant X-factors flagged beyond normal game variance.")
