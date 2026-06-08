@@ -66,121 +66,145 @@
         "team": "NYK",
         "player": "Jalen Brunson",
         "role": "Starter",
-        "projected_minutes": 36.5,
-        "minutes_floor": 31.5,
-        "minutes_ceiling": 41.5,
+        "projected_minutes": 37.5,
+        "minutes_floor": 32.5,
+        "minutes_ceiling": 42.0,
         "is_starter": true,
         "is_closer": true,
         "rotation_confidence": "high",
-        "notes": "G1 actual: 37.1. On track with projections."
+        "notes": "G1: 37.1. G2: 37.7. Locked into heavy minutes. 33.9% FG across both games but making every clutch play \u2014 game-winning FTs in G2. Efficiency is the only question."
       },
       {
         "team": "NYK",
         "player": "OG Anunoby",
         "role": "Starter",
-        "projected_minutes": 32.5,
-        "minutes_floor": 27.5,
-        "minutes_ceiling": 37.5,
+        "projected_minutes": 34.8,
+        "minutes_floor": 29.0,
+        "minutes_ceiling": 39.5,
         "is_starter": true,
         "is_closer": true,
         "rotation_confidence": "high",
-        "notes": "G1 actual: 31.1. Slightly less than projected."
+        "notes": "G1: 31.1. G2: 36.8. Minutes trending up. 4 fouls in G2 but no games limited by them yet. Key two-way wing at MSG."
       },
       {
         "team": "NYK",
         "player": "Josh Hart",
         "role": "Starter",
-        "projected_minutes": 31.0,
-        "minutes_floor": 26.0,
-        "minutes_ceiling": 36.0,
+        "projected_minutes": 21.2,
+        "minutes_floor": 13.0,
+        "minutes_ceiling": 28.0,
         "is_starter": true,
         "is_closer": true,
-        "rotation_confidence": "high",
-        "notes": "G1 actual: 26.8. Possible foul trouble; adjusted down."
+        "rotation_confidence": "low",
+        "notes": "G1: 26.8 (4 fouls). G2: 18.2 (5 fouls). Foul trouble is a serious pattern \u2014 9 fouls in 2 games. Minutes and confidence floor dropped significantly. SAS targeting him at the rim."
       },
       {
         "team": "NYK",
         "player": "Mikal Bridges",
         "role": "Starter",
-        "projected_minutes": 30.5,
-        "minutes_floor": 25.5,
-        "minutes_ceiling": 35.5,
+        "projected_minutes": 36.5,
+        "minutes_floor": 31.0,
+        "minutes_ceiling": 42.0,
         "is_starter": true,
         "is_closer": true,
         "rotation_confidence": "high",
-        "notes": "G1 actual: 28.2. Slight reduction observed."
+        "notes": "G1: 28.2. G2: 40.9. Major emergence \u2014 20 pts 6 ast in G2, his best Finals performance. Now a genuine third scoring option. Minutes ceiling raised substantially."
       },
       {
         "team": "NYK",
         "player": "Karl-Anthony Towns",
         "role": "Starter",
-        "projected_minutes": 31.5,
-        "minutes_floor": 26.5,
-        "minutes_ceiling": 36.5,
+        "projected_minutes": 34.1,
+        "minutes_floor": 29.0,
+        "minutes_ceiling": 39.0,
         "is_starter": true,
         "is_closer": true,
         "rotation_confidence": "high",
-        "notes": "G1 actual: 34.4. Used more than expected."
+        "notes": "G1: 34.4. G2: 33.9. Extremely consistent. 55.6% FG across both games. Most efficient star in the series. 9 fouls across 2 games is a watch item."
       },
       {
         "team": "NYK",
         "player": "Miles McBride",
         "role": "Bench",
-        "projected_minutes": 19.2,
-        "minutes_floor": 14.2,
-        "minutes_ceiling": 24.2,
+        "projected_minutes": 18.7,
+        "minutes_floor": 13.5,
+        "minutes_ceiling": 24.0,
         "is_starter": false,
         "is_closer": false,
         "rotation_confidence": "medium",
-        "notes": "G1 actual: 19.5. Right on projection."
+        "notes": "G1: 19.5. G2: 18.3. Stable role. 28.6% FG overall \u2014 scoring has been inconsistent but defensive value keeps him on the floor."
       },
       {
         "team": "NYK",
         "player": "Mitchell Robinson",
         "role": "Bench",
-        "projected_minutes": 13.5,
+        "projected_minutes": 13.8,
         "minutes_floor": 8.5,
-        "minutes_ceiling": 18.5,
+        "minutes_ceiling": 19.0,
         "is_starter": false,
         "is_closer": false,
         "rotation_confidence": "medium",
-        "notes": "G1 actual: 13.2. On track."
+        "notes": "G1: 13.2. G2: 14.1. Consistent role. 75% FG (limited attempts). Rim presence and rebounding valued; minutes stable."
       },
       {
         "team": "NYK",
         "player": "Landry Shamet",
         "role": "Bench",
-        "projected_minutes": 25.0,
-        "minutes_floor": 20.0,
-        "minutes_ceiling": 30.0,
+        "projected_minutes": 31.2,
+        "minutes_floor": 26.0,
+        "minutes_ceiling": 36.0,
         "is_starter": false,
         "is_closer": true,
         "rotation_confidence": "high",
-        "notes": "G1 actual: 33.3. Major rotation bump \u2014 13 pts on 3/6 from 3; now a key bench weapon."
+        "notes": "G1: 33.3 (13 pts). G2: 30.2 (13 pts). Two straight double-digit games off the bench. Now clearly in the primary rotation. Projection raised from 25.0 to 31.2."
       },
       {
         "team": "NYK",
         "player": "Jordan Clarkson",
         "role": "Reserve",
-        "projected_minutes": 9.0,
-        "minutes_floor": 4.0,
-        "minutes_ceiling": 14.0,
+        "projected_minutes": 2.0,
+        "minutes_floor": 0.0,
+        "minutes_ceiling": 8.0,
         "is_starter": false,
         "is_closer": false,
         "rotation_confidence": "low",
-        "notes": "G1 actual: 5.7. Lost minutes to Shamet; reduced role."
+        "notes": "G1: 5.7. G2: DNP. Effectively lost his rotation spot to Shamet. Only if foul trouble depletes the guard rotation."
       },
       {
         "team": "NYK",
         "player": "Jose Alvarado",
         "role": "Reserve",
-        "projected_minutes": 10.0,
+        "projected_minutes": 10.4,
         "minutes_floor": 5.0,
         "minutes_ceiling": 15.0,
         "is_starter": false,
         "is_closer": false,
         "rotation_confidence": "low",
-        "notes": "G1 actual: 11.0. Slight uptick from projection."
+        "notes": "G1: 10.9. G2: 10.1. Consistent spot minutes. Defensive energy role off the bench."
+      },
+      {
+        "team": "NYK",
+        "player": "Jeremy Sochan",
+        "role": "Reserve",
+        "projected_minutes": 4.0,
+        "minutes_floor": 0.0,
+        "minutes_ceiling": 12.0,
+        "is_starter": false,
+        "is_closer": false,
+        "rotation_confidence": "low",
+        "notes": "DNP G1. DNP G2. Emergency option only. On NYK roster \u2014 traded from SAS during season."
+      },
+      {
+        "team": "NYK",
+        "player": "Pacome Dadiet",
+        "role": "Reserve",
+        "projected_minutes": 4.0,
+        "minutes_floor": 0.0,
+        "minutes_ceiling": 10.0,
+        "is_starter": false,
+        "is_closer": false,
+        "rotation_confidence": "low",
+        "notes": "DNP G1. DNP G2."
       },
       {
         "team": "NYK",
@@ -192,7 +216,7 @@
         "is_starter": false,
         "is_closer": false,
         "rotation_confidence": "low",
-        "notes": "Did not play G1 (DNP)."
+        "notes": "DNP G1. DNP G2."
       },
       {
         "team": "NYK",
@@ -204,7 +228,7 @@
         "is_starter": false,
         "is_closer": false,
         "rotation_confidence": "low",
-        "notes": "Did not play G1 (DNP)."
+        "notes": "DNP G1. DNP G2."
       },
       {
         "team": "NYK",
@@ -216,7 +240,7 @@
         "is_starter": false,
         "is_closer": false,
         "rotation_confidence": "low",
-        "notes": "Did not play G1 (DNP)."
+        "notes": "DNP G1. DNP G2."
       }
     ],
     "SAS": [
@@ -224,121 +248,121 @@
         "team": "SAS",
         "player": "Devin Vassell",
         "role": "Starter",
-        "projected_minutes": 34.5,
-        "minutes_floor": 29.5,
-        "minutes_ceiling": 39.5,
+        "projected_minutes": 37.3,
+        "minutes_floor": 32.0,
+        "minutes_ceiling": 42.0,
         "is_starter": true,
         "is_closer": true,
         "rotation_confidence": "high",
-        "notes": "G1 actual: 36.0. Played heavy minutes; 9 pts 4 reb."
+        "notes": "G1: 36.0. G2: 38.0. Carrying a heavy workload. 14 pts G2 but 40% FG across both games. Important defender \u2014 SAS cannot afford him in foul trouble."
       },
       {
         "team": "SAS",
         "player": "Stephon Castle",
         "role": "Starter",
-        "projected_minutes": 34.0,
-        "minutes_floor": 29.0,
-        "minutes_ceiling": 39.0,
+        "projected_minutes": 30.1,
+        "minutes_floor": 24.0,
+        "minutes_ceiling": 36.0,
         "is_starter": true,
         "is_closer": true,
-        "rotation_confidence": "high",
-        "notes": "G1 actual: 34.5. On track; 17 pts."
+        "rotation_confidence": "medium",
+        "notes": "G1: 34.5 (17 pts). G2: 27.7 (14 pts, 4 TOs). Minutes declining due to foul and turnover issues. 6 TOs across 2 games. Confidence downgraded \u2014 late-game execution a real concern."
       },
       {
         "team": "SAS",
         "player": "De'Aaron Fox",
         "role": "Starter",
-        "projected_minutes": 35.0,
+        "projected_minutes": 35.2,
         "minutes_floor": 30.0,
         "minutes_ceiling": 40.0,
         "is_starter": true,
         "is_closer": true,
         "rotation_confidence": "high",
-        "notes": "G1 actual: 37.9. Heavy load but poor game (7 pts 3/13); rode hard to close gap."
+        "notes": "G1: 37.9 (7 pts, 3/13 FG). G2: 33.8 (20 pts, 8/12 FG). Huge bounce-back in G2 but 7 TOs across both games. Minutes stable but decision-making must improve."
       },
       {
         "team": "SAS",
         "player": "Victor Wembanyama",
         "role": "Starter",
-        "projected_minutes": 34.5,
-        "minutes_floor": 29.5,
-        "minutes_ceiling": 39.5,
+        "projected_minutes": 39.4,
+        "minutes_floor": 34.0,
+        "minutes_ceiling": 44.0,
         "is_starter": true,
         "is_closer": true,
         "rotation_confidence": "high",
-        "notes": "G1 actual: 37.8. Heavy load; 26 pts 6/21 FG but 12/13 FT."
+        "notes": "G1: 37.8 (26 pts). G2: 40.3 (29 pts). Playing elite-level basketball \u2014 27.5 pts/game. But 5.0 TOs/game including the G2-deciding miscommunication with Castle. Minutes raised substantially from 34.5 projection."
       },
       {
         "team": "SAS",
         "player": "Julian Champagnie",
         "role": "Starter",
-        "projected_minutes": 31.0,
-        "minutes_floor": 26.0,
-        "minutes_ceiling": 36.0,
+        "projected_minutes": 34.3,
+        "minutes_floor": 28.5,
+        "minutes_ceiling": 39.5,
         "is_starter": true,
         "is_closer": true,
         "rotation_confidence": "high",
-        "notes": "G1 actual: 31.2. On track; 16 pts 5/10 from 3."
+        "notes": "G1: 31.2 (16 pts, 5/10 from 3). G2: 36.0 (8 pts, 2/6). Minutes up but production inconsistent. SAS needs his G1 shooting to return."
       },
       {
         "team": "SAS",
         "player": "Dylan Harper",
         "role": "Bench",
-        "projected_minutes": 27.0,
-        "minutes_floor": 22.0,
-        "minutes_ceiling": 32.0,
+        "projected_minutes": 30.6,
+        "minutes_floor": 25.0,
+        "minutes_ceiling": 36.0,
         "is_starter": false,
         "is_closer": true,
         "rotation_confidence": "high",
-        "notes": "G1 actual: 27.5. On track; 16 pts off bench."
+        "notes": "G1: 27.5 (16 pts). G2: 32.3 (15 pts). Steady contributor off the bench. Minutes trending up as Popovich leans on him more. 0/3 from 3 in G2 \u2014 3-point variance to watch."
       },
       {
         "team": "SAS",
         "player": "Keldon Johnson",
         "role": "Bench",
-        "projected_minutes": 13.5,
-        "minutes_floor": 8.5,
-        "minutes_ceiling": 18.5,
+        "projected_minutes": 13.1,
+        "minutes_floor": 7.0,
+        "minutes_ceiling": 19.0,
         "is_starter": false,
         "is_closer": false,
         "rotation_confidence": "medium",
-        "notes": "G1 actual: 8.3. Reduced usage; blended projection."
+        "notes": "G1: 8.3 (0 pts). G2: 15.7 (3 pts). SAS's Sixth Man of the Year has been invisible \u2014 3 pts on 4 FGA across both games. Variable role but SAS desperately needs him to produce."
       },
       {
         "team": "SAS",
         "player": "Luke Kornet",
         "role": "Bench",
-        "projected_minutes": 12.5,
-        "minutes_floor": 7.5,
-        "minutes_ceiling": 17.5,
+        "projected_minutes": 8.6,
+        "minutes_floor": 3.0,
+        "minutes_ceiling": 14.0,
         "is_starter": false,
         "is_closer": false,
-        "rotation_confidence": "medium",
-        "notes": "G1 actual: 10.2. Slight reduction from projection."
+        "rotation_confidence": "low",
+        "notes": "G1: 10.2. G2: 7.8. Declining role. DNP risk elevated. Projection reduced from 12.5."
       },
       {
         "team": "SAS",
         "player": "Harrison Barnes",
         "role": "Reserve",
-        "projected_minutes": 10.5,
-        "minutes_floor": 5.5,
-        "minutes_ceiling": 15.5,
+        "projected_minutes": 7.4,
+        "minutes_floor": 2.0,
+        "minutes_ceiling": 13.0,
         "is_starter": false,
         "is_closer": false,
         "rotation_confidence": "low",
-        "notes": "G1 actual: 12.1. Slightly more usage than projected."
+        "notes": "G1: 12.1. G2: 4.8. Fading from the rotation. Used situationally."
       },
       {
         "team": "SAS",
         "player": "Carter Bryant",
         "role": "Reserve",
-        "projected_minutes": 7.0,
-        "minutes_floor": 2.0,
-        "minutes_ceiling": 12.0,
+        "projected_minutes": 4.0,
+        "minutes_floor": 0.0,
+        "minutes_ceiling": 9.0,
         "is_starter": false,
         "is_closer": false,
         "rotation_confidence": "low",
-        "notes": "G1 actual: 4.4. Reduced to mop-up role."
+        "notes": "G1: 4.4. G2: DNP. Mop-up role only."
       },
       {
         "team": "SAS",
@@ -350,7 +374,7 @@
         "is_starter": false,
         "is_closer": false,
         "rotation_confidence": "low",
-        "notes": "Did not play G1 (DNP)."
+        "notes": "DNP G1. DNP G2."
       },
       {
         "team": "SAS",
@@ -362,7 +386,7 @@
         "is_starter": false,
         "is_closer": false,
         "rotation_confidence": "low",
-        "notes": "Did not play G1 (DNP)."
+        "notes": "DNP G1. DNP G2."
       },
       {
         "team": "SAS",
@@ -374,14 +398,38 @@
         "is_starter": false,
         "is_closer": false,
         "rotation_confidence": "low",
-        "notes": "Did not play G1 (DNP)."
+        "notes": "DNP G1. DNP G2."
+      },
+      {
+        "team": "SAS",
+        "player": "Bismack Biyombo",
+        "role": "Reserve",
+        "projected_minutes": 2.0,
+        "minutes_floor": 0.0,
+        "minutes_ceiling": 6.0,
+        "is_starter": false,
+        "is_closer": false,
+        "rotation_confidence": "low",
+        "notes": "DNP G1. DNP G2."
+      },
+      {
+        "team": "SAS",
+        "player": "Mason Plumlee",
+        "role": "Reserve",
+        "projected_minutes": 2.0,
+        "minutes_floor": 0.0,
+        "minutes_ceiling": 6.0,
+        "is_starter": false,
+        "is_closer": false,
+        "rotation_confidence": "low",
+        "notes": "DNP G1. DNP G2."
       }
     ]
   },
   "injuries": {
     "NYK": [
       {
-        "date": "2026-06-03",
+        "date": "2026-06-04",
         "team": "NYK",
         "player": "Jalen Brunson",
         "status": "Available",
@@ -390,7 +438,7 @@
         "expected_minutes_adjustment": 0
       },
       {
-        "date": "2026-06-03",
+        "date": "2026-06-04",
         "team": "NYK",
         "player": "OG Anunoby",
         "status": "Available",
@@ -399,7 +447,7 @@
         "expected_minutes_adjustment": 0
       },
       {
-        "date": "2026-06-03",
+        "date": "2026-06-04",
         "team": "NYK",
         "player": "Josh Hart",
         "status": "Available",
@@ -408,7 +456,7 @@
         "expected_minutes_adjustment": 0
       },
       {
-        "date": "2026-06-03",
+        "date": "2026-06-04",
         "team": "NYK",
         "player": "Mikal Bridges",
         "status": "Available",
@@ -417,7 +465,7 @@
         "expected_minutes_adjustment": 0
       },
       {
-        "date": "2026-06-03",
+        "date": "2026-06-04",
         "team": "NYK",
         "player": "Karl-Anthony Towns",
         "status": "Available",
@@ -426,7 +474,7 @@
         "expected_minutes_adjustment": 0
       },
       {
-        "date": "2026-06-03",
+        "date": "2026-06-04",
         "team": "NYK",
         "player": "Miles McBride",
         "status": "Available",
@@ -435,7 +483,7 @@
         "expected_minutes_adjustment": 0
       },
       {
-        "date": "2026-06-03",
+        "date": "2026-06-04",
         "team": "NYK",
         "player": "Mitchell Robinson",
         "status": "Available",
@@ -444,7 +492,7 @@
         "expected_minutes_adjustment": 0
       },
       {
-        "date": "2026-06-03",
+        "date": "2026-06-04",
         "team": "NYK",
         "player": "Jordan Clarkson",
         "status": "Available",
@@ -453,9 +501,36 @@
         "expected_minutes_adjustment": 0
       },
       {
-        "date": "2026-06-03",
+        "date": "2026-06-04",
         "team": "NYK",
         "player": "Landry Shamet",
+        "status": "Available",
+        "injury": null,
+        "notes": "No limitation",
+        "expected_minutes_adjustment": 0
+      },
+      {
+        "date": "2026-06-04",
+        "team": "NYK",
+        "player": "Jose Alvarado",
+        "status": "Available",
+        "injury": null,
+        "notes": "No limitation",
+        "expected_minutes_adjustment": 0
+      },
+      {
+        "date": "2026-06-04",
+        "team": "NYK",
+        "player": "Jeremy Sochan",
+        "status": "Available",
+        "injury": null,
+        "notes": "No limitation",
+        "expected_minutes_adjustment": 0
+      },
+      {
+        "date": "2026-06-04",
+        "team": "NYK",
+        "player": "Pacome Dadiet",
         "status": "Available",
         "injury": null,
         "notes": "No limitation",
@@ -464,7 +539,7 @@
     ],
     "SAS": [
       {
-        "date": "2026-06-03",
+        "date": "2026-06-04",
         "team": "SAS",
         "player": "Victor Wembanyama",
         "status": "Available",
@@ -473,7 +548,7 @@
         "expected_minutes_adjustment": 0
       },
       {
-        "date": "2026-06-03",
+        "date": "2026-06-04",
         "team": "SAS",
         "player": "De'Aaron Fox",
         "status": "Available",
@@ -482,7 +557,7 @@
         "expected_minutes_adjustment": 0
       },
       {
-        "date": "2026-06-03",
+        "date": "2026-06-04",
         "team": "SAS",
         "player": "Devin Vassell",
         "status": "Available",
@@ -491,7 +566,7 @@
         "expected_minutes_adjustment": 0
       },
       {
-        "date": "2026-06-03",
+        "date": "2026-06-04",
         "team": "SAS",
         "player": "Stephon Castle",
         "status": "Available",
@@ -500,7 +575,7 @@
         "expected_minutes_adjustment": 0
       },
       {
-        "date": "2026-06-03",
+        "date": "2026-06-04",
         "team": "SAS",
         "player": "Dylan Harper",
         "status": "Available",
@@ -509,7 +584,7 @@
         "expected_minutes_adjustment": 0
       },
       {
-        "date": "2026-06-03",
+        "date": "2026-06-04",
         "team": "SAS",
         "player": "Julian Champagnie",
         "status": "Available",
@@ -518,7 +593,7 @@
         "expected_minutes_adjustment": 0
       },
       {
-        "date": "2026-06-03",
+        "date": "2026-06-04",
         "team": "SAS",
         "player": "Keldon Johnson",
         "status": "Available",
@@ -527,9 +602,27 @@
         "expected_minutes_adjustment": 0
       },
       {
-        "date": "2026-06-03",
+        "date": "2026-06-04",
         "team": "SAS",
         "player": "Luke Kornet",
+        "status": "Available",
+        "injury": null,
+        "notes": "No limitation",
+        "expected_minutes_adjustment": 0
+      },
+      {
+        "date": "2026-06-04",
+        "team": "SAS",
+        "player": "Harrison Barnes",
+        "status": "Available",
+        "injury": null,
+        "notes": "No limitation",
+        "expected_minutes_adjustment": 0
+      },
+      {
+        "date": "2026-06-04",
+        "team": "SAS",
+        "player": "Carter Bryant",
         "status": "Available",
         "injury": null,
         "notes": "No limitation",
@@ -553,8 +646,8 @@
       "defensive_team": "SAS",
       "primary_defender": "Victor Wembanyama",
       "matchup_type": "rim_pressure",
-      "expected_impact": -1.5,
-      "notes": "Wembanyama best rim protector in league; KAT avoids driving"
+      "expected_impact": -0.8,
+      "notes": "Wembanyama best rim protector but KAT found mid-range solutions in G1 (7/15 18pts 12reb +14); revised from -1.5"
     },
     {
       "offensive_team": "NYK",
@@ -571,8 +664,8 @@
       "defensive_team": "SAS",
       "primary_defender": "Devin Vassell",
       "matchup_type": "isolation",
-      "expected_impact": -0.5,
-      "notes": "Vassell solid on-ball defender; neutralizes Anunoby mid-range"
+      "expected_impact": 0.2,
+      "notes": "Vassell solid defender but OG had a good G1 (5/12 3/6 from 3 17pts); Vassell struggled offensively too \u2014 revised from -0.5"
     },
     {
       "offensive_team": "NYK",
@@ -593,13 +686,22 @@
       "notes": "Harper bigger but McBride quick enough to limit damage"
     },
     {
+      "offensive_team": "NYK",
+      "offensive_player": "Landry Shamet",
+      "defensive_team": "SAS",
+      "primary_defender": "Julian Champagnie",
+      "matchup_type": "three_point",
+      "expected_impact": 0.6,
+      "notes": "Shamet proved in G1 (3/6 from 3 33min) he is a real catch-and-shoot threat; SAS will sag or switch \u2014 if they sag NYK can run Brunson/Shamet PnR"
+    },
+    {
       "offensive_team": "SAS",
       "offensive_player": "Victor Wembanyama",
       "defensive_team": "NYK",
       "primary_defender": "Karl-Anthony Towns",
       "matchup_type": "rim_pressure",
-      "expected_impact": 1.5,
-      "notes": "KAT soft rim protector; Wembanyama scores at will at the rim"
+      "expected_impact": 1.0,
+      "notes": "KAT soft rim protector but NYK crowded Wemby at the rim in G1 (6/21 FG); 26 pts came via FTs (12/13) not rim finishes \u2014 revised from 1.5"
     },
     {
       "offensive_team": "SAS",
@@ -607,8 +709,8 @@
       "defensive_team": "NYK",
       "primary_defender": "Jalen Brunson",
       "matchup_type": "pick_and_roll",
-      "expected_impact": 0.5,
-      "notes": "Fox speed advantage; Brunson gives up penetration off screens"
+      "expected_impact": 0.3,
+      "notes": "Fox speed advantage; Brunson gives up penetration off screens \u2014 G1 Fox went 3/13 (7 pts); impact trimmed until bounce-back confirmed"
     },
     {
       "offensive_team": "SAS",
@@ -617,7 +719,7 @@
       "primary_defender": "Mikal Bridges",
       "matchup_type": "isolation",
       "expected_impact": -1.0,
-      "notes": "Bridges elite wing defender; Vassell struggles to create off dribble"
+      "notes": "Bridges elite wing defender; G1 confirmed (Vassell 4/11 9pts -13)"
     },
     {
       "offensive_team": "SAS",
@@ -625,8 +727,8 @@
       "defensive_team": "NYK",
       "primary_defender": "OG Anunoby",
       "matchup_type": "isolation",
-      "expected_impact": -1.0,
-      "notes": "Anunoby top-5 wing defender; Castle has to work for everything"
+      "expected_impact": -0.5,
+      "notes": "Anunoby top-5 wing defender but Castle showed real creation ability in G1 (7/16 17pts 8reb 3ast); revised from -1.0"
     },
     {
       "offensive_team": "SAS",
@@ -670,6 +772,34 @@
       "adjustment_type": "lineup",
       "description": "Could close smaller for spacing",
       "expected_impact": 1
+    },
+    {
+      "game_number": 2,
+      "team": "SAS",
+      "adjustment_type": "offense",
+      "description": "Fox will likely be featured more aggressively to bounce back from 3/13 G1; expect more isolation looks for Fox early",
+      "expected_impact": 1
+    },
+    {
+      "game_number": 2,
+      "team": "SAS",
+      "adjustment_type": "defense",
+      "description": "SAS likely adjusts to limit Shamet's catch-and-shoot looks after his 33-min G1 breakout",
+      "expected_impact": -1
+    },
+    {
+      "game_number": 2,
+      "team": "NYK",
+      "adjustment_type": "rotation",
+      "description": "Shamet confirmed as key bench weapon; expect Brunson/Shamet PnR action in G2",
+      "expected_impact": 1
+    },
+    {
+      "game_number": 2,
+      "team": "NYK",
+      "adjustment_type": "defense",
+      "description": "NYK showed ability to make Wembanyama work hard (6/21 FG) by crowding him off catch; likely to repeat",
+      "expected_impact": 1
     }
   ],
   "data_sources": {
@@ -679,5 +809,8 @@
     "manual_rotations": true,
     "manual_injuries": true
   },
-  "validation_warnings": []
+  "validation_warnings": [
+    "rotations.csv: NYK projected minutes sum to 264.2 (expected ~240).",
+    "coaching_notes.csv unrecognized adjustment_type: ['offense', 'defense', 'defense']"
+  ]
 }
