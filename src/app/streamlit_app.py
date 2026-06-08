@@ -183,8 +183,26 @@ def _ml_model_status() -> dict[str, Any]:
 # Data bundle
 # ---------------------------------------------------------------------------
 
+def _data_version() -> str:
+    """Return a hash of key data file mtimes so cache busts when data changes."""
+    import hashlib
+    paths = [
+        PROJECT_ROOT / "data" / "processed" / "finals_games",
+        PROJECT_ROOT / "data" / "processed" / "finals_context" / "projected_rotations.csv",
+        PROJECT_ROOT / "data" / "processed" / "stats_cache" / "team_stats_2025-26_Playoffs.json",
+        PROJECT_ROOT / "config" / "model_weights.yaml",
+    ]
+    sig = ""
+    for p in paths:
+        if p.is_dir():
+            sig += "".join(str(f.stat().st_mtime) for f in sorted(p.glob("*")) if f.is_file())
+        elif p.exists():
+            sig += str(p.stat().st_mtime)
+    return hashlib.md5(sig.encode()).hexdigest()[:8]
+
+
 @cache_data(show_spinner="Building predictions - this takes about 15 seconds...")
-def load_dashboard_bundle(series_simulations: int) -> dict[str, Any]:
+def load_dashboard_bundle(series_simulations: int, _data_ver: str = "") -> dict[str, Any]:
     settings = load_settings()
     context = build_finals_context()
     team_a, team_b = _team_pair(context)
@@ -1926,7 +1944,7 @@ def render_dashboard() -> None:
         st.rerun()
 
     st.title("🏀 NBA Finals Predictor 2026")
-    bundle = load_dashboard_bundle(int(series_simulations))
+    bundle = load_dashboard_bundle(int(series_simulations), _data_ver=_data_version())
 
     st.caption(
         f"Last updated: {bundle['last_updated']} · "
