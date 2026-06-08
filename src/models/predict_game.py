@@ -671,7 +671,11 @@ def _production_probability(
         )
         return probability, "learned_meta"
     weights = load_game_prediction_weights(model_weights_path)
-    return _combine_probability(baseline_probability, margins, weights), "calibrated_ensemble"
+    # Blend ML baseline (strong regular-season signal) with playoff net rating
+    # (in-series signal) to prevent regular-season stats from dominating.
+    # 50/50 aligns predicted home-court probability with market consensus.
+    effective_baseline = 0.50 * baseline_probability + 0.50 * net_rating_probability
+    return _combine_probability(effective_baseline, margins, weights), "calibrated_ensemble"
 
 
 _LEAGUE_AVG_ORTG = 113.0  # 2025-26 playoffs approximate
