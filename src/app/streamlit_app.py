@@ -356,18 +356,21 @@ def render_the_pick(bundle: dict[str, Any]) -> None:
 
     # Key stats in plain English
     most_likely = series["most_likely_result"]
-    avg_games = series.get("average_games", 6.0)
+    dist = series.get("result_distribution", [])
+    sorted_dist = sorted(dist, key=lambda r: float(r["probability"]), reverse=True)
+    top_prob = float(sorted_dist[0]["probability"]) if sorted_dist else 0.0
+    second = sorted_dist[1] if len(sorted_dist) > 1 else None
 
     col1, col2, col3, col4 = st.columns(4)
     col1.metric(
         "Most likely outcome",
         most_likely,
-        "Our top prediction",
+        f"{top_prob:.0%} of simulations",
     )
     col2.metric(
-        "Expected series length",
-        f"{avg_games:.1f} games",
-        "How long we expect this to last",
+        "If series extends",
+        second["result"] if second else "—",
+        f"{float(second['probability']):.0%} chance" if second else "",
     )
     col3.metric(
         "Confidence range",
