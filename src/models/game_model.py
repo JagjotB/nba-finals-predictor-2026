@@ -47,7 +47,13 @@ FEATURE_COLS = [
 # XGBoost uses all LR features plus injury signals.
 # LR deliberately excludes injury features — validation showed LR is hurt by
 # sparse injury data while XGBoost handles it correctly via tree splits.
-XGB_FEATURE_COLS = FEATURE_COLS + ["injury_strength_diff", "injury_data_available"]
+XGB_FEATURE_COLS = FEATURE_COLS + [
+    "injury_strength_diff",
+    "injury_data_available",
+    # In-series features (series_games_played, series_score_diff, etc.) computed
+    # but excluded: validation showed they hurt ECE (0.058 → 0.069) due to thin
+    # sample per series-state. Re-evaluate with more historical data.
+]
 
 XGB_MODEL_PATH = MODEL_PATH.parent / "xgb_game_model.json"
 XGB_MODEL_BINARY_PATH = MODEL_PATH.parent / "xgb_game_model.joblib"

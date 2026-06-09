@@ -206,6 +206,68 @@ def _history_record(team_row: dict[str, Any], opponent_row: dict[str, Any]) -> d
     }
 
 
+def _efg(row: dict[str, Any]) -> float:
+    fga = _as_float(row.get("FGA"))
+    return ((_as_float(row.get("FGM")) + 0.5 * _as_float(row.get("FG3M"))) / fga) if fga else 0.0
+
+
+def _tov_rate(row: dict[str, Any]) -> float:
+    tov = _as_float(row.get("TOV"))
+    fga = _as_float(row.get("FGA"))
+    fta = _as_float(row.get("FTA"))
+    denom = fga + 0.44 * fta + tov
+    return (tov / denom) if denom else 0.0
+
+
+def _oreb_pct(team_row: dict[str, Any], opp_row: dict[str, Any]) -> float:
+    oreb = _as_float(team_row.get("OREB"))
+    opp_dreb = _as_float(opp_row.get("DREB"))
+    denom = oreb + opp_dreb
+    return (oreb / denom) if denom else 0.0
+
+
+def _in_series_features(
+    prior_games: list[dict[str, Any]],
+    team_a_id: str,
+) -> dict[str, float]:
+    """Compute pregame in-series features from prior games in the same series.
+
+    All values are from team_a's perspective (positive = team_a advantage).
+    Returns zeros with series_data_available=0 for Game 1.
+    """
+    zero = {
+        "series_games_played": 0.0,
+        "series_score_diff": 0.0,
+        "series_margin_diff": 0.0,
+        "series_efg_diff": 0.0,
+        "series_tov_diff": 0.0,
+        "series_oreb_pct_diff": 0.0,
+        "series_data_available": 0.0,
+    }
+    if not prior_games:
+        return zero
+
+    wins_a = sum(1 for g in prior_games if g["winner_id"] == team_a_id)
+    wins_b = len(prior_games) - wins_a
+
+    # Stats are stored from home_id perspective; flip if team_a is away
+    def stat(g: dict[str, Any], key_a: str, key_b: str) -> float:
+        if g["home_id"] == team_a_id:
+            return g.get(key_a, 0.0) - g.get(key_b, 0.0)
+        return g.get(key_b, 0.0) - g.get(key_a, 0.0)
+
+    n = len(prior_games)
+    return {
+        "series_games_played": float(n),
+        "series_score_diff": float(wins_a - wins_b),
+        "series_margin_diff": sum(stat(g, "pts_home", "pts_away") for g in prior_games) / n,
+        "series_efg_diff": sum(stat(g, "efg_home", "efg_away") for g in prior_games) / n,
+        "series_tov_diff": sum(stat(g, "tov_home", "tov_away") for g in prior_games) / n,
+        "series_oreb_pct_diff": sum(stat(g, "oreb_home", "oreb_away") for g in prior_games) / n,
+        "series_data_available": 1.0,
+    }
+
+
 def build_canonical_pregame_rows(
     game_logs: list[dict[str, Any]],
     team_ratings: dict[str, dict[str, Any]],
@@ -216,6 +278,7 @@ def build_canonical_pregame_rows(
     histories: dict[tuple[str, str], list[dict[str, float]]] = {}
     previous_dates: dict[tuple[str, str], date] = {}
     previous_venues: dict[tuple[str, str], str] = {}
+    series_records: dict[str, list[dict[str, Any]]] = {}
     rows: list[dict[str, Any]] = []
 
     for game in _pair_games(game_logs):
@@ -290,6 +353,12 @@ def build_canonical_pregame_rows(
                 "injury_strength_diff": 0.0,
                 "rotation_strength_diff": None,
                 "lineup_strength_diff": None,
+                **_in_series_features(
+                    series_records.get(
+                        f"{season}:{min(home_id, away_id)}:{max(home_id, away_id)}", []
+                    ),
+                    team_id,
+                ),
                 "team_score": _as_float(team_row.get("PTS")),
                 "opponent_score": _as_float(opponent_row.get("PTS")),
                 "won": int(str(team_row.get("WL", "")).upper() == "W"),
@@ -328,6 +397,24 @@ def build_canonical_pregame_rows(
                 )
                 row["injury_strength_diff"] = inj_diff
                 row["injury_data_available"] = inj_available
+
+        # Record game result for in-series feature computation
+        series_key = f"{season}:{min(home_id, away_id)}:{max(home_id, away_id)}"
+        home_pts = _as_float(home.get("PTS"))
+        away_pts = _as_float(away.get("PTS"))
+        series_records.setdefault(series_key, []).append({
+            "home_id": home_id,
+            "away_id": away_id,
+            "winner_id": home_id if home_pts >= away_pts else away_id,
+            "pts_home": home_pts,
+            "pts_away": away_pts,
+            "efg_home": _efg(home),
+            "efg_away": _efg(away),
+            "tov_home": _tov_rate(home),
+            "tov_away": _tov_rate(away),
+            "oreb_home": _oreb_pct(home, away),
+            "oreb_away": _oreb_pct(away, home),
+        })
 
     return rows
 
