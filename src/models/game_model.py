@@ -620,11 +620,17 @@ def walk_forward_backtest(
         # LR model (FEATURE_COLS only, no injury)
         lr_bundle = train(eligible_rows, holdout_seasons=[test_season])
 
-        # XGBoost model (XGB_FEATURE_COLS including injury)
+        # XGBoost classifier (XGB_FEATURE_COLS including injury)
         xgb_bundle = train_xgb(eligible_rows, holdout_seasons=[test_season])
 
+        # XGBoost margin regression (same features, different target)
+        margin_bundle = train_xgb_margin(eligible_rows, holdout_seasons=[test_season])
+
         elo = _elo_predictions(eligible_rows, test_season)
-        targets, lr_probs, xgb_probs, ens_probs, net_probs, elo_probs = [], [], [], [], [], []
+        targets = []
+        lr_probs, xgb_probs, ens_probs = [], [], []
+        spread_probs, ens3_probs, xgb_spread_probs = [], [], []
+        net_probs, elo_probs = [], []
 
         for row in test_rows:
             lr_p = predict_win_probability(
@@ -632,7 +638,12 @@ def walk_forward_backtest(
                 str(row.get("team_a_id")), str(row.get("team_b_id")),
             )
             xgb_p = predict_xgb_win_probability(row, xgb_bundle)
+            raw_margin, margin_std = predict_margin(row, margin_bundle)
+            spread_p = margin_to_probability(raw_margin, margin_std)
+
             ens_p = round(0.5 * lr_p + 0.5 * xgb_p, 6)
+            ens3_p = round((lr_p + xgb_p + spread_p) / 3.0, 6)      # equal three-way
+            xgb_spread_p = round(0.5 * xgb_p + 0.5 * spread_p, 6)   # drop LR, blend XGB+spread
 
             identity = f"{test_season}:{row['game_id']}:{row['perspective']}"
             elo_p = elo.get(identity, 0.5)
@@ -643,6 +654,9 @@ def walk_forward_backtest(
             lr_probs.append(lr_p)
             xgb_probs.append(xgb_p)
             ens_probs.append(ens_p)
+            spread_probs.append(spread_p)
+            ens3_probs.append(ens3_p)
+            xgb_spread_probs.append(xgb_spread_p)
             net_probs.append(net_p)
             elo_probs.append(elo_p)
 
@@ -669,11 +683,12 @@ def walk_forward_backtest(
                 "team_a": row.get("team_a"),
                 "team_b": row.get("team_b"),
                 "actual_team_a_win": target,
-                # baseline_probability = LR only (original meaning for report clarity)
-                # ensemble_probability used by meta model as its baseline logit
                 "baseline_probability": lr_p,
                 "xgb_probability": xgb_p,
                 "ensemble_probability": ens_p,
+                "spread_probability": round(spread_p, 6),
+                "ensemble_spread_probability": round(ens3_p, 6),
+                "xgb_spread_probability": round(xgb_spread_p, 6),
                 "net_rating_probability": round(net_p, 6),
                 "elo_probability": round(elo_p, 6),
                 "player_edge": player_edge_pts,
@@ -696,6 +711,9 @@ def walk_forward_backtest(
             "model": _binary_metrics(targets, lr_probs),
             "xgb_model": _binary_metrics(targets, xgb_probs),
             "ensemble": _binary_metrics(targets, ens_probs),
+            "spread_model": _binary_metrics(targets, spread_probs),
+            "ensemble_with_spread": _binary_metrics(targets, ens3_probs),
+            "xgb_plus_spread": _binary_metrics(targets, xgb_spread_probs),
             "net_rating_baseline": _binary_metrics(targets, net_probs),
             "elo_baseline": _binary_metrics(targets, elo_probs),
         })
@@ -707,6 +725,9 @@ def walk_forward_backtest(
             ("model", "baseline_probability"),
             ("xgb_model", "xgb_probability"),
             ("ensemble", "ensemble_probability"),
+            ("spread_model", "spread_probability"),
+            ("ensemble_with_spread", "ensemble_spread_probability"),
+            ("xgb_plus_spread", "xgb_spread_probability"),
             ("net_rating_baseline", "net_rating_probability"),
             ("elo_baseline", "elo_probability"),
         ]:

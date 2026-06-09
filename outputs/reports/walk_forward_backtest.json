@@ -37,6 +37,30 @@
         "roc_auc": 0.6471,
         "expected_calibration_error": 0.078
       },
+      "spread_model": {
+        "games": 174,
+        "accuracy": 0.5977,
+        "log_loss": 0.6709,
+        "brier_score": 0.2386,
+        "roc_auc": 0.6442,
+        "expected_calibration_error": 0.0764
+      },
+      "ensemble_with_spread": {
+        "games": 174,
+        "accuracy": 0.5805,
+        "log_loss": 0.6588,
+        "brier_score": 0.2332,
+        "roc_auc": 0.6521,
+        "expected_calibration_error": 0.0628
+      },
+      "xgb_plus_spread": {
+        "games": 174,
+        "accuracy": 0.6207,
+        "log_loss": 0.658,
+        "brier_score": 0.2327,
+        "roc_auc": 0.6549,
+        "expected_calibration_error": 0.0264
+      },
       "net_rating_baseline": {
         "games": 174,
         "accuracy": 0.6322,
@@ -89,6 +113,30 @@
         "brier_score": 0.251,
         "roc_auc": 0.5998,
         "expected_calibration_error": 0.0916
+      },
+      "spread_model": {
+        "games": 168,
+        "accuracy": 0.5655,
+        "log_loss": 0.7122,
+        "brier_score": 0.2565,
+        "roc_auc": 0.6016,
+        "expected_calibration_error": 0.1264
+      },
+      "ensemble_with_spread": {
+        "games": 168,
+        "accuracy": 0.5833,
+        "log_loss": 0.7001,
+        "brier_score": 0.2519,
+        "roc_auc": 0.601,
+        "expected_calibration_error": 0.1006
+      },
+      "xgb_plus_spread": {
+        "games": 168,
+        "accuracy": 0.619,
+        "log_loss": 0.6956,
+        "brier_score": 0.25,
+        "roc_auc": 0.6042,
+        "expected_calibration_error": 0.136
       },
       "net_rating_baseline": {
         "games": 168,
@@ -143,6 +191,30 @@
         "brier_score": 0.2159,
         "roc_auc": 0.7204,
         "expected_calibration_error": 0.0787
+      },
+      "spread_model": {
+        "games": 164,
+        "accuracy": 0.6951,
+        "log_loss": 0.6161,
+        "brier_score": 0.2113,
+        "roc_auc": 0.7353,
+        "expected_calibration_error": 0.0707
+      },
+      "ensemble_with_spread": {
+        "games": 164,
+        "accuracy": 0.6707,
+        "log_loss": 0.6185,
+        "brier_score": 0.2135,
+        "roc_auc": 0.7313,
+        "expected_calibration_error": 0.0939
+      },
+      "xgb_plus_spread": {
+        "games": 164,
+        "accuracy": 0.6829,
+        "log_loss": 0.6177,
+        "brier_score": 0.2131,
+        "roc_auc": 0.7359,
+        "expected_calibration_error": 0.0901
       },
       "net_rating_baseline": {
         "games": 164,
@@ -199,6 +271,30 @@
         "roc_auc": 0.6232,
         "expected_calibration_error": 0.0696
       },
+      "spread_model": {
+        "games": 168,
+        "accuracy": 0.5417,
+        "log_loss": 0.709,
+        "brier_score": 0.2566,
+        "roc_auc": 0.5794,
+        "expected_calibration_error": 0.1198
+      },
+      "ensemble_with_spread": {
+        "games": 168,
+        "accuracy": 0.6071,
+        "log_loss": 0.682,
+        "brier_score": 0.2437,
+        "roc_auc": 0.6059,
+        "expected_calibration_error": 0.0909
+      },
+      "xgb_plus_spread": {
+        "games": 168,
+        "accuracy": 0.5357,
+        "log_loss": 0.6901,
+        "brier_score": 0.2482,
+        "roc_auc": 0.5959,
+        "expected_calibration_error": 0.0976
+      },
       "net_rating_baseline": {
         "games": 168,
         "accuracy": 0.5714,
@@ -252,6 +348,42 @@
       "opening_series_winner": {
         "series": 60,
         "accuracy": 0.6333
+      }
+    },
+    "spread_model": {
+      "games": 674,
+      "accuracy": 0.5994,
+      "log_loss": 0.6774,
+      "brier_score": 0.2409,
+      "roc_auc": 0.6374,
+      "expected_calibration_error": 0.0701,
+      "opening_series_winner": {
+        "series": 60,
+        "accuracy": 0.6167
+      }
+    },
+    "ensemble_with_spread": {
+      "games": 674,
+      "accuracy": 0.6098,
+      "log_loss": 0.6651,
+      "brier_score": 0.2357,
+      "roc_auc": 0.6456,
+      "expected_calibration_error": 0.0369,
+      "opening_series_winner": {
+        "series": 60,
+        "accuracy": 0.6167
+      }
+    },
+    "xgb_plus_spread": {
+      "games": 674,
+      "accuracy": 0.6142,
+      "log_loss": 0.6655,
+      "brier_score": 0.2361,
+      "roc_auc": 0.6437,
+      "expected_calibration_error": 0.0318,
+      "opening_series_winner": {
+        "series": 60,
+        "accuracy": 0.6
       }
     },
     "net_rating_baseline": {
