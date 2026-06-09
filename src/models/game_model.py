@@ -59,6 +59,10 @@ XGB_FEATURE_COLS = FEATURE_COLS + [
     "blended_off_rating_diff",
     "regular_def_rating_diff",
     "blended_def_rating_diff",
+    # fg3a_rate, clutch_net_rating, and sos_net_rating computed in training rows
+    # but excluded here: validation showed they hurt ECE (0.0254→0.0475) on 915
+    # games. All three features increase accuracy (+0.5-1%) but degrade Brier
+    # score. Re-evaluate when more historical seasons are available.
     # In-series features (series_games_played, series_score_diff, etc.) computed
     # but excluded: validation showed they hurt ECE (0.058 → 0.069) due to thin
     # sample per series-state. Re-evaluate with more historical data.

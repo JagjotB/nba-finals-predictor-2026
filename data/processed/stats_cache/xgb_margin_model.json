@@ -28,6 +28,6 @@
   "residual_std": 14.875,
   "margin_mae": 11.802,
   "margin_std_raw": 15.775,
-  "dataset_sha256": "557cbb1642d0cf3c8e89b40642e43bd794c8af261dc64c1e0d6a4d8a0a6c69ef",
+  "dataset_sha256": "ee5e3c53502862fc782ace0b3145aca99c5263f9bd3ca0c926f73e17eae06cfc",
   "binary_artifact": "xgb_margin_model.joblib"
 }

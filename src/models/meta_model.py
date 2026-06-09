@@ -41,7 +41,9 @@ def _logit(probability: float) -> float:
 
 def _feature_row(row: dict[str, Any]) -> dict[str, float]:
     return {
-        "baseline_logit": _logit(float(row.get("baseline_probability", 0.5))),
+        "baseline_logit": _logit(float(
+            row.get("ensemble_probability") or row.get("baseline_probability") or 0.5
+        )),
         "net_rating_logit": _logit(float(row.get("net_rating_probability", row.get("baseline_probability", 0.5)))),
         "player_edge": float(row.get("player_edge", 0.0)) / 11.5,
         "matchup_edge": float(row.get("matchup_edge", 0.0)) / 11.5,

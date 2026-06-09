@@ -47,6 +47,25 @@ def fetch_team_stats(season: str, season_type: str) -> Any:
     return _first_data_frame(endpoint)
 
 
+def fetch_team_stats_clutch(season: str, season_type: str = "Regular Season") -> Any:
+    """Fetch clutch-situation team stats (last 5 min, within 5 pts)."""
+    try:
+        from nba_api.stats.endpoints import leaguedashteamclutch
+    except ImportError as exc:
+        raise _nba_api_import_error(exc) from exc
+
+    endpoint = _endpoint_with_timeout(
+        leaguedashteamclutch.LeagueDashTeamClutch,
+        season=season,
+        season_type_all_star=season_type,
+        measure_type_detailed_defense="Advanced",
+        clutch_time="Last 5 Minutes",
+        ahead_behind="Ahead or Behind",
+        point_diff="5",
+    )
+    return _first_data_frame(endpoint)
+
+
 def fetch_player_stats(season: str, season_type: str) -> Any:
     """Fetch league-level player stats for a season and season type."""
     try:

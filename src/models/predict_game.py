@@ -397,6 +397,7 @@ _GAME_MODEL_BUNDLE: dict[str, Any] | None = None
 _XGB_MODEL_BUNDLE: dict[str, Any] | None = None
 _MARGIN_MODEL_BUNDLE: dict[str, Any] | None = None
 _META_MODEL_BUNDLE: dict[str, Any] | None = None
+_CLUTCH_CACHE: dict[str, Any] | None = None
 
 
 def _get_game_model() -> dict[str, Any] | None:
@@ -424,6 +425,29 @@ def _get_margin_model() -> dict[str, Any] | None:
         except Exception:
             _MARGIN_MODEL_BUNDLE = {}
     return _MARGIN_MODEL_BUNDLE if _MARGIN_MODEL_BUNDLE else None
+
+
+def _get_clutch_cache() -> dict[str, Any]:
+    global _CLUTCH_CACHE
+    if _CLUTCH_CACHE is None:
+        try:
+            import json
+            p = PROJECT_ROOT / "data" / "processed" / "stats_cache" / "clutch_stats_cache.json"
+            _CLUTCH_CACHE = json.loads(p.read_text(encoding="utf-8")) if p.exists() else {}
+        except Exception:
+            _CLUTCH_CACHE = {}
+    return _CLUTCH_CACHE
+
+
+def _clutch_diff_for_inference(
+    team_a_id: Any, team_b_id: Any, season: str = "2024-25"
+) -> float:
+    """Look up clutch net-rating diff using team IDs from the clutch cache."""
+    cache = _get_clutch_cache()
+    season_data = cache.get(season, {})
+    a = season_data.get(str(int(team_a_id))) if team_a_id else None
+    b = season_data.get(str(int(team_b_id))) if team_b_id else None
+    return round(float(a) - float(b), 3) if a is not None and b is not None else 0.0
 
 
 def _get_meta_model() -> dict[str, Any] | None:
@@ -513,8 +537,17 @@ def _ml_baseline_probability(
         "regular_pace_diff": _r(row_a, "REGULAR_PACE", 96.5) - _r(row_b, "REGULAR_PACE", 96.5),
         "blended_pace_diff": _r(row_a, "PACE", 96.5) - _r(row_b, "PACE", 96.5),
         "recent_net_rating_diff": _r(row_a, "PLAYOFF_NET_RATING") - _r(row_b, "PLAYOFF_NET_RATING"),
+        "playoff_fg3a_rate_diff": 0.0,  # FG3A not in advanced stats index at inference
+        "regular_clutch_net_rating_diff": _clutch_diff_for_inference(
+            row_a.get("TEAM_ID"), row_b.get("TEAM_ID")
+        ),
         "rest_diff": rest_a - rest_b,
         "playoff_experience_diff": 0.0,
+        "clutch_data_available": float(
+            bool(row_a.get("TEAM_ID")) and bool(row_b.get("TEAM_ID"))
+        ),
+        "sos_net_rating_diff": 0.0,
+        "sos_data_available": 0.0,
         "travel_miles_diff": 0.0,
         "travel_data_available": 0.0,
         "home_court": home_court,

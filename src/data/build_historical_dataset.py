@@ -135,7 +135,8 @@ def _playoff_snapshot(history: list[dict[str, float]]) -> dict[str, float]:
             "games": 0.0, "possessions": 0.0, "net_rating": 0.0,
             "off_rating": 110.0, "def_rating": 110.0,
             "efg_pct": 0.54, "tov_pct": 0.14, "oreb_pct": 0.27,
-            "fta_rate": 0.25, "pace": 98.0, "recent_net_rating": 0.0,
+            "fta_rate": 0.25, "pace": 98.0, "fg3a_rate": 0.375,
+            "recent_net_rating": 0.0,
         }
     possessions = sum(row["possessions"] for row in history)
     points = sum(row["points"] for row in history)
@@ -143,6 +144,7 @@ def _playoff_snapshot(history: list[dict[str, float]]) -> dict[str, float]:
     fga = sum(row["fga"] for row in history)
     fgm = sum(row["fgm"] for row in history)
     fg3m = sum(row["fg3m"] for row in history)
+    fg3a = sum(row["fg3a"] for row in history)
     turnovers = sum(row["turnovers"] for row in history)
     oreb = sum(row["oreb"] for row in history)
     opponent_dreb = sum(row["opponent_dreb"] for row in history)
@@ -157,6 +159,7 @@ def _playoff_snapshot(history: list[dict[str, float]]) -> dict[str, float]:
         "off_rating": 100.0 * points / max(possessions, 1.0),
         "def_rating": 100.0 * opponent_points / max(possessions, 1.0),
         "efg_pct": (fgm + 0.5 * fg3m) / max(fga, 1.0),
+        "fg3a_rate": fg3a / max(fga, 1.0),
         "tov_pct": turnovers / max(possessions, 1.0),
         "oreb_pct": oreb / max(oreb + opponent_dreb, 1.0),
         "fta_rate": fta / max(fga, 1.0),
@@ -208,10 +211,12 @@ def _history_record(team_row: dict[str, Any], opponent_row: dict[str, Any]) -> d
         "fga": _as_float(team_row.get("FGA")),
         "fgm": _as_float(team_row.get("FGM")),
         "fg3m": _as_float(team_row.get("FG3M")),
+        "fg3a": _as_float(team_row.get("FG3A")),
         "turnovers": _as_float(team_row.get("TOV")),
         "oreb": _as_float(team_row.get("OREB")),
         "opponent_dreb": _as_float(opponent_row.get("DREB")),
         "fta": _as_float(team_row.get("FTA")),
+        "opponent_net_rating": _as_float(opponent_row.get("PLUS_MINUS")),
     }
 
 
@@ -281,13 +286,25 @@ def build_canonical_pregame_rows(
     game_logs: list[dict[str, Any]],
     team_ratings: dict[str, dict[str, Any]],
     injury_cache: dict[str, Any] | None = None,
+    clutch_cache: dict[str, Any] | None = None,
 ) -> list[dict[str, Any]]:
     """Create two symmetric, strictly pregame rows for every paired game."""
+    from src.data.fetch_clutch_stats import get_clutch_diff
     from src.data.fetch_injury_proxy import get_injury_diff_for_row
+
+    # Pre-build team_id → regular net_rating lookup for SOS computation
+    team_reg_net: dict[tuple[str, str], float] = {}
+    for season_key, season_ratings in team_ratings.items():
+        for tid, stats in season_ratings.items():
+            team_reg_net[(str(season_key), str(tid))] = _regular_metric(stats, "net_rating")
+
     histories: dict[tuple[str, str], list[dict[str, float]]] = {}
     previous_dates: dict[tuple[str, str], date] = {}
     previous_venues: dict[tuple[str, str], str] = {}
     series_records: dict[str, list[dict[str, Any]]] = {}
+    # SOS: track quality of prior-series playoff opponents per team per season
+    sos_opp_ratings: dict[tuple[str, str], list[float]] = {}
+    current_series_for_team: dict[tuple[str, str], str] = {}
     rows: list[dict[str, Any]] = []
 
     for game in _pair_games(game_logs):
@@ -296,7 +313,19 @@ def build_canonical_pregame_rows(
         home_id, away_id = str(int(home["TEAM_ID"])), str(int(away["TEAM_ID"]))
         home_abbr, away_abbr = _team_abbr(home), _team_abbr(away)
         venue = home_abbr
+        series_key = f"{season}:{min(home_id, away_id)}:{max(home_id, away_id)}"
         ratings = team_ratings.get(season, {})
+
+        # SOS: when a team starts a new series, record the previous series opponent's quality
+        for team_id, opp_id in ((home_id, away_id), (away_id, home_id)):
+            prev_series = current_series_for_team.get((season, team_id))
+            if prev_series is not None and prev_series != series_key:
+                parts = prev_series.split(":")
+                if len(parts) == 3:
+                    prev_opp = parts[2] if parts[1] == team_id else parts[1]
+                    rating = team_reg_net.get((season, prev_opp), 0.0)
+                    sos_opp_ratings.setdefault((season, team_id), []).append(rating)
+            current_series_for_team[(season, team_id)] = series_key
         regular = {home_id: ratings.get(home_id, {}), away_id: ratings.get(away_id, {})}
         snapshots = {
             home_id: _playoff_snapshot(histories.get((season, home_id), [])),
@@ -363,6 +392,28 @@ def build_canonical_pregame_rows(
                 "injury_strength_diff": 0.0,
                 "rotation_strength_diff": None,
                 "lineup_strength_diff": None,
+                # 3-point rate (playoff blended)
+                "playoff_fg3a_rate_diff": (
+                    team_playoff["fg3a_rate"] - opponent_playoff["fg3a_rate"]
+                ),
+                # Clutch net rating (regular season prior)
+                **dict(zip(
+                    ("regular_clutch_net_rating_diff", "clutch_data_available"),
+                    get_clutch_diff(season, team_id, opponent_id, clutch_cache or {}),
+                )),
+                # Strength of schedule (prior-series opponent quality)
+                "sos_net_rating_diff": (
+                    (sum(sos_opp_ratings.get((season, team_id), [])) /
+                     max(len(sos_opp_ratings.get((season, team_id), [])), 1))
+                    - (sum(sos_opp_ratings.get((season, opponent_id), [])) /
+                       max(len(sos_opp_ratings.get((season, opponent_id), [])), 1))
+                    if sos_opp_ratings.get((season, team_id)) or
+                    sos_opp_ratings.get((season, opponent_id)) else 0.0
+                ),
+                "sos_data_available": int(
+                    bool(sos_opp_ratings.get((season, team_id))) and
+                    bool(sos_opp_ratings.get((season, opponent_id)))
+                ),
                 **_in_series_features(
                     series_records.get(
                         f"{season}:{min(home_id, away_id)}:{max(home_id, away_id)}", []

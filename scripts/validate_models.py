@@ -45,7 +45,15 @@ def main() -> None:
         print("No injury cache found — run: python -m src.data.fetch_injury_proxy")
         print("Training without injury features.")
         injury_cache = None
-    rows = build_canonical_pregame_rows(logs, ratings, injury_cache=injury_cache)
+    from src.data.fetch_clutch_stats import _load_cache as _load_clutch
+    clutch_cache = _load_clutch()
+    if not clutch_cache:
+        print("No clutch cache found — run: python -m src.data.fetch_clutch_stats")
+        print("Training without clutch features.")
+        clutch_cache = None
+    rows = build_canonical_pregame_rows(
+        logs, ratings, injury_cache=injury_cache, clutch_cache=clutch_cache
+    )
     dataset_metadata = save_canonical_dataset(rows)
 
     report = walk_forward_backtest(rows)

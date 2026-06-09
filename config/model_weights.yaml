@@ -1,10 +1,9 @@
 combination_mode: calibrated_ensemble
-
 final_game_prediction_weights:
-  team_baseline: 1.00
-  player_projection: 0.45
-  matchup_edge: 0.20
+  clutch_edge: 0.1
+  foul_trouble_risk: 0.1
+  injury_edge: 0.0
   lineup_edge: 0.25
-  clutch_edge: 0.10
-  injury_edge: 0.00
-  foul_trouble_risk: 0.10
+  matchup_edge: 0.2
+  player_projection: 0.45
+  team_baseline: 1.0
