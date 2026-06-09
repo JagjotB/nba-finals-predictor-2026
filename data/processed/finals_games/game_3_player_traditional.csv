@@ -1,0 +1,31 @@
+gameId,teamId,teamCity,teamName,teamTricode,teamSlug,personId,firstName,familyName,nameI,playerSlug,position,comment,jerseyNum,minutes,fieldGoalsMade,fieldGoalsAttempted,fieldGoalsPercentage,threePointersMade,threePointersAttempted,threePointersPercentage,freeThrowsMade,freeThrowsAttempted,freeThrowsPercentage,reboundsOffensive,reboundsDefensive,reboundsTotal,assists,steals,blocks,turnovers,foulsPersonal,points,plusMinusPoints
+0042500403,1610612752,New York,Knicks,NYK,knicks,1628384,OG,Anunoby,O. Anunoby,og-anunoby,F,,,37:57,9,13,0.692,3,7,0.429,7,9,0.778,0,5,5,1,0,2,1,2,28,-3.0
+0042500403,1610612752,New York,Knicks,NYK,knicks,1628404,Josh,Hart,J. Hart,josh-hart,F,,,34:55,6,10,0.6,4,7,0.571,0,0,0.0,1,8,9,5,0,0,2,2,16,-7.0
+0042500403,1610612752,New York,Knicks,NYK,knicks,1626157,Karl-Anthony,Towns,K. Towns,karl-anthony-towns,C,,,38:02,4,10,0.4,0,2,0.0,3,3,1.0,2,6,8,1,3,2,1,4,11,6.0
+0042500403,1610612752,New York,Knicks,NYK,knicks,1628969,Mikal,Bridges,M. Bridges,mikal-bridges,G,,,28:43,1,5,0.2,0,3,0.0,0,0,0.0,0,5,5,2,0,1,1,4,2,11.0
+0042500403,1610612752,New York,Knicks,NYK,knicks,1628973,Jalen,Brunson,J. Brunson,jalen-brunson,G,,,35:27,11,25,0.44,3,5,0.6,7,8,0.875,2,3,5,5,0,0,5,5,32,-9.0
+0042500403,1610612752,New York,Knicks,NYK,knicks,1629013,Landry,Shamet,L. Shamet,landry-shamet,,,,23:24,1,8,0.125,1,7,0.143,0,0,0.0,2,2,4,2,0,1,0,5,3,-20.0
+0042500403,1610612752,New York,Knicks,NYK,knicks,1630540,Miles,McBride,M. McBride,miles-mcbride,,,,8:40,0,2,0.0,0,2,0.0,0,0,0.0,0,0,0,0,0,0,1,0,0,2.0
+0042500403,1610612752,New York,Knicks,NYK,knicks,1629011,Mitchell,Robinson,M. Robinson,mitchell-robinson,,,,7:04,2,3,0.667,0,0,0.0,1,2,0.5,4,0,4,0,0,0,0,0,5,-13.0
+0042500403,1610612752,New York,Knicks,NYK,knicks,1630631,Jose,Alvarado,J. Alvarado,jose-alvarado,,,,12:23,2,5,0.4,0,2,0.0,0,0,0.0,0,3,3,1,0,0,0,1,4,5.0
+0042500403,1610612752,New York,Knicks,NYK,knicks,203903,Jordan,Clarkson,J. Clarkson,jordan-clarkson,,,,13:15,4,7,0.571,2,2,1.0,0,0,0.0,1,2,3,1,1,0,2,0,10,8.0
+0042500403,1610612752,New York,Knicks,NYK,knicks,1631110,Jeremy,Sochan,J. Sochan,jeremy-sochan,,,,0:10,0,0,0.0,0,0,0.0,0,0,0.0,0,0,0,0,0,0,0,0,0,0.0
+0042500403,1610612752,New York,Knicks,NYK,knicks,1642359,Pacôme,Dadiet,P. Dadiet,pacôme-dadiet,,DNP - Coach's Decision,,,0,0,0.0,0,0,0.0,0,0,0.0,0,0,0,0,0,0,0,0,0,0.0
+0042500403,1610612752,New York,Knicks,NYK,knicks,1642885,Mohamed,Diawara,M. Diawara,mohamed-diawara,,DNP - Coach's Decision,,,0,0,0.0,0,0,0.0,0,0,0.0,0,0,0,0,0,0,0,0,0,0.0
+0042500403,1610612752,New York,Knicks,NYK,knicks,1630574,Ariel,Hukporti,A. Hukporti,ariel-hukporti,,DNP - Coach's Decision,,,0,0,0.0,0,0,0.0,0,0,0.0,0,0,0,0,0,0,0,0,0,0.0
+0042500403,1610612752,New York,Knicks,NYK,knicks,1642278,Tyler,Kolek,T. Kolek,tyler-kolek,,DNP - Coach's Decision,,,0,0,0.0,0,0,0.0,0,0,0.0,0,0,0,0,0,0,0,0,0,0.0
+0042500403,1610612759,San Antonio,Spurs,SAS,spurs,1630577,Julian,Champagnie,J. Champagnie,julian-champagnie,F,,,26:40,4,9,0.444,3,7,0.429,1,2,0.5,0,1,1,3,1,0,0,1,12,8.0
+0042500403,1610612759,San Antonio,Spurs,SAS,spurs,1630170,Devin,Vassell,D. Vassell,devin-vassell,F,,,38:04,3,4,0.75,3,4,0.75,2,3,0.667,0,4,4,0,0,0,1,3,11,12.0
+0042500403,1610612759,San Antonio,Spurs,SAS,spurs,1641705,Victor,Wembanyama,V. Wembanyama,victor-wembanyama,C,,,38:44,11,18,0.611,2,4,0.5,8,9,0.889,1,7,8,6,2,3,1,3,32,7.0
+0042500403,1610612759,San Antonio,Spurs,SAS,spurs,1642264,Stephon,Castle,S. Castle,stephon-castle,G,,,38:02,8,14,0.571,2,5,0.4,5,6,0.833,1,4,5,5,1,1,2,4,23,6.0
+0042500403,1610612759,San Antonio,Spurs,SAS,spurs,1628368,De'Aaron,Fox,D. Fox,deaaron-fox,G,,,36:41,4,14,0.286,0,5,0.0,4,4,1.0,0,3,3,8,1,2,2,3,12,-7.0
+0042500403,1610612759,San Antonio,Spurs,SAS,spurs,1642844,Dylan,Harper,D. Harper,dylan-harper,,,,32:00,5,18,0.278,1,8,0.125,2,2,1.0,1,8,9,4,0,0,0,1,13,-8.0
+0042500403,1610612759,San Antonio,Spurs,SAS,spurs,1629640,Keldon,Johnson,K. Johnson,keldon-johnson,,,,16:45,3,5,0.6,0,0,0.0,1,4,0.25,0,2,2,0,1,0,2,3,7,14.0
+0042500403,1610612759,San Antonio,Spurs,SAS,spurs,1628436,Luke,Kornet,L. Kornet,luke-kornet,,,,9:16,0,1,0.0,0,0,0.0,2,2,1.0,3,2,5,2,1,0,0,1,2,-3.0
+0042500403,1610612759,San Antonio,Spurs,SAS,spurs,1642868,Carter,Bryant,C. Bryant,carter-bryant,,,,3:48,1,1,1.0,1,1,1.0,0,0,0.0,0,0,0,0,0,1,0,2,3,-9.0
+0042500403,1610612759,San Antonio,Spurs,SAS,spurs,203084,Harrison,Barnes,H. Barnes,harrison-barnes,,DNP - Coach's Decision,,,0,0,0.0,0,0,0.0,0,0,0.0,0,0,0,0,0,0,0,0,0,0.0
+0042500403,1610612759,San Antonio,Spurs,SAS,spurs,202687,Bismack,Biyombo,B. Biyombo,bismack-biyombo,,DNP - Coach's Decision,,,0,0,0.0,0,0,0.0,0,0,0.0,0,0,0,0,0,0,0,0,0,0.0
+0042500403,1610612759,San Antonio,Spurs,SAS,spurs,1629162,Jordan,McLaughlin,J. McLaughlin,jordan-mclaughlin,,DNP - Coach's Decision,,,0,0,0.0,0,0,0.0,0,0,0.0,0,0,0,0,0,0,0,0,0,0.0
+0042500403,1610612759,San Antonio,Spurs,SAS,spurs,203482,Kelly,Olynyk,K. Olynyk,kelly-olynyk,,DNP - Coach's Decision,,,0,0,0.0,0,0,0.0,0,0,0.0,0,0,0,0,0,0,0,0,0,0.0
+0042500403,1610612759,San Antonio,Spurs,SAS,spurs,203486,Mason,Plumlee,M. Plumlee,mason-plumlee,,DNP - Coach's Decision,,,0,0,0.0,0,0,0.0,0,0,0.0,0,0,0,0,0,0,0,0,0,0.0
+0042500403,1610612759,San Antonio,Spurs,SAS,spurs,1630322,Lindy,Waters III,L. Waters III,lindy-waters-iii,,DNP - Coach's Decision,,,0,0,0.0,0,0,0.0,0,0,0.0,0,0,0,0,0,0,0,0,0,0.0

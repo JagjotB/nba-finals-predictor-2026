@@ -1,31 +1,31 @@
 team,player,role,projected_minutes,minutes_floor,minutes_ceiling,is_starter,is_closer,rotation_confidence,notes
-NYK,Jalen Brunson,Starter,37.5,32.5,42.0,True,True,high,"G1: 37.1. G2: 37.7. Locked into heavy minutes. 33.9% FG across both games but making every clutch play — game-winning FTs in G2. Efficiency is the only question."
-NYK,OG Anunoby,Starter,34.8,29.0,39.5,True,True,high,"G1: 31.1. G2: 36.8. Minutes trending up. 4 fouls in G2 but no games limited by them yet. Key two-way wing at MSG."
-NYK,Josh Hart,Starter,21.2,13.0,28.0,True,True,low,"G1: 26.8 (4 fouls). G2: 18.2 (5 fouls). Foul trouble is a serious pattern — 9 fouls in 2 games. Minutes and confidence floor dropped significantly. SAS targeting him at the rim."
-NYK,Mikal Bridges,Starter,36.5,31.0,42.0,True,True,high,"G1: 28.2. G2: 40.9. Major emergence — 20 pts 6 ast in G2, his best Finals performance. Now a genuine third scoring option. Minutes ceiling raised substantially."
-NYK,Karl-Anthony Towns,Starter,34.1,29.0,39.0,True,True,high,"G1: 34.4. G2: 33.9. Extremely consistent. 55.6% FG across both games. Most efficient star in the series. 9 fouls across 2 games is a watch item."
-NYK,Miles McBride,Bench,18.7,13.5,24.0,False,False,medium,"G1: 19.5. G2: 18.3. Stable role. 28.6% FG overall — scoring has been inconsistent but defensive value keeps him on the floor."
-NYK,Mitchell Robinson,Bench,13.8,8.5,19.0,False,False,medium,"G1: 13.2. G2: 14.1. Consistent role. 75% FG (limited attempts). Rim presence and rebounding valued; minutes stable."
-NYK,Landry Shamet,Bench,31.2,26.0,36.0,False,True,high,"G1: 33.3 (13 pts). G2: 30.2 (13 pts). Two straight double-digit games off the bench. Now clearly in the primary rotation. Projection raised from 25.0 to 31.2."
-NYK,Jordan Clarkson,Reserve,2.0,0.0,8.0,False,False,low,"G1: 5.7. G2: DNP. Effectively lost his rotation spot to Shamet. Only if foul trouble depletes the guard rotation."
-NYK,Jose Alvarado,Reserve,10.4,5.0,15.0,False,False,low,"G1: 10.9. G2: 10.1. Consistent spot minutes. Defensive energy role off the bench."
-NYK,Jeremy Sochan,Reserve,4.0,0.0,12.0,False,False,low,"DNP G1. DNP G2. Emergency option only. On NYK roster — traded from SAS during season."
-NYK,Pacome Dadiet,Reserve,4.0,0.0,10.0,False,False,low,DNP G1. DNP G2.
-NYK,Ariel Hukporti,Reserve,6.0,1.0,11.0,False,False,low,DNP G1. DNP G2.
-NYK,Mohamed Diawara,Reserve,5.0,0.0,10.0,False,False,low,DNP G1. DNP G2.
-NYK,Tyler Kolek,Reserve,5.0,0.0,10.0,False,False,low,DNP G1. DNP G2.
-SAS,Devin Vassell,Starter,37.3,32.0,42.0,True,True,high,"G1: 36.0. G2: 38.0. Carrying a heavy workload. 14 pts G2 but 40% FG across both games. Important defender — SAS cannot afford him in foul trouble."
-SAS,Stephon Castle,Starter,30.1,24.0,36.0,True,True,medium,"G1: 34.5 (17 pts). G2: 27.7 (14 pts, 4 TOs). Minutes declining due to foul and turnover issues. 6 TOs across 2 games. Confidence downgraded — late-game execution a real concern."
-SAS,De'Aaron Fox,Starter,35.2,30.0,40.0,True,True,high,"G1: 37.9 (7 pts, 3/13 FG). G2: 33.8 (20 pts, 8/12 FG). Huge bounce-back in G2 but 7 TOs across both games. Minutes stable but decision-making must improve."
-SAS,Victor Wembanyama,Starter,39.4,34.0,44.0,True,True,high,"G1: 37.8 (26 pts). G2: 40.3 (29 pts). Playing elite-level basketball — 27.5 pts/game. But 5.0 TOs/game including the G2-deciding miscommunication with Castle. Minutes raised substantially from 34.5 projection."
-SAS,Julian Champagnie,Starter,34.3,28.5,39.5,True,True,high,"G1: 31.2 (16 pts, 5/10 from 3). G2: 36.0 (8 pts, 2/6). Minutes up but production inconsistent. SAS needs his G1 shooting to return."
-SAS,Dylan Harper,Bench,30.6,25.0,36.0,False,True,high,"G1: 27.5 (16 pts). G2: 32.3 (15 pts). Steady contributor off the bench. Minutes trending up as Popovich leans on him more. 0/3 from 3 in G2 — 3-point variance to watch."
-SAS,Keldon Johnson,Bench,13.1,7.0,19.0,False,False,medium,"G1: 8.3 (0 pts). G2: 15.7 (3 pts). SAS's Sixth Man of the Year has been invisible — 3 pts on 4 FGA across both games. Variable role but SAS desperately needs him to produce."
-SAS,Luke Kornet,Bench,8.6,3.0,14.0,False,False,low,"G1: 10.2. G2: 7.8. Declining role. DNP risk elevated. Projection reduced from 12.5."
-SAS,Harrison Barnes,Reserve,7.4,2.0,13.0,False,False,low,"G1: 12.1. G2: 4.8. Fading from the rotation. Used situationally."
-SAS,Carter Bryant,Reserve,4.0,0.0,9.0,False,False,low,"G1: 4.4. G2: DNP. Mop-up role only."
-SAS,Jordan McLaughlin,Reserve,4.6,0.0,9.6,False,False,low,DNP G1. DNP G2.
-SAS,Kelly Olynyk,Reserve,3.9,0.0,8.9,False,False,low,DNP G1. DNP G2.
-SAS,Lindy Waters III,Reserve,3.8,0.0,8.8,False,False,low,DNP G1. DNP G2.
-SAS,Bismack Biyombo,Reserve,2.0,0.0,6.0,False,False,low,DNP G1. DNP G2.
-SAS,Mason Plumlee,Reserve,2.0,0.0,6.0,False,False,low,DNP G1. DNP G2.
+NYK,Jalen Brunson,Starter,36.4,31.0,41.0,True,True,high,"G1:37.1 G2:37.7 G3:35.5. Still the engine but 5 fouls and 5 TOs in G3 — discipline is critical heading into G4."
+NYK,OG Anunoby,Starter,36.2,31.0,41.0,True,True,high,"G1:31.1 G2:36.8 G3:38.0. Best game of the series in G3 (28 pts, 9/13 FG). Heavy workload trending up."
+NYK,Josh Hart,Starter,28.3,20.0,35.0,True,True,medium,"G1:26.8(4PF) G2:18.2(5PF) G3:34.9(2PF). Major bounce-back in G3 — 16 pts 9 reb only 2 fouls. Confidence restored; floor raised back up."
+NYK,Mikal Bridges,Starter,32.3,25.0,39.0,True,True,medium,"G1:28.2(9pts) G2:40.9(20pts) G3:28.7(2pts). Wildly inconsistent. 4 fouls in G3. Cannot count on him as a consistent co-star."
+NYK,Karl-Anthony Towns,Starter,36.1,30.0,41.0,True,True,high,"G1:34.4 G2:33.9 G3:38.0. Played heavy minutes but went quiet offensively (11 pts) against Wemby. Minutes up even if scoring dipped."
+NYK,Landry Shamet,Bench,27.4,21.0,33.0,False,True,medium,"G1:33.3 G2:30.2 G3:23.4. Minutes declining each game. Went 1/8 from 3 in G3 — cold shooting eroding his role. Confidence downgraded."
+NYK,Miles McBride,Bench,13.7,8.0,20.0,False,False,low,"G1:19.5 G2:18.3 G3:9.0. Lost significant minutes in G3. Getting crowded out of the rotation."
+NYK,Jordan Clarkson,Bench,7.8,2.0,14.0,False,False,low,"G1:5.7 G2:DNP G3:13.3(10pts). Came back in G3 and contributed. Emergency option; minutes dependent on game flow."
+NYK,Mitchell Robinson,Bench,10.4,5.0,16.0,False,False,low,"G1:13.2 G2:14.1 G3:7.0. Reduced role in G3. Matchup-dependent."
+NYK,Jose Alvarado,Reserve,11.4,6.0,16.0,False,False,low,"G1:10.9 G2:10.1 G3:12.4. Consistent reserve minutes. Defensive energy role."
+NYK,Jeremy Sochan,Reserve,4.0,0.0,10.0,False,False,low,DNP all 3 games. Emergency option only.
+NYK,Pacome Dadiet,Reserve,4.0,0.0,8.0,False,False,low,DNP all 3 games.
+NYK,Ariel Hukporti,Reserve,4.0,0.0,8.0,False,False,low,DNP all 3 games.
+NYK,Mohamed Diawara,Reserve,4.0,0.0,8.0,False,False,low,DNP all 3 games.
+NYK,Tyler Kolek,Reserve,4.0,0.0,8.0,False,False,low,DNP all 3 games.
+SAS,Victor Wembanyama,Starter,39.0,34.0,44.0,True,True,high,"G1:37.8 G2:40.3 G3:38.7. Unstoppable in G3 — 32 pts on 11/18 (61% FG) 8 reb 6 ast 1 TO. Locked into heavy minutes."
+SAS,Devin Vassell,Starter,37.7,32.0,42.0,True,True,high,"G1:36.0 G2:38.0 G3:38.1. Iron man minutes. Consistent two-way presence, 3/4 from 3 in G3."
+SAS,De'Aaron Fox,Starter,36.1,30.0,41.0,True,True,high,"G1:37.9 G2:33.8 G3:36.7. 8 assists in G3 — finding his playmaking role. 2 TOs, much better decision-making."
+SAS,Stephon Castle,Starter,34.2,28.0,40.0,True,True,high,"G1:34.5(2TO) G2:27.7(4TO) G3:38.0(2TO). Major bounce-back — 23 pts and cut TOs to 2. Confidence restored to high."
+SAS,Julian Champagnie,Starter,30.4,24.0,36.0,True,True,medium,"G1:31.2 G2:36.0 G3:26.7. Minutes and production inconsistent. 3/7 from 3 in G3 — shooting presence still valuable."
+SAS,Dylan Harper,Bench,31.2,25.0,37.0,False,True,high,"G1:27.5 G2:32.3 G3:32.0(13pts 9reb). Career performance in G3. Locked into ~32 min as a key rotation piece."
+SAS,Keldon Johnson,Bench,14.8,9.0,21.0,False,False,medium,"G1:8.3(0pts) G2:15.7(3pts) G3:16.8(7pts). Finally contributing after invisible start to series. Trending up; confidence raised."
+SAS,Luke Kornet,Bench,9.0,4.0,15.0,False,False,low,"G1:10.2 G2:7.8 G3:9.3. Stable spot minutes. Situational big."
+SAS,Harrison Barnes,Reserve,3.9,0.0,10.0,False,False,low,"G1:12.1 G2:4.8 G3:DNP. Fading from rotation."
+SAS,Carter Bryant,Reserve,3.8,0.0,8.0,False,False,low,"G1:4.4 G2:3.3 G3:3.8. Mop-up only."
+SAS,Jordan McLaughlin,Reserve,4.6,0.0,9.6,False,False,low,DNP all 3 games.
+SAS,Kelly Olynyk,Reserve,3.9,0.0,8.9,False,False,low,DNP all 3 games.
+SAS,Lindy Waters III,Reserve,3.8,0.0,8.8,False,False,low,DNP all 3 games.
+SAS,Bismack Biyombo,Reserve,2.0,0.0,6.0,False,False,low,DNP all 3 games.
+SAS,Mason Plumlee,Reserve,2.0,0.0,6.0,False,False,low,DNP all 3 games.
