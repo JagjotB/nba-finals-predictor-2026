@@ -386,9 +386,9 @@ def render_the_pick(bundle: dict[str, Any]) -> None:
         f"{top_prob:.0%} of simulations",
     )
     col2.metric(
-        "If series extends",
+        "2nd most likely",
         second["result"] if second else "—",
-        f"{float(second['probability']):.0%} chance" if second else "",
+        f"{float(second['probability']):.0%} of simulations" if second else "",
     )
     col3.metric(
         "Confidence range",
