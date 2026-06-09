@@ -724,132 +724,237 @@ def render_player_breakdown(bundle: dict[str, Any]) -> None:
 # ---------------------------------------------------------------------------
 
 def render_ml_panel(bundle: dict[str, Any]) -> None:
+    import json as _json
+
     ml = bundle.get("ml_status", {})
     team_a = bundle["team_a"]
+    team_b = bundle["team_b"]
 
-    st.markdown("## How Our Model Works")
+    st.markdown("## How the Model Works")
     st.caption(
-        "This section shows exactly what's powering the predictions - "
-        "what data is live, which ML models are trained, and how confident each component is."
+        "Architecture, training results, signal breakdown, and live data status "
+        "for every component powering these predictions."
     )
 
-    # ---- Data status ----
+    # ── 1. Key performance metrics ────────────────────────────────────────────
+    acc = ml.get("model_accuracy")
+    brier = ml.get("model_brier")
+    ece = ml.get("model_ece")
+    rows_trained = ml.get("model_training_rows", 0)
+    games_trained = (rows_trained // 2) if rows_trained else 915
+
+    st.markdown("### Model Performance")
+
+    if not ml.get("model_trained"):
+        st.warning(
+            "ML model not loaded — using statistical fallback. "
+            "Run `python scripts/validate_models.py` to train."
+        )
+
+    m1, m2, m3, m4 = st.columns(4)
+    with m1:
+        with st.container(border=True):
+            st.metric(
+                "Walk-forward accuracy",
+                f"{acc:.1%}" if acc else "—",
+                delta=f"+{(acc - 0.5) * 100:.1f}% vs coin flip" if acc else None,
+            )
+    with m2:
+        with st.container(border=True):
+            st.metric(
+                "Brier score",
+                f"{brier:.4f}" if brier else "—",
+                delta="lower = better  (random = 0.25)",
+                delta_color="off",
+            )
+    with m3:
+        with st.container(border=True):
+            st.metric(
+                "Calibration (ECE)",
+                f"{ece:.4f}" if ece else "—",
+                delta="avg probability error",
+                delta_color="off",
+            )
+    with m4:
+        with st.container(border=True):
+            st.metric(
+                "Training games",
+                f"{games_trained:,}",
+                delta="11 playoff seasons",
+                delta_color="off",
+            )
+
+    st.caption(
+        "Walk-forward validation: model is trained on older seasons and tested on seasons it has never seen. "
+        "This prevents the accuracy number from being inflated by overfitting."
+    )
+
+    # Performance comparison bar chart
+    st.markdown("**How it compares to simpler approaches** (674 held-out games, 4 seasons)")
+    comparison_df = pd.DataFrame({
+        "Model": [
+            "ELO Baseline",
+            "Net Rating Only",
+            "Logistic Regression",
+            "XGBoost",
+            "LR + XGBoost Ensemble",
+        ],
+        "Accuracy": [0.5579, 0.5964, 0.6113, 0.6157, 0.6172],
+    }).set_index("Model")
+    st.bar_chart(comparison_df, y="Accuracy", use_container_width=True)
+
+    st.markdown("---")
+
+    # ── 2. Architecture ───────────────────────────────────────────────────────
+    st.markdown("### Architecture")
+    st.caption(
+        "Two ML models produce the baseline probability. "
+        "Five signal adjustments then shift it up or down."
+    )
+
+    a1, a2, a3 = st.columns(3)
+    with a1:
+        with st.container(border=True):
+            st.markdown("**Logistic Regression**")
+            st.metric("Accuracy", "61.1%", delta="16 features", delta_color="off")
+            st.caption(
+                "Trained on blended regular-season + playoff stats. "
+                "Net rating, eFG%, TOV%, OReb%, FTA rate, pace, home court, travel."
+            )
+    with a2:
+        with st.container(border=True):
+            st.markdown("**XGBoost Classifier**")
+            st.metric("Accuracy", "61.6%", delta="24 features", delta_color="off")
+            st.caption(
+                "All LR features plus injury signal, offensive/defensive rating split, "
+                "rest advantage, and playoff experience."
+            )
+    with a3:
+        with st.container(border=True):
+            st.markdown("**Ensemble (50 / 50 blend)**")
+            st.metric("Accuracy", "61.7%", delta="production model", delta_color="off")
+            st.caption(
+                "LR and XGBoost probabilities averaged, then five component "
+                "adjustments shift the final number."
+            )
+
+    st.markdown("---")
+
+    # ── 3. Signal breakdown ───────────────────────────────────────────────────
+    st.markdown("### The Seven Signals")
+    st.caption(
+        "Each signal is computed from live NBA data and either baked into the ML baseline "
+        "or applied as a weighted shift on top of it."
+    )
+
+    signals = [
+        ("ML Baseline", "Anchor", "Team quality across 24 stats", "#1f77b4",
+         "LR + XGBoost blend trained on 915 playoff games. Net rating, shooting, turnovers, pace, injury."),
+        ("Player Projections", "0.45×", "Projected scoring edge", "#2ca02c",
+         "Regular-season / playoff rate blend × projected minutes × PIE efficiency multiplier."),
+        ("Lineup Strength", "0.25×", "Depth and closing lineup edge", "#9467bd",
+         "2-man and 5-man lineup net ratings. Accounts for rotation quality and late-game units."),
+        ("Matchup Edges", "0.20×", "Style-specific advantages", "#8c564b",
+         "Pick-and-roll, transition, corner 3s. Flags structural mismatches between play styles."),
+        ("Clutch Edge", "0.10×", "Close-game performance", "#e377c2",
+         "Applied only when game is expected to be close (30% of games). Uses closing lineup ratings."),
+        ("Injury / Availability", "Baseline + upstream", "Key player absences", "#d62728",
+         "Baked into XGBoost via pts-share differential. Also adjusts upstream player projections."),
+        ("Foul Trouble", "0.10×", "Star player availability risk", "#ff7f0e",
+         "Monte Carlo simulation of 100,000 games. Penalises teams whose key players foul out often."),
+    ]
+
+    col_l, col_r = st.columns(2)
+    for i, (name, weight, what, color, detail) in enumerate(signals):
+        col = col_l if i % 2 == 0 else col_r
+        with col:
+            st.markdown(
+                f"<div style='border-left:4px solid {color}; padding:10px 14px; "
+                f"margin-bottom:10px; background:#1a1a1a; border-radius:0 6px 6px 0;'>"
+                f"<div style='display:flex; justify-content:space-between; align-items:baseline;'>"
+                f"<span style='font-weight:700; font-size:0.95rem;'>{name}</span>"
+                f"<span style='font-size:0.8rem; color:#aaa; background:#2a2a2a; "
+                f"padding:2px 8px; border-radius:12px;'>{weight}</span>"
+                f"</div>"
+                f"<div style='font-size:0.8rem; color:#ccc; margin-top:2px;'>{what}</div>"
+                f"<div style='font-size:0.75rem; color:#888; margin-top:4px;'>{detail}</div>"
+                f"</div>",
+                unsafe_allow_html=True,
+            )
+
+    st.markdown("---")
+
+    # ── 4. Spread / margin model ──────────────────────────────────────────────
+    st.markdown("### Spread Model")
+    st.caption(
+        "A separate XGBoost regression model trained to predict point margin directly, "
+        "independent of the win-probability model. "
+        "Used to show the projected spread and a cross-check probability on each game."
+    )
+
+    margin_path = PROJECT_ROOT / "data" / "processed" / "stats_cache" / "xgb_margin_model.json"
+    if margin_path.exists():
+        mm = _json.loads(margin_path.read_text(encoding="utf-8"))
+        sm1, sm2, sm3 = st.columns(3)
+        with sm1:
+            with st.container(border=True):
+                st.metric("Margin MAE", f"{mm.get('margin_mae', 0):.1f} pts",
+                          delta="avg prediction error", delta_color="off")
+        with sm2:
+            with st.container(border=True):
+                st.metric("Residual std", f"{mm.get('residual_std', 0):.1f} pts",
+                          delta="68% CI width", delta_color="off")
+        with sm3:
+            with st.container(border=True):
+                st.metric("Raw margin std", f"{mm.get('margin_std_raw', 0):.1f} pts",
+                          delta="how noisy NBA games are", delta_color="off")
+        st.caption(
+            "Even Vegas narrows margin std to ~12 pts. An MAE of 11.8 pts is realistic — "
+            "individual game outcomes have genuine irreducible randomness. "
+            "The spread model's value is in direction and divergence, not in an exact number."
+        )
+    else:
+        st.info("Spread model not trained. Run `python scripts/validate_models.py`.")
+
+    st.markdown("---")
+
+    # ── 5. Live data status ───────────────────────────────────────────────────
     st.markdown("### Live Data Status")
-    st.caption("Green = using real NBA API data. Red = using a statistical default.")
+    st.caption("Green = using real NBA API data for this prediction. Red = using a statistical fallback.")
 
     d1, d2, d3, d4 = st.columns(4)
-    def _status_indicator(ok: bool, label: str, detail: str) -> None:
+
+    def _status_card(ok: bool, label: str, detail: str) -> None:
         color = "#2ecc71" if ok else "#e74c3c"
+        bg = "#0d2b1a" if ok else "#2b0d0d"
         icon = "✅" if ok else "⚠️"
         st.markdown(
-            f"<div style='border:1px solid {color}; border-radius:8px; padding:10px; text-align:center;'>"
-            f"<div style='font-size:1.5rem;'>{icon}</div>"
-            f"<div style='font-weight:700;'>{label}</div>"
-            f"<div style='font-size:0.8rem; color:#aaa;'>{detail}</div>"
+            f"<div style='border:1px solid {color}; background:{bg}; border-radius:8px; "
+            f"padding:12px; text-align:center;'>"
+            f"<div style='font-size:1.4rem;'>{icon}</div>"
+            f"<div style='font-weight:700; font-size:0.9rem; margin-top:4px;'>{label}</div>"
+            f"<div style='font-size:0.75rem; color:#aaa; margin-top:2px;'>{detail}</div>"
             f"</div>",
             unsafe_allow_html=True,
         )
 
     with d1:
-        _status_indicator(ml.get("live_team_stats", False), "Team Stats", "Offensive/defensive ratings, pace")
+        _status_card(ml.get("live_team_stats", False), "Team Stats", "Off/def ratings · pace · eFG%")
     with d2:
-        _status_indicator(ml.get("live_player_stats", False), "Player Stats", "Per-game stats & PIE efficiency")
+        _status_card(ml.get("live_player_stats", False), "Player Stats", "Per-game stats · PIE · minutes")
     with d3:
-        _status_indicator(ml.get("live_lineup_stats", False), "Lineup Stats", "2-man & 5-man lineup net ratings")
+        _status_card(ml.get("live_lineup_stats", False), "Lineup Stats", "2-man & 5-man net ratings")
     with d4:
-        _status_indicator(ml.get("model_trained", False), "ML Model", "Logistic regression trained on real games")
+        _status_card(ml.get("model_trained", False), "ML Model", "LR + XGBoost trained & loaded")
 
     st.markdown("---")
 
-    # ---- ML model status ----
-    st.markdown("### Prediction Model")
-
-    if ml.get("model_trained"):
-        acc = ml.get("model_accuracy")
-        rows_trained = ml.get("model_training_rows")
-        ece = ml.get("model_ece")
-        ece_str = f" · calibration error {ece:.3f}" if ece else ""
-        st.success(
-            f"**LR + XGBoost ensemble active.** "
-            f"Trained on **{rows_trained:,} team-game perspectives** across 11 playoff seasons. "
-            f"Walk-forward accuracy: **{acc:.1%}**{ece_str} — outperforms ELO and net-rating baselines. "
-            f"Injury signal baked into XGBoost baseline; all other signals from live NBA data."
-        )
-    else:
-        st.warning(
-            "**ML model not found.** Using statistical formula fallback. "
-            "Run `python scripts/train_game_model.py` to train the model."
-        )
-
-    st.markdown("#### What the model combines")
+    # ── 6. Bayesian series updater ────────────────────────────────────────────
+    st.markdown("### Bayesian Series Cross-Check")
     st.caption(
-        "Two ML models form the baseline: a logistic regression on team-quality stats blended 50/50 "
-        "with an XGBoost model that also incorporates injury signal. "
-        "Five component adjustments then shift that baseline based on player quality, matchup advantages, "
-        "lineup depth, and series-specific risk factors."
-    )
-
-    component_rows = [
-        {
-            "Component": "Team baseline (LR + XGBoost)",
-            "Weight": "Anchor",
-            "What it measures": "Team quality — net rating, shooting efficiency, turnovers, pace, injury strength",
-            "Data source": "LR + XGBoost ensemble trained on 915 playoff games (11 seasons)" if ml.get("model_trained") else "Statistical sigmoid formula",
-            "Role in ensemble": "Core probability anchor — 50% logistic regression, 50% XGBoost with injury signal",
-        },
-        {
-            "Component": "Player projections",
-            "Weight": "0.45×",
-            "What it measures": "Projected scoring edge based on individual production vs opponent",
-            "Data source": "Regular-season/playoff rate blend × projected minutes × PIE multiplier",
-            "Role in ensemble": "Active signal — shifts probability toward better-projected team",
-        },
-        {
-            "Component": "Matchup edges",
-            "Weight": "0.20×",
-            "What it measures": "Advantages in specific play types — pick-and-roll, transition, corner threes",
-            "Data source": "Live team playstyle data from NBA API",
-            "Role in ensemble": "Active signal — adjusts for structural style mismatches",
-        },
-        {
-            "Component": "Lineup strength",
-            "Weight": "0.25×",
-            "What it measures": "Quality of starting five, bench, and closing lineup",
-            "Data source": "2-man and 5-man lineup net ratings from NBA API",
-            "Role in ensemble": "Active signal — accounts for depth and late-game lineup edge",
-        },
-        {
-            "Component": "Clutch edge",
-            "Weight": "0.10× (close games only)",
-            "What it measures": "Which team performs better when games are close late",
-            "Data source": "Closing lineup composition + individual clutch ratings",
-            "Role in ensemble": "Active signal — applied at 30% weight (rate of close games)",
-        },
-        {
-            "Component": "Injury / availability",
-            "Weight": "Baseline + upstream",
-            "What it measures": "Absence of key players — pts-share lost to injured starters",
-            "Data source": "XGBoost trained on 11-season absence proxy; manual tracker adjusts rotations",
-            "Role in ensemble": "Baked into XGBoost baseline via injury_strength_diff; also adjusts upstream player projections",
-        },
-        {
-            "Component": "Foul trouble",
-            "Weight": "0.10×",
-            "What it measures": "Risk that a key player loses minutes to foul trouble",
-            "Data source": "Player foul-rate scenarios in 100,000-game Monte Carlo simulation",
-            "Role in ensemble": "Active signal — penalizes teams whose stars carry high foul risk",
-        },
-    ]
-    st.dataframe(pd.DataFrame(component_rows), use_container_width=True, hide_index=True)
-
-    st.markdown("---")
-
-    # ---- Bayesian updater ----
-    st.markdown("### Bayesian Series Updater")
-    st.caption(
-        "After each game, we use Bayesian statistics to update our beliefs about team strength. "
-        "This is more principled than just adjusting numbers by hand - "
-        "it correctly treats 'expected winner won' as weak evidence and 'upset' as strong evidence."
+        "After games are played, a Bayesian model updates its estimate of each team's true strength "
+        "based on actual results. An upset shifts beliefs more than an expected win. "
+        "This runs independently of the main model — agreement confirms the call."
     )
 
     bayesian = bundle.get("bayesian_series")
@@ -857,83 +962,80 @@ def render_ml_panel(bundle: dict[str, Any]) -> None:
     series = bundle["series_simulation"]
 
     if bayesian and completed:
-        col_mc, col_bt, col_gap = st.columns(3)
         mc_p = float(series["team_a_series_win_probability"])
         bt_p = float(bayesian.get("team_a_series_win_probability", 0.5))
+        gap = abs(mc_p - bt_p) * 100
 
+        col_mc, col_bt, col_gap = st.columns(3)
         with col_mc:
             with st.container(border=True):
-                st.metric("Official series forecast", _pct(mc_p))
-                st.caption("Matches the game probabilities and the full outcome distribution")
-
+                st.metric(f"{team_a} series win — MC simulation", _pct(mc_p))
+                st.caption("Monte Carlo: 100,000 simulated series from current state")
         with col_bt:
             with st.container(border=True):
-                st.metric("Bayesian cross-check", _pct(bt_p))
-                st.caption(
-                    "Updates our prior belief about team strength based on actual game results. "
-                    "It is diagnostic and is not mixed into the official distribution."
-                )
-
+                st.metric(f"{team_a} series win — Bayesian", _pct(bt_p))
+                st.caption("Posterior after updating on actual game results")
         with col_gap:
             with st.container(border=True):
-                st.metric("Cross-check gap", f"{abs(mc_p - bt_p) * 100:.1f} pts")
-                st.caption("Both methods pointing the same direction confirms the series call.")
+                st.metric("Gap between methods", f"{gap:.1f} pts")
+                if gap < 5:
+                    st.caption("Models agree — strengthens the forecast.")
+                else:
+                    st.caption("Meaningful divergence — treat series estimate with more uncertainty.")
 
+        agreement = "agree" if gap < 5 else "diverge"
         st.info(
-            f"**After {len(completed)} game(s) played:** "
-            f"Ensemble simulation: **{_pct(mc_p)}** for {team_a}. "
-            f"Bayesian strength cross-check: **{_pct(bt_p)}**. "
-            "Both models are independent — agreement between them strengthens the forecast."
+            f"**After {len(completed)} game(s):** Monte Carlo says **{_pct(mc_p)}** for {team_a}, "
+            f"Bayesian cross-check says **{_pct(bt_p)}**. "
+            f"The two methods {agreement} ({gap:.1f} pt gap)."
         )
     elif not completed:
         st.info(
-            "Bayesian updates activate after Game 1 is played. "
-            "Before any games, we use the pre-series model. "
-            "Each game result will update our estimate of each team's true strength."
+            "Bayesian updates activate after Game 1. Before any games, both methods use the pre-series model."
         )
     else:
         st.info(
-            "The official forecast already reflects completed games. "
-            "A Bayesian cross-check requires saved pregame prediction snapshots, "
-            "so it is withheld rather than reconstructed from postgame data."
+            "Bayesian cross-check requires pre-game prediction snapshots — "
+            "withheld rather than reconstructed from postgame data."
         )
 
     st.markdown("---")
 
-    # ---- Series simulation explained ----
-    st.markdown("### How Series Odds Are Calculated")
+    # ── 7. Series simulation ──────────────────────────────────────────────────
+    st.markdown("### Series Simulation")
     st.caption(
-        "We run 100,000 simulated versions of the rest of this series. "
-        "In each simulation, each game is decided based on that game's win probability "
-        "plus some randomness (because anything can happen in one game). "
-        "The final percentages show how often each team won across all simulations."
+        "100,000 simulated series from the current game state. "
+        "Each game uses that game's win probability plus randomness — "
+        "because a 60% favorite still loses 40% of the time."
     )
 
     series_data = bundle["series_simulation"]
     col_a, col_b, col_c = st.columns(3)
     with col_a:
-        st.markdown("**Series win probabilities**")
+        st.markdown("**Series win probability**")
         st.bar_chart(
             pd.DataFrame({
-                "Team": [team_a, bundle["team_b"]],
-                "Chance": [
+                "Team": [team_a, team_b],
+                "Probability": [
                     series_data["team_a_series_win_probability"],
                     series_data["team_b_series_win_probability"],
                 ],
-            }).set_index("Team")
+            }).set_index("Team"),
+            y="Probability",
         )
     with col_b:
-        st.markdown("**How many games?**")
+        st.markdown("**Series length**")
         st.bar_chart(
             pd.DataFrame({
                 "Games": [str(r["games"]) for r in series_data.get("series_length_distribution", [])],
                 "Probability": [r["probability"] for r in series_data.get("series_length_distribution", [])],
-            }).set_index("Games")
+            }).set_index("Games"),
+            y="Probability",
         )
     with col_c:
-        st.markdown("**All possible outcomes**")
+        st.markdown("**Outcome distribution**")
         dist_rows = [
-            {"Result": r["result"], "Chance": r["percentage"]}
+            {"Result": r["result"], "Probability": r["percentage"]}
             for r in series_data.get("result_distribution", [])
             if float(r["probability"]) > 0.01
         ]
@@ -942,12 +1044,11 @@ def render_ml_panel(bundle: dict[str, Any]) -> None:
 
     st.markdown("---")
 
-    # ---- Scenarios ----
+    # ── 8. What-if scenarios ──────────────────────────────────────────────────
     st.markdown("### What-If Scenarios")
     st.caption(
-        "These scenarios test how the series odds change if specific things happen. "
-        "For example: what if one team's star player gets into foul trouble all series? "
-        "Toggle scenarios in the sidebar."
+        "Toggle scenarios in the sidebar to see how the series odds shift under different conditions — "
+        "foul trouble, player absence, style adjustments."
     )
 
 
