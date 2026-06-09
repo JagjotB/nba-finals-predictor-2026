@@ -1,5 +1,6 @@
 {
   "validation": "chronological_walk_forward",
+  "production_model": "ensemble",
   "splits": [
     {
       "test_season": "2021-22",
@@ -19,6 +20,22 @@
         "brier_score": 0.2376,
         "roc_auc": 0.6276,
         "expected_calibration_error": 0.0178
+      },
+      "xgb_model": {
+        "games": 174,
+        "accuracy": 0.6264,
+        "log_loss": 0.6571,
+        "brier_score": 0.2321,
+        "roc_auc": 0.656,
+        "expected_calibration_error": 0.0263
+      },
+      "ensemble": {
+        "games": 174,
+        "accuracy": 0.6149,
+        "log_loss": 0.6606,
+        "brier_score": 0.2339,
+        "roc_auc": 0.6486,
+        "expected_calibration_error": 0.0238
       },
       "net_rating_baseline": {
         "games": 174,
@@ -57,6 +74,22 @@
         "roc_auc": 0.5927,
         "expected_calibration_error": 0.1428
       },
+      "xgb_model": {
+        "games": 168,
+        "accuracy": 0.6012,
+        "log_loss": 0.6821,
+        "brier_score": 0.2438,
+        "roc_auc": 0.6212,
+        "expected_calibration_error": 0.0981
+      },
+      "ensemble": {
+        "games": 168,
+        "accuracy": 0.5774,
+        "log_loss": 0.6957,
+        "brier_score": 0.2498,
+        "roc_auc": 0.6098,
+        "expected_calibration_error": 0.0971
+      },
       "net_rating_baseline": {
         "games": 168,
         "accuracy": 0.5476,
@@ -94,6 +127,22 @@
         "brier_score": 0.2167,
         "roc_auc": 0.7237,
         "expected_calibration_error": 0.0931
+      },
+      "xgb_model": {
+        "games": 164,
+        "accuracy": 0.6646,
+        "log_loss": 0.6244,
+        "brier_score": 0.2167,
+        "roc_auc": 0.7164,
+        "expected_calibration_error": 0.0765
+      },
+      "ensemble": {
+        "games": 164,
+        "accuracy": 0.6707,
+        "log_loss": 0.6226,
+        "brier_score": 0.2157,
+        "roc_auc": 0.7228,
+        "expected_calibration_error": 0.0634
       },
       "net_rating_baseline": {
         "games": 164,
@@ -134,6 +183,22 @@
         "roc_auc": 0.6327,
         "expected_calibration_error": 0.0612
       },
+      "xgb_model": {
+        "games": 168,
+        "accuracy": 0.5893,
+        "log_loss": 0.685,
+        "brier_score": 0.2455,
+        "roc_auc": 0.5985,
+        "expected_calibration_error": 0.0819
+      },
+      "ensemble": {
+        "games": 168,
+        "accuracy": 0.6131,
+        "log_loss": 0.679,
+        "brier_score": 0.2419,
+        "roc_auc": 0.6182,
+        "expected_calibration_error": 0.0495
+      },
       "net_rating_baseline": {
         "games": 168,
         "accuracy": 0.5714,
@@ -163,6 +228,30 @@
       "opening_series_winner": {
         "series": 60,
         "accuracy": 0.65
+      }
+    },
+    "xgb_model": {
+      "games": 674,
+      "accuracy": 0.6202,
+      "log_loss": 0.6623,
+      "brier_score": 0.2346,
+      "roc_auc": 0.646,
+      "expected_calibration_error": 0.0398,
+      "opening_series_winner": {
+        "series": 60,
+        "accuracy": 0.6333
+      }
+    },
+    "ensemble": {
+      "games": 674,
+      "accuracy": 0.6187,
+      "log_loss": 0.6647,
+      "brier_score": 0.2354,
+      "roc_auc": 0.6462,
+      "expected_calibration_error": 0.0252,
+      "opening_series_winner": {
+        "series": 60,
+        "accuracy": 0.6333
       }
     },
     "net_rating_baseline": {
@@ -207,7 +296,7 @@
       "2023-24",
       "2024-25"
     ],
-    "sha256": "4a85d45c04da4e96b9d745e8fb4dbab8e2ad3ca3d577cc7c7cf22765b4492d33",
+    "sha256": "afe0f8805ecd675decd8c95ea0b983addbcf2ddba5555906e4c56db3bebb957d",
     "source_policy": "regular-season priors plus playoff games strictly before tipoff",
     "unavailable_historical_sources": [
       "injuries",

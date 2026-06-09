@@ -460,7 +460,15 @@ def walk_forward_backtest(
     rows: list[dict[str, Any]],
     test_seasons: list[str] | None = None,
 ) -> dict[str, Any]:
-    """Train only on earlier seasons and score each later playoff season."""
+    """Train only on earlier seasons and score each later playoff season.
+
+    Validates three models: LR (baseline), XGBoost (with injury), and their
+    50/50 ensemble. The ensemble is the production model.
+    """
+    import numpy as np
+    from sklearn.calibration import CalibratedClassifierCV
+    from sklearn.model_selection import GroupKFold
+
     seasons = sorted({str(row.get("season")) for row in rows})
     test_seasons = test_seasons or seasons[-4:]
     split_reports = []
@@ -479,23 +487,36 @@ def walk_forward_backtest(
         ]
         if len(train_seasons) < 3 or not test_rows:
             continue
-        bundle = train(eligible_rows, holdout_seasons=[test_season])
+
+        # LR model (FEATURE_COLS only, no injury)
+        lr_bundle = train(eligible_rows, holdout_seasons=[test_season])
+
+        # XGBoost model (XGB_FEATURE_COLS including injury)
+        xgb_bundle = train_xgb(eligible_rows, holdout_seasons=[test_season])
+
         elo = _elo_predictions(eligible_rows, test_season)
-        targets, model_probs, net_probs, elo_probs = [], [], [], []
+        targets, lr_probs, xgb_probs, ens_probs, net_probs, elo_probs = [], [], [], [], [], []
+
         for row in test_rows:
-            probability = predict_win_probability(
-                row,
-                bundle,
-                str(row.get("team_a_id")),
-                str(row.get("team_b_id")),
+            lr_p = predict_win_probability(
+                row, lr_bundle,
+                str(row.get("team_a_id")), str(row.get("team_b_id")),
             )
+            xgb_p = predict_xgb_win_probability(row, xgb_bundle)
+            ens_p = round(0.5 * lr_p + 0.5 * xgb_p, 6)
+
             identity = f"{test_season}:{row['game_id']}:{row['perspective']}"
-            elo_probability = elo.get(identity, 0.5)
+            elo_p = elo.get(identity, 0.5)
+            net_p = _net_rating_baseline_probability(row)
             target = int(row["won"])
+
             targets.append(target)
-            model_probs.append(probability)
-            net_probs.append(_net_rating_baseline_probability(row))
-            elo_probs.append(elo_probability)
+            lr_probs.append(lr_p)
+            xgb_probs.append(xgb_p)
+            ens_probs.append(ens_p)
+            net_probs.append(net_p)
+            elo_probs.append(elo_p)
+
             oof_rows.append({
                 "season": test_season,
                 "series_id": row.get("series_id"),
@@ -505,9 +526,11 @@ def walk_forward_backtest(
                 "team_a": row.get("team_a"),
                 "team_b": row.get("team_b"),
                 "actual_team_a_win": target,
-                "baseline_probability": probability,
-                "net_rating_probability": round(net_probs[-1], 6),
-                "elo_probability": round(elo_probability, 6),
+                "baseline_probability": lr_p,
+                "xgb_probability": xgb_p,
+                "ensemble_probability": ens_p,
+                "net_rating_probability": round(net_p, 6),
+                "elo_probability": round(elo_p, 6),
                 "player_edge": 0.0,
                 "matchup_edge": 0.0,
                 "lineup_edge": 0.0,
@@ -521,32 +544,34 @@ def walk_forward_backtest(
                 "injury_data_available": int(row.get("injury_data_available", 0)),
                 "coaching_data_available": 0,
             })
+
         split_reports.append({
             "test_season": test_season,
             "train_seasons": train_seasons,
-            "model": _binary_metrics(targets, model_probs),
+            "model": _binary_metrics(targets, lr_probs),
+            "xgb_model": _binary_metrics(targets, xgb_probs),
+            "ensemble": _binary_metrics(targets, ens_probs),
             "net_rating_baseline": _binary_metrics(targets, net_probs),
             "elo_baseline": _binary_metrics(targets, elo_probs),
         })
 
     targets = [int(row["actual_team_a_win"]) for row in oof_rows]
-    overall = {
-        "model": _binary_metrics(targets, [float(row["baseline_probability"]) for row in oof_rows]),
-        "net_rating_baseline": _binary_metrics(targets, [float(row["net_rating_probability"]) for row in oof_rows]),
-        "elo_baseline": _binary_metrics(targets, [float(row["elo_probability"]) for row in oof_rows]),
-    } if oof_rows else {}
-    for model_name, probability_key in (
-        ("model", "baseline_probability"),
-        ("net_rating_baseline", "net_rating_probability"),
-        ("elo_baseline", "elo_probability"),
-    ):
-        if model_name in overall:
-            overall[model_name]["opening_series_winner"] = _opening_series_accuracy(
-                oof_rows,
-                probability_key,
-            )
+    overall: dict[str, Any] = {}
+    if oof_rows:
+        for key, prob_key in [
+            ("model", "baseline_probability"),
+            ("xgb_model", "xgb_probability"),
+            ("ensemble", "ensemble_probability"),
+            ("net_rating_baseline", "net_rating_probability"),
+            ("elo_baseline", "elo_probability"),
+        ]:
+            probs = [float(row[prob_key]) for row in oof_rows]
+            overall[key] = _binary_metrics(targets, probs)
+            overall[key]["opening_series_winner"] = _opening_series_accuracy(oof_rows, prob_key)
+
     return {
         "validation": "chronological_walk_forward",
+        "production_model": "ensemble",
         "splits": split_reports,
         "overall": overall,
         "oof_predictions": oof_rows,

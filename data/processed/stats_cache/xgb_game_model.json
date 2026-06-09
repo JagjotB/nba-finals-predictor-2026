@@ -19,6 +19,6 @@
     "injury_strength_diff",
     "injury_data_available"
   ],
-  "dataset_sha256": "5fdff3449a921eadcbdd7453c36864621cf92ea121ed388ea1e6dda0072040d6",
+  "dataset_sha256": "afe0f8805ecd675decd8c95ea0b983addbcf2ddba5555906e4c56db3bebb957d",
   "binary_artifact": "xgb_game_model.joblib"
 }
