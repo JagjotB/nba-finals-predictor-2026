@@ -191,8 +191,8 @@ def _prediction_team_stats(
             playoff_value = playoff_row.get(metric)
             regular_value = regular_row.get(metric)
             metric_name = {
-                "OFF_RATING": "net_rating",
-                "DEF_RATING": "net_rating",
+                "OFF_RATING": "off_rating",
+                "DEF_RATING": "def_rating",
                 "NET_RATING": "net_rating",
                 "EFG_PCT": "efg_pct",
                 "TM_TOV_PCT": "tov_pct",
@@ -484,6 +484,10 @@ def _ml_baseline_probability(
     features = {
         "regular_net_rating_diff": _r(row_a, "REGULAR_NET_RATING") - _r(row_b, "REGULAR_NET_RATING"),
         "blended_net_rating_diff": net_a - net_b,
+        "regular_off_rating_diff": _r(row_a, "REGULAR_OFF_RATING", 110.0) - _r(row_b, "REGULAR_OFF_RATING", 110.0),
+        "blended_off_rating_diff": _r(row_a, "OFF_RATING", 110.0) - _r(row_b, "OFF_RATING", 110.0),
+        "regular_def_rating_diff": _r(row_a, "REGULAR_DEF_RATING", 110.0) - _r(row_b, "REGULAR_DEF_RATING", 110.0),
+        "blended_def_rating_diff": _r(row_a, "DEF_RATING", 110.0) - _r(row_b, "DEF_RATING", 110.0),
         "regular_efg_pct_diff": _r(row_a, "REGULAR_EFG_PCT") - _r(row_b, "REGULAR_EFG_PCT"),
         "blended_efg_pct_diff": _r(row_a, "EFG_PCT") - _r(row_b, "EFG_PCT"),
         "regular_tov_pct_diff": _r(row_a, "REGULAR_TM_TOV_PCT") - _r(row_b, "REGULAR_TM_TOV_PCT"),
@@ -495,10 +499,11 @@ def _ml_baseline_probability(
         "regular_pace_diff": _r(row_a, "REGULAR_PACE", 96.5) - _r(row_b, "REGULAR_PACE", 96.5),
         "blended_pace_diff": _r(row_a, "PACE", 96.5) - _r(row_b, "PACE", 96.5),
         "recent_net_rating_diff": _r(row_a, "PLAYOFF_NET_RATING") - _r(row_b, "PLAYOFF_NET_RATING"),
+        "rest_diff": rest_a - rest_b,
+        "playoff_experience_diff": 0.0,
         "travel_miles_diff": 0.0,
         "travel_data_available": 0.0,
         "home_court": home_court,
-        "rest_diff": rest_a - rest_b,
     }
 
     # Need at least net rating to trust the ML model

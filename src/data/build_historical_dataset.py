@@ -30,6 +30,8 @@ DEFAULT_METADATA_PATH = DEFAULT_OUTPUT_PATH.with_suffix(".metadata.json")
 
 METRIC_PRIOR_POSSESSIONS = {
     "net_rating": 900.0,
+    "off_rating": 900.0,
+    "def_rating": 900.0,
     "efg_pct": 1800.0,
     "tov_pct": 700.0,
     "oreb_pct": 700.0,
@@ -103,6 +105,8 @@ def _travel_miles(previous_venue: str | None, current_venue: str) -> tuple[float
 def _regular_metric(row: dict[str, Any], metric: str) -> float:
     aliases = {
         "net_rating": ("NET_RATING",),
+        "off_rating": ("OFF_RATING",),
+        "def_rating": ("DEF_RATING",),
         "efg_pct": ("EFG_PCT",),
         "tov_pct": ("TM_TOV_PCT",),
         "oreb_pct": ("OREB_PCT",),
@@ -111,6 +115,8 @@ def _regular_metric(row: dict[str, Any], metric: str) -> float:
     }
     defaults = {
         "net_rating": 0.0,
+        "off_rating": 110.0,
+        "def_rating": 110.0,
         "efg_pct": 0.54,
         "tov_pct": 0.14,
         "oreb_pct": 0.27,
@@ -127,6 +133,7 @@ def _playoff_snapshot(history: list[dict[str, float]]) -> dict[str, float]:
     if not history:
         return {
             "games": 0.0, "possessions": 0.0, "net_rating": 0.0,
+            "off_rating": 110.0, "def_rating": 110.0,
             "efg_pct": 0.54, "tov_pct": 0.14, "oreb_pct": 0.27,
             "fta_rate": 0.25, "pace": 98.0, "recent_net_rating": 0.0,
         }
@@ -147,6 +154,8 @@ def _playoff_snapshot(history: list[dict[str, float]]) -> dict[str, float]:
         "games": float(len(history)),
         "possessions": possessions,
         "net_rating": 100.0 * (points - opponent_points) / max(possessions, 1.0),
+        "off_rating": 100.0 * points / max(possessions, 1.0),
+        "def_rating": 100.0 * opponent_points / max(possessions, 1.0),
         "efg_pct": (fgm + 0.5 * fg3m) / max(fga, 1.0),
         "tov_pct": turnovers / max(possessions, 1.0),
         "oreb_pct": oreb / max(oreb + opponent_dreb, 1.0),
@@ -340,6 +349,7 @@ def build_canonical_pregame_rows(
                 "rest_diff": float(rest[team_id] - rest[opponent_id]),
                 "travel_miles_diff": travel[team_id][0] - travel[opponent_id][0],
                 "travel_data_available": min(travel[team_id][1], travel[opponent_id][1]),
+                "playoff_experience_diff": int(team_playoff["games"]) - int(opponent_playoff["games"]),
                 "playoff_games_team_a": int(team_playoff["games"]),
                 "playoff_games_team_b": int(opponent_playoff["games"]),
                 "playoff_possessions_team_a": round(team_playoff["possessions"], 2),

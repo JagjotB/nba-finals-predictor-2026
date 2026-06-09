@@ -16,9 +16,15 @@
     "travel_miles_diff",
     "travel_data_available",
     "home_court",
+    "rest_diff",
+    "playoff_experience_diff",
     "injury_strength_diff",
-    "injury_data_available"
+    "injury_data_available",
+    "regular_off_rating_diff",
+    "blended_off_rating_diff",
+    "regular_def_rating_diff",
+    "blended_def_rating_diff"
   ],
-  "dataset_sha256": "afe0f8805ecd675decd8c95ea0b983addbcf2ddba5555906e4c56db3bebb957d",
+  "dataset_sha256": "557cbb1642d0cf3c8e89b40642e43bd794c8af261dc64c1e0d6a4d8a0a6c69ef",
   "binary_artifact": "xgb_game_model.joblib"
 }

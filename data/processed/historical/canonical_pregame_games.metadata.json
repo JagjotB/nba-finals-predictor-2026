@@ -15,7 +15,7 @@
     "2023-24",
     "2024-25"
   ],
-  "sha256": "4a85d45c04da4e96b9d745e8fb4dbab8e2ad3ca3d577cc7c7cf22765b4492d33",
+  "sha256": "557cbb1642d0cf3c8e89b40642e43bd794c8af261dc64c1e0d6a4d8a0a6c69ef",
   "source_policy": "regular-season priors plus playoff games strictly before tipoff",
   "unavailable_historical_sources": [
     "injuries",

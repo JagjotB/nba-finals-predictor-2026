@@ -44,12 +44,21 @@ FEATURE_COLS = [
     "home_court",
 ]
 
-# XGBoost uses all LR features plus injury signals.
-# LR deliberately excludes injury features — validation showed LR is hurt by
-# sparse injury data while XGBoost handles it correctly via tree splits.
+# XGBoost uses all LR features plus richer signals that hurt the linear model.
+# rest_diff / playoff_experience_diff: non-linear interaction with game context —
+#   LR treats them as a fixed linear shift; XGB learns the true relationship.
+# off/def ratings: linear combination of net_rating causes LR multicollinearity;
+#   XGB's tree structure extracts the offense/defense split without the penalty.
+# injury: sparse signal that confuses LR regularization; XGB handles it cleanly.
 XGB_FEATURE_COLS = FEATURE_COLS + [
+    "rest_diff",
+    "playoff_experience_diff",
     "injury_strength_diff",
     "injury_data_available",
+    "regular_off_rating_diff",
+    "blended_off_rating_diff",
+    "regular_def_rating_diff",
+    "blended_def_rating_diff",
     # In-series features (series_games_played, series_score_diff, etc.) computed
     # but excluded: validation showed they hurt ECE (0.058 → 0.069) due to thin
     # sample per series-state. Re-evaluate with more historical data.

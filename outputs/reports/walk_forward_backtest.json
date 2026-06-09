@@ -23,19 +23,19 @@
       },
       "xgb_model": {
         "games": 174,
-        "accuracy": 0.6264,
-        "log_loss": 0.6571,
-        "brier_score": 0.2321,
-        "roc_auc": 0.656,
-        "expected_calibration_error": 0.0263
+        "accuracy": 0.6207,
+        "log_loss": 0.6551,
+        "brier_score": 0.2314,
+        "roc_auc": 0.6591,
+        "expected_calibration_error": 0.0243
       },
       "ensemble": {
         "games": 174,
-        "accuracy": 0.6149,
-        "log_loss": 0.6606,
-        "brier_score": 0.2339,
-        "roc_auc": 0.6486,
-        "expected_calibration_error": 0.0238
+        "accuracy": 0.5977,
+        "log_loss": 0.6598,
+        "brier_score": 0.2337,
+        "roc_auc": 0.6471,
+        "expected_calibration_error": 0.078
       },
       "net_rating_baseline": {
         "games": 174,
@@ -76,19 +76,19 @@
       },
       "xgb_model": {
         "games": 168,
-        "accuracy": 0.6012,
-        "log_loss": 0.6821,
-        "brier_score": 0.2438,
-        "roc_auc": 0.6212,
-        "expected_calibration_error": 0.0981
+        "accuracy": 0.5893,
+        "log_loss": 0.6865,
+        "brier_score": 0.2462,
+        "roc_auc": 0.6097,
+        "expected_calibration_error": 0.0858
       },
       "ensemble": {
         "games": 168,
-        "accuracy": 0.5774,
-        "log_loss": 0.6957,
-        "brier_score": 0.2498,
-        "roc_auc": 0.6098,
-        "expected_calibration_error": 0.0971
+        "accuracy": 0.5655,
+        "log_loss": 0.6978,
+        "brier_score": 0.251,
+        "roc_auc": 0.5998,
+        "expected_calibration_error": 0.0916
       },
       "net_rating_baseline": {
         "games": 168,
@@ -131,18 +131,18 @@
       "xgb_model": {
         "games": 164,
         "accuracy": 0.6646,
-        "log_loss": 0.6244,
-        "brier_score": 0.2167,
-        "roc_auc": 0.7164,
-        "expected_calibration_error": 0.0765
+        "log_loss": 0.6262,
+        "brier_score": 0.2175,
+        "roc_auc": 0.7179,
+        "expected_calibration_error": 0.0578
       },
       "ensemble": {
         "games": 164,
-        "accuracy": 0.6707,
-        "log_loss": 0.6226,
-        "brier_score": 0.2157,
-        "roc_auc": 0.7228,
-        "expected_calibration_error": 0.0634
+        "accuracy": 0.6951,
+        "log_loss": 0.6229,
+        "brier_score": 0.2159,
+        "roc_auc": 0.7204,
+        "expected_calibration_error": 0.0787
       },
       "net_rating_baseline": {
         "games": 164,
@@ -186,18 +186,18 @@
       "xgb_model": {
         "games": 168,
         "accuracy": 0.5893,
-        "log_loss": 0.685,
-        "brier_score": 0.2455,
-        "roc_auc": 0.5985,
-        "expected_calibration_error": 0.0819
+        "log_loss": 0.6801,
+        "brier_score": 0.2434,
+        "roc_auc": 0.6035,
+        "expected_calibration_error": 0.0612
       },
       "ensemble": {
         "games": 168,
         "accuracy": 0.6131,
-        "log_loss": 0.679,
-        "brier_score": 0.2419,
-        "roc_auc": 0.6182,
-        "expected_calibration_error": 0.0495
+        "log_loss": 0.6766,
+        "brier_score": 0.2409,
+        "roc_auc": 0.6232,
+        "expected_calibration_error": 0.0696
       },
       "net_rating_baseline": {
         "games": 168,
@@ -232,11 +232,11 @@
     },
     "xgb_model": {
       "games": 674,
-      "accuracy": 0.6202,
-      "log_loss": 0.6623,
-      "brier_score": 0.2346,
-      "roc_auc": 0.646,
-      "expected_calibration_error": 0.0398,
+      "accuracy": 0.6157,
+      "log_loss": 0.6621,
+      "brier_score": 0.2347,
+      "roc_auc": 0.6447,
+      "expected_calibration_error": 0.0209,
       "opening_series_winner": {
         "series": 60,
         "accuracy": 0.6333
@@ -244,11 +244,11 @@
     },
     "ensemble": {
       "games": 674,
-      "accuracy": 0.6187,
-      "log_loss": 0.6647,
-      "brier_score": 0.2354,
-      "roc_auc": 0.6462,
-      "expected_calibration_error": 0.0252,
+      "accuracy": 0.6172,
+      "log_loss": 0.6645,
+      "brier_score": 0.2355,
+      "roc_auc": 0.6454,
+      "expected_calibration_error": 0.0254,
       "opening_series_winner": {
         "series": 60,
         "accuracy": 0.6333
@@ -296,7 +296,7 @@
       "2023-24",
       "2024-25"
     ],
-    "sha256": "afe0f8805ecd675decd8c95ea0b983addbcf2ddba5555906e4c56db3bebb957d",
+    "sha256": "557cbb1642d0cf3c8e89b40642e43bd794c8af261dc64c1e0d6a4d8a0a6c69ef",
     "source_policy": "regular-season priors plus playoff games strictly before tipoff",
     "unavailable_historical_sources": [
       "injuries",

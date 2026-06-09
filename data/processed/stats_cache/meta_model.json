@@ -23,20 +23,20 @@
     "2024-25"
   ],
   "metrics": {
-    "log_loss": 0.6619,
-    "brier_score": 0.2347,
-    "walk_forward_log_loss": 0.6697,
-    "walk_forward_brier_score": 0.238,
+    "log_loss": 0.6572,
+    "brier_score": 0.2326,
+    "walk_forward_log_loss": 0.6677,
+    "walk_forward_brier_score": 0.237,
     "walk_forward_games": 500
   },
   "coefficients_standardized": {
-    "baseline_logit": 0.306489,
-    "net_rating_logit": 0.239715,
-    "player_edge": 0.0,
+    "baseline_logit": 0.316182,
+    "net_rating_logit": 0.227079,
+    "player_edge": 0.01288,
     "matchup_edge": 0.0,
     "lineup_edge": 0.0,
     "clutch_edge": 0.0,
-    "injury_edge": 0.0,
+    "injury_edge": 0.156784,
     "coaching_edge": 0.0,
     "player_data_available": 0.0,
     "matchup_data_available": 0.0,
@@ -45,7 +45,10 @@
     "injury_data_available": 0.0,
     "coaching_data_available": 0.0
   },
-  "validated_components": [],
-  "dataset_sha256": "4a85d45c04da4e96b9d745e8fb4dbab8e2ad3ca3d577cc7c7cf22765b4492d33",
+  "validated_components": [
+    "player",
+    "injury"
+  ],
+  "dataset_sha256": "557cbb1642d0cf3c8e89b40642e43bd794c8af261dc64c1e0d6a4d8a0a6c69ef",
   "model_format": "joblib_regularized_meta_model"
 }
