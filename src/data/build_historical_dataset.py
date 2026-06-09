@@ -209,8 +209,10 @@ def _history_record(team_row: dict[str, Any], opponent_row: dict[str, Any]) -> d
 def build_canonical_pregame_rows(
     game_logs: list[dict[str, Any]],
     team_ratings: dict[str, dict[str, Any]],
+    injury_cache: dict[str, Any] | None = None,
 ) -> list[dict[str, Any]]:
     """Create two symmetric, strictly pregame rows for every paired game."""
+    from src.data.fetch_injury_proxy import get_injury_diff_for_row
     histories: dict[tuple[str, str], list[dict[str, float]]] = {}
     previous_dates: dict[tuple[str, str], date] = {}
     previous_venues: dict[tuple[str, str], str] = {}
@@ -285,7 +287,7 @@ def build_canonical_pregame_rows(
                 "injury_data_available": 0,
                 "rotation_data_available": 0,
                 "lineup_data_available": 0,
-                "injury_strength_diff": None,
+                "injury_strength_diff": 0.0,
                 "rotation_strength_diff": None,
                 "lineup_strength_diff": None,
                 "team_score": _as_float(team_row.get("PTS")),
@@ -316,6 +318,17 @@ def build_canonical_pregame_rows(
         for team_id in (home_id, away_id):
             previous_dates[(season, team_id)] = game["date"]
             previous_venues[(season, team_id)] = venue
+
+        # Backfill injury data from cache for both perspectives
+        if injury_cache:
+            game_id = str(game.get("GAME_ID", game.get("game_id", "")))
+            for row in rows[-2:]:
+                inj_diff, inj_available = get_injury_diff_for_row(
+                    game_id, row["team_a"], injury_cache
+                )
+                row["injury_strength_diff"] = inj_diff
+                row["injury_data_available"] = inj_available
+
     return rows
 
 

@@ -41,11 +41,16 @@ FEATURE_COLS = [
     "recent_net_rating_diff",
     "travel_miles_diff",
     "travel_data_available",
-    # home_court: 1.0 = team_a is home, -1.0 = team_a is away, 0.0 = neutral.
-    # Included so the calibrated model learns the actual historical advantage
-    # rather than relying on a hardcoded point margin.
     "home_court",
 ]
+
+# XGBoost uses all LR features plus injury signals.
+# LR deliberately excludes injury features — validation showed LR is hurt by
+# sparse injury data while XGBoost handles it correctly via tree splits.
+XGB_FEATURE_COLS = FEATURE_COLS + ["injury_strength_diff", "injury_data_available"]
+
+XGB_MODEL_PATH = MODEL_PATH.parent / "xgb_game_model.json"
+XGB_MODEL_BINARY_PATH = MODEL_PATH.parent / "xgb_game_model.joblib"
 
 HOME_MARGIN_POINTS = 2.2
 REST_MARGIN_POINTS_PER_DAY = 0.35
@@ -212,6 +217,71 @@ def load_model(path: Path = MODEL_PATH) -> dict[str, Any] | None:
 
 def _sigmoid(x: float) -> float:
     return 1.0 / (1.0 + math.exp(-x))
+
+
+def train_xgb(
+    rows: list[dict[str, Any]],
+    holdout_seasons: list[str] | None = None,
+) -> dict[str, Any]:
+    """Train a calibrated XGBoost model using XGB_FEATURE_COLS (includes injury)."""
+    import numpy as np
+    from sklearn.calibration import CalibratedClassifierCV
+    from sklearn.model_selection import GroupKFold
+    from xgboost import XGBClassifier
+
+    if holdout_seasons is None:
+        holdout_seasons = ["2024-25"]
+
+    train_rows = [r for r in rows if r.get("season") not in holdout_seasons]
+    if len(train_rows) < 50:
+        raise ValueError(f"Not enough training rows: {len(train_rows)}")
+
+    X_train = np.array([[float(r.get(f, 0) or 0) for f in XGB_FEATURE_COLS] for r in train_rows])
+    y_train = np.array([r["won"] for r in train_rows])
+    groups = np.array([
+        f"{r.get('season', '')}:{r.get('game_id', i)}"
+        for i, r in enumerate(train_rows)
+    ])
+    cv_splits = list(GroupKFold(n_splits=5).split(X_train, y_train, groups))
+
+    base_xgb = XGBClassifier(
+        n_estimators=200, max_depth=3, learning_rate=0.05,
+        subsample=0.8, colsample_bytree=0.8, min_child_weight=5,
+        reg_lambda=2.0, random_state=42, verbosity=0,
+    )
+    xgb_model = CalibratedClassifierCV(base_xgb, cv=cv_splits, method="sigmoid")
+    xgb_model.fit(X_train, y_train)
+
+    return {"feature_cols": XGB_FEATURE_COLS, "_xgb_model_ref": xgb_model}
+
+
+def save_xgb_model(bundle: dict[str, Any]) -> None:
+    import joblib
+    XGB_MODEL_BINARY_PATH.parent.mkdir(parents=True, exist_ok=True)
+    joblib.dump(bundle, XGB_MODEL_BINARY_PATH)
+    serializable = {k: v for k, v in bundle.items() if not k.startswith("_")}
+    serializable["binary_artifact"] = XGB_MODEL_BINARY_PATH.name
+    XGB_MODEL_PATH.write_text(json.dumps(serializable, indent=2), encoding="utf-8")
+
+
+def load_xgb_model() -> dict[str, Any] | None:
+    if not XGB_MODEL_BINARY_PATH.exists():
+        return None
+    import joblib
+    return joblib.load(XGB_MODEL_BINARY_PATH)
+
+
+def predict_xgb_win_probability(
+    row: dict[str, Any],
+    bundle: dict[str, Any],
+) -> float:
+    import numpy as np
+    xgb = bundle.get("_xgb_model_ref")
+    if xgb is None:
+        return 0.5
+    feat = bundle.get("feature_cols", XGB_FEATURE_COLS)
+    X = np.array([[float(row.get(f, 0) or 0) for f in feat]])
+    return float(xgb.predict_proba(X)[0, 1])
 
 
 def _logit(probability: float) -> float:

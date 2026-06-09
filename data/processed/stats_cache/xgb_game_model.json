@@ -15,26 +15,10 @@
     "recent_net_rating_diff",
     "travel_miles_diff",
     "travel_data_available",
-    "home_court"
+    "home_court",
+    "injury_strength_diff",
+    "injury_data_available"
   ],
-  "metrics": {
-    "train_size": 1830,
-    "test_size": 0,
-    "holdout_seasons": []
-  },
-  "validation_metrics": {
-    "games": 674,
-    "accuracy": 0.6113,
-    "log_loss": 0.6728,
-    "brier_score": 0.2385,
-    "roc_auc": 0.641,
-    "expected_calibration_error": 0.0355,
-    "opening_series_winner": {
-      "series": 60,
-      "accuracy": 0.65
-    }
-  },
   "dataset_sha256": "5fdff3449a921eadcbdd7453c36864621cf92ea121ed388ea1e6dda0072040d6",
-  "model_format": "joblib_calibrated_classifier",
-  "binary_artifact": "game_model.joblib"
+  "binary_artifact": "xgb_game_model.joblib"
 }

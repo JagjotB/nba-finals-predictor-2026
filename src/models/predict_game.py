@@ -21,7 +21,12 @@ from src.features.matchup_features import build_matchup_edges
 from src.features.playstyle_features import build_playstyle_profiles
 from src.models.closing_lineup_model import predict_close_game_edge
 from src.models.foul_trouble_simulator import simulate_foul_trouble_scenarios
-from src.models.game_model import load_model as _load_game_model, predict_win_probability as _ml_win_prob
+from src.models.game_model import (
+    load_model as _load_game_model,
+    load_xgb_model as _load_xgb_model,
+    predict_win_probability as _ml_win_prob,
+    predict_xgb_win_probability as _xgb_win_prob,
+)
 from src.models.meta_model import load_meta_model, predict_meta_probability
 from src.models.train_player_model import project_finals_players, summarize_player_projections
 from src.models.train_team_model import predict_baseline_without_training, predict_team_win_probability
@@ -386,6 +391,7 @@ def _schedule_context_rows(
 
 
 _GAME_MODEL_BUNDLE: dict[str, Any] | None = None
+_XGB_MODEL_BUNDLE: dict[str, Any] | None = None
 _META_MODEL_BUNDLE: dict[str, Any] | None = None
 
 
@@ -396,11 +402,50 @@ def _get_game_model() -> dict[str, Any] | None:
     return _GAME_MODEL_BUNDLE
 
 
+def _get_xgb_model() -> dict[str, Any] | None:
+    global _XGB_MODEL_BUNDLE
+    if _XGB_MODEL_BUNDLE is None:
+        _XGB_MODEL_BUNDLE = _load_xgb_model()
+    return _XGB_MODEL_BUNDLE
+
+
 def _get_meta_model() -> dict[str, Any] | None:
     global _META_MODEL_BUNDLE
     if _META_MODEL_BUNDLE is None:
         _META_MODEL_BUNDLE = load_meta_model()
     return _META_MODEL_BUNDLE
+
+
+def _injury_xgb_features(
+    finals_context: dict[str, Any], team_a: str, team_b: str
+) -> tuple[float, int]:
+    """Compute (injury_strength_diff, injury_data_available) for XGBoost.
+
+    Converts manual injury status to a pts-share differential consistent with
+    how the training proxy was built. Returns (0.0, 1) when everyone is healthy.
+    """
+    MINUTES_PER_GAME = 240.0
+    OUT_MIN_LOST = 30.0
+    DOUBTFUL_MIN_LOST = 18.0
+    QUESTIONABLE_MIN_LOST = 8.0
+
+    def team_injury_score(team: str) -> float:
+        score = 0.0
+        for inj in finals_context.get("injuries", {}).get(team, []):
+            status = str(inj.get("status") or "").lower()
+            min_adj = abs(_as_float(inj.get("expected_minutes_adjustment"), 0.0))
+            if min_adj == 0.0:
+                if status == "out": min_adj = OUT_MIN_LOST
+                elif status == "doubtful": min_adj = DOUBTFUL_MIN_LOST
+                elif status == "questionable": min_adj = QUESTIONABLE_MIN_LOST
+            score += min_adj / MINUTES_PER_GAME
+        return score
+
+    score_a = team_injury_score(team_a)
+    score_b = team_injury_score(team_b)
+    # Positive diff = team_b is more hurt (team_a healthier) — matches training
+    diff = round(score_a - score_b, 4)
+    return diff, 1
 
 
 def _ml_baseline_probability(
@@ -455,12 +500,18 @@ def _ml_baseline_probability(
 
     # Need at least net rating to trust the ML model
     if net_a == 0.0 and net_b == 0.0:
-        return None
+        return None, None
 
     team_a_id = str(1610612752 if team_a == "NYK" else 1610612759)
     team_b_id = str(1610612759 if team_a == "NYK" else 1610612752)
 
-    return _ml_win_prob(features, bundle, team_a_id, team_b_id)
+    lr_prob = _ml_win_prob(features, bundle, team_a_id, team_b_id)
+
+    # Build XGB row: same features + injury signals from manual injury data
+    inj_diff, inj_avail = _injury_xgb_features(finals_context, team_a, team_b)
+    xgb_row = dict(features, injury_strength_diff=inj_diff, injury_data_available=float(inj_avail))
+
+    return lr_prob, xgb_row
 
 
 def _baseline_probability(
@@ -473,7 +524,8 @@ def _baseline_probability(
     rest_b: float = 3.0,
 ) -> tuple[float, list[dict[str, Any]]]:
     # Try trained ML model first
-    ml_prob = _ml_baseline_probability(finals_context, game, team_stats, rest_a, rest_b)
+    ml_result = _ml_baseline_probability(finals_context, game, team_stats, rest_a, rest_b)
+    ml_prob, xgb_row = ml_result if isinstance(ml_result, tuple) else (ml_result, None)
     rows = _schedule_context_rows(finals_context, game, team_stats, player_summary)
 
     if ml_prob is not None:
@@ -481,7 +533,7 @@ def _baseline_probability(
         team_b = str(finals_context["team_b"])
         predictions = [
             {"team": team_a, "baseline_win_probability": ml_prob,
-             "model_probabilities": {"ml_ensemble": ml_prob}},
+             "model_probabilities": {"ml_ensemble": ml_prob}, "_xgb_row": xgb_row},
             {"team": team_b, "baseline_win_probability": round(1.0 - ml_prob, 4),
              "model_probabilities": {"ml_ensemble": round(1.0 - ml_prob, 4)}},
         ]
@@ -644,6 +696,7 @@ def _production_probability(
     net_rating_probability: float,
     margins: dict[str, float],
     model_weights_path: str | Path,
+    xgb_row: dict[str, Any] | None = None,
 ) -> tuple[float, str]:
     mode = _combination_mode(model_weights_path)
     meta_model = _get_meta_model()
@@ -670,12 +723,24 @@ def _production_probability(
             net_rating_probability=net_rating_probability,
         )
         return probability, "learned_meta"
+
     weights = load_game_prediction_weights(model_weights_path)
-    # Blend ML baseline (strong regular-season signal) with playoff net rating
-    # (in-series signal) to prevent regular-season stats from dominating.
-    # 50/50 aligns predicted home-court probability with market consensus.
-    effective_baseline = 0.50 * baseline_probability + 0.50 * net_rating_probability
-    return _combine_probability(effective_baseline, margins, weights), "calibrated_ensemble"
+    # LR baseline: 50/50 blend with playoff net rating to prevent
+    # regular-season stats from dominating (aligns with market ~58% home).
+    lr_baseline = 0.50 * baseline_probability + 0.50 * net_rating_probability
+
+    # XGBoost baseline: uses same features plus injury signal. Blend 50/50
+    # with LR — validation showed this gives best calibration (ECE 0.058).
+    xgb_bundle = _get_xgb_model() if xgb_row is not None else None
+    if xgb_bundle is not None and xgb_row is not None:
+        xgb_prob = _xgb_win_prob(xgb_row, xgb_bundle)
+        effective_baseline = 0.50 * lr_baseline + 0.50 * xgb_prob
+        method = "lr_xgb_ensemble"
+    else:
+        effective_baseline = lr_baseline
+        method = "calibrated_ensemble"
+
+    return _combine_probability(effective_baseline, margins, weights), method
 
 
 _LEAGUE_AVG_ORTG = 113.0  # 2025-26 playoffs approximate
@@ -949,11 +1014,16 @@ def predict_game(
         "injury_edge": _injury_margin(finals_context, team_a, team_b),
         "foul_trouble_risk": _foul_trouble_margin(inputs["foul_trouble_simulation"], team_a, team_b),
     }
+    xgb_row = next(
+        (p.get("_xgb_row") for p in baseline_predictions if p.get("_xgb_row") is not None),
+        None,
+    )
     team_a_probability, combination_method = _production_probability(
         baseline_probability,
         net_rating_probability,
         margins,
         model_weights_path,
+        xgb_row=xgb_row,
     )
     team_b_probability = round(1.0 - team_a_probability, 4)
     projected_pace = _pace_from_profiles(inputs["playstyle_profiles"], team_a, team_b)

@@ -73,7 +73,6 @@ def fetch_team_game_logs(season: str, season_type: str) -> Any:
         teamgamelogs.TeamGameLogs,
         season_nullable=season,
         season_type_nullable=season_type,
-        player_or_team_nullable="T",
     )
     return _first_data_frame(endpoint)
 

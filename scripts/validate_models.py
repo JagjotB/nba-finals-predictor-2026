@@ -20,7 +20,7 @@ from src.data.fetch_current_stats import (
     fetch_historical_playoff_logs,
     fetch_historical_team_ratings,
 )
-from src.models.game_model import save_model, train, walk_forward_backtest
+from src.models.game_model import save_model, save_xgb_model, train, train_xgb, walk_forward_backtest
 from src.models.meta_model import save_meta_model, train_meta_model
 from src.models.uncertainty import (
     fit_empirical_probability_uncertainty,
@@ -31,7 +31,13 @@ from src.models.uncertainty import (
 def main() -> None:
     logs = fetch_historical_playoff_logs()
     ratings = fetch_historical_team_ratings()
-    rows = build_canonical_pregame_rows(logs, ratings)
+    from src.data.fetch_injury_proxy import _load_cache
+    injury_cache = _load_cache()
+    if not injury_cache.get("_seasons_fetched"):
+        print("No injury cache found — run: python -m src.data.fetch_injury_proxy")
+        print("Training without injury features.")
+        injury_cache = None
+    rows = build_canonical_pregame_rows(logs, ratings, injury_cache=injury_cache)
     dataset_metadata = save_canonical_dataset(rows)
 
     report = walk_forward_backtest(rows)
@@ -61,6 +67,11 @@ def main() -> None:
     final_game_model["validation_metrics"] = report.get("overall", {}).get("model", {})
     final_game_model["dataset_sha256"] = dataset_metadata["sha256"]
     save_model(final_game_model)
+
+    print("Training XGBoost model with injury features...")
+    xgb_model = train_xgb(rows, holdout_seasons=[])
+    xgb_model["dataset_sha256"] = dataset_metadata["sha256"]
+    save_xgb_model(xgb_model)
 
     print(f"Canonical dataset: {dataset_metadata['games']} games")
     print(json.dumps(report["overall"], indent=2))
