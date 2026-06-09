@@ -38,10 +38,14 @@ from src.models.train_player_model import (
     simulate_correlated_player_box_scores,
 )
 from src.models.uncertainty import add_game_uncertainty
-from src.models.update_after_game import _load_game_actuals, simulate_series_after_results
+from src.models.update_after_game import (
+    _load_game_actuals,
+    _run_bayesian_update,
+    simulate_series_after_results,
+)
 
 
-MODEL_VERSION = "calibrated-finals-v3"
+MODEL_VERSION = "lr-xgb-ensemble-v4"
 DEFAULT_SIMULATIONS = 100000
 DEFAULT_SCENARIO_SIMULATIONS = 25000
 
@@ -159,15 +163,15 @@ def _ml_model_status() -> dict[str, Any]:
         if report_path.exists():
             import json
             report = json.loads(report_path.read_text(encoding="utf-8"))
-            net_metrics = report.get("overall", {}).get("net_rating_baseline", {})
-            status["model_accuracy"] = net_metrics.get("accuracy", status["model_accuracy"])
+            # Use ensemble metrics — that is the production model
+            ens_metrics = report.get("overall", {}).get("ensemble", {})
+            if ens_metrics.get("accuracy"):
+                status["model_accuracy"] = ens_metrics["accuracy"]
+                status["model_brier"] = ens_metrics.get("brier_score", status.get("model_brier"))
+                status["model_ece"] = ens_metrics.get("expected_calibration_error")
         if meta_path.exists():
             import json
             meta = json.loads(meta_path.read_text(encoding="utf-8"))
-            status["model_brier"] = meta.get("metrics", {}).get(
-                "walk_forward_brier_score",
-                status.get("model_brier"),
-            )
             status["validated_components"] = meta.get("validated_components", [])
     except Exception:
         pass
@@ -271,6 +275,9 @@ def load_dashboard_bundle(series_simulations: int, _data_ver: str = "") -> dict[
             foul_trouble_simulation=foul_trouble_simulation,
         )
         series_score = series_simulation.get("series_score")
+        bayesian_series = _run_bayesian_update(
+            context, series_simulation, completed_results, game_predictions
+        )
     else:
         series_simulation = simulate_series(
             game_predictions,
@@ -760,11 +767,13 @@ def render_ml_panel(bundle: dict[str, Any]) -> None:
     if ml.get("model_trained"):
         acc = ml.get("model_accuracy")
         rows_trained = ml.get("model_training_rows")
+        ece = ml.get("model_ece")
+        ece_str = f" · calibration error {ece:.3f}" if ece else ""
         st.success(
-            f"**Calibrated ensemble active.** "
-            f"ML baseline trained on **{rows_trained:,} team-game perspectives** across 11 playoff seasons. "
-            f"Walk-forward accuracy: **{acc:.1%}** — outperforms ELO and simple net-rating baselines. "
-            f"All seven signals computed from live NBA data."
+            f"**LR + XGBoost ensemble active.** "
+            f"Trained on **{rows_trained:,} team-game perspectives** across 11 playoff seasons. "
+            f"Walk-forward accuracy: **{acc:.1%}**{ece_str} — outperforms ELO and net-rating baselines. "
+            f"Injury signal baked into XGBoost baseline; all other signals from live NBA data."
         )
     else:
         st.warning(
@@ -774,18 +783,19 @@ def render_ml_panel(bundle: dict[str, Any]) -> None:
 
     st.markdown("#### What the model combines")
     st.caption(
-        "Seven signals are combined in a calibrated ensemble — each one computed from live NBA API data. "
-        "The ML baseline is the anchor; the remaining components shift the probability based on "
-        "player quality, matchup advantages, lineup depth, and series-specific risk factors."
+        "Two ML models form the baseline: a logistic regression on team-quality stats blended 50/50 "
+        "with an XGBoost model that also incorporates injury signal. "
+        "Five component adjustments then shift that baseline based on player quality, matchup advantages, "
+        "lineup depth, and series-specific risk factors."
     )
 
     component_rows = [
         {
-            "Component": "Team baseline (ML model)",
+            "Component": "Team baseline (LR + XGBoost)",
             "Weight": "Anchor",
-            "What it measures": "Overall team quality — net rating, shooting efficiency, turnovers, pace",
-            "Data source": "Calibrated logistic regression trained on 915 playoff games" if ml.get("model_trained") else "Statistical sigmoid formula",
-            "Role in ensemble": "Core probability anchor",
+            "What it measures": "Team quality — net rating, shooting efficiency, turnovers, pace, injury strength",
+            "Data source": "LR + XGBoost ensemble trained on 915 playoff games (11 seasons)" if ml.get("model_trained") else "Statistical sigmoid formula",
+            "Role in ensemble": "Core probability anchor — 50% logistic regression, 50% XGBoost with injury signal",
         },
         {
             "Component": "Player projections",
@@ -817,10 +827,10 @@ def render_ml_panel(bundle: dict[str, Any]) -> None:
         },
         {
             "Component": "Injury / availability",
-            "Weight": "Upstream",
-            "What it measures": "Changes to minutes, roles, and available lineups",
-            "Data source": "Manual injury tracker applied before projections are built",
-            "Role in ensemble": "Upstream input — rotations adjusted before all other signals",
+            "Weight": "Baseline + upstream",
+            "What it measures": "Absence of key players — pts-share lost to injured starters",
+            "Data source": "XGBoost trained on 11-season absence proxy; manual tracker adjusts rotations",
+            "Role in ensemble": "Baked into XGBoost baseline via injury_strength_diff; also adjusts upstream player projections",
         },
         {
             "Component": "Foul trouble",
