@@ -405,8 +405,11 @@ def _get_game_model() -> dict[str, Any] | None:
 def _get_xgb_model() -> dict[str, Any] | None:
     global _XGB_MODEL_BUNDLE
     if _XGB_MODEL_BUNDLE is None:
-        _XGB_MODEL_BUNDLE = _load_xgb_model()
-    return _XGB_MODEL_BUNDLE
+        try:
+            _XGB_MODEL_BUNDLE = _load_xgb_model()
+        except Exception:
+            _XGB_MODEL_BUNDLE = {}  # sentinel: tried and failed, don't retry
+    return _XGB_MODEL_BUNDLE if _XGB_MODEL_BUNDLE else None
 
 
 def _get_meta_model() -> dict[str, Any] | None:
@@ -725,22 +728,42 @@ def _production_probability(
         return probability, "learned_meta"
 
     weights = load_game_prediction_weights(model_weights_path)
-    # LR baseline: 50/50 blend with playoff net rating to prevent
-    # regular-season stats from dominating (aligns with market ~58% home).
+    # Build the LR+XGB blend — used as effective baseline in all paths
     lr_baseline = 0.50 * baseline_probability + 0.50 * net_rating_probability
-
-    # XGBoost baseline: uses same features plus injury signal. Blend 50/50
-    # with LR — validation showed this gives best calibration (ECE 0.058).
     xgb_bundle = _get_xgb_model() if xgb_row is not None else None
     if xgb_bundle is not None and xgb_row is not None:
         xgb_prob = _xgb_win_prob(xgb_row, xgb_bundle)
         effective_baseline = 0.50 * lr_baseline + 0.50 * xgb_prob
-        method = "lr_xgb_ensemble"
     else:
         effective_baseline = lr_baseline
-        method = "calibrated_ensemble"
 
-    return _combine_probability(effective_baseline, margins, weights), method
+    if mode == "learned_meta" and meta_model:
+        # Meta model learns residual adjustments on top of the LR+XGB blend.
+        # baseline_probability passed here is the blend, not raw LR.
+        probability = predict_meta_probability(
+            effective_baseline,
+            {
+                "player_edge": margins["player_projection"],
+                "matchup_edge": margins["matchup_edge"],
+                "lineup_edge": margins["lineup_edge"],
+                "clutch_edge": margins["clutch_edge"] * CLUTCH_GAME_RATE,
+                "injury_edge": margins["injury_edge"],
+                "coaching_edge": 0.0,
+            },
+            availability={
+                "player": True,
+                "matchup": True,
+                "lineup": True,
+                "clutch": True,
+                "injury": True,
+                "coaching": False,
+            },
+            model_bundle=meta_model,
+            net_rating_probability=net_rating_probability,
+        )
+        return probability, "lr_xgb_learned_meta"
+
+    return _combine_probability(effective_baseline, margins, weights), "lr_xgb_ensemble"
 
 
 _LEAGUE_AVG_ORTG = 113.0  # 2025-26 playoffs approximate

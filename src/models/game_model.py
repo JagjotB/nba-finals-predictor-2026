@@ -273,8 +273,11 @@ def save_xgb_model(bundle: dict[str, Any]) -> None:
 def load_xgb_model() -> dict[str, Any] | None:
     if not XGB_MODEL_BINARY_PATH.exists():
         return None
-    import joblib
-    return joblib.load(XGB_MODEL_BINARY_PATH)
+    try:
+        import joblib
+        return joblib.load(XGB_MODEL_BINARY_PATH)
+    except Exception:
+        return None
 
 
 def predict_xgb_win_probability(
@@ -465,12 +468,18 @@ def walk_forward_backtest(
     Validates three models: LR (baseline), XGBoost (with injury), and their
     50/50 ensemble. The ensemble is the production model.
     """
-    import numpy as np
-    from sklearn.calibration import CalibratedClassifierCV
-    from sklearn.model_selection import GroupKFold
+    from src.data.fetch_injury_proxy import _load_cache as _load_injury_cache, get_injury_diff_for_row
+    from src.data.fetch_player_projections import build_player_projections, get_player_projection_edge
 
     seasons = sorted({str(row.get("season")) for row in rows})
     test_seasons = test_seasons or seasons[-4:]
+
+    # Load historical component data for meta model training
+    injury_cache = _load_injury_cache()
+    player_projections = build_player_projections(seasons, verbose=False)
+
+    INJURY_PTS_SCALE = 15.0  # injury pts_share → pts margin conversion
+
     split_reports = []
     oof_rows: list[dict[str, Any]] = []
 
@@ -517,6 +526,20 @@ def walk_forward_backtest(
             net_probs.append(net_p)
             elo_probs.append(elo_p)
 
+            # Compute historical component values for meta-model training
+            inj_diff, inj_avail = get_injury_diff_for_row(
+                row["game_id"], str(row.get("team_a", "")), injury_cache
+            )
+            # Positive inj_diff means team_a is more injured → negative edge
+            inj_edge = round(-inj_diff * INJURY_PTS_SCALE, 3)
+
+            player_edge_pts, player_avail = get_player_projection_edge(
+                test_season,
+                str(row.get("team_a", "")),
+                str(row.get("team_b", "")),
+                player_projections,
+            )
+
             oof_rows.append({
                 "season": test_season,
                 "series_id": row.get("series_id"),
@@ -526,22 +549,24 @@ def walk_forward_backtest(
                 "team_a": row.get("team_a"),
                 "team_b": row.get("team_b"),
                 "actual_team_a_win": target,
+                # baseline_probability = LR only (original meaning for report clarity)
+                # ensemble_probability used by meta model as its baseline logit
                 "baseline_probability": lr_p,
                 "xgb_probability": xgb_p,
                 "ensemble_probability": ens_p,
                 "net_rating_probability": round(net_p, 6),
                 "elo_probability": round(elo_p, 6),
-                "player_edge": 0.0,
+                "player_edge": player_edge_pts,
                 "matchup_edge": 0.0,
                 "lineup_edge": 0.0,
                 "clutch_edge": 0.0,
-                "injury_edge": 0.0,
+                "injury_edge": inj_edge,
                 "coaching_edge": 0.0,
-                "player_data_available": 0,
+                "player_data_available": player_avail,
                 "matchup_data_available": 0,
                 "lineup_data_available": int(row.get("lineup_data_available", 0)),
                 "clutch_data_available": 0,
-                "injury_data_available": int(row.get("injury_data_available", 0)),
+                "injury_data_available": inj_avail,
                 "coaching_data_available": 0,
             })
 
