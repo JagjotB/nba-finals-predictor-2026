@@ -20,7 +20,15 @@ from src.data.fetch_current_stats import (
     fetch_historical_playoff_logs,
     fetch_historical_team_ratings,
 )
-from src.models.game_model import save_model, save_xgb_model, train, train_xgb, walk_forward_backtest
+from src.models.game_model import (
+    save_model,
+    save_xgb_margin_model,
+    save_xgb_model,
+    train,
+    train_xgb,
+    train_xgb_margin,
+    walk_forward_backtest,
+)
 from src.models.meta_model import save_meta_model, train_meta_model
 from src.models.uncertainty import (
     fit_empirical_probability_uncertainty,
@@ -68,10 +76,17 @@ def main() -> None:
     final_game_model["dataset_sha256"] = dataset_metadata["sha256"]
     save_model(final_game_model)
 
-    print("Training XGBoost model with injury features...")
+    print("Training XGBoost classifier with injury features...")
     xgb_model = train_xgb(rows, holdout_seasons=[])
     xgb_model["dataset_sha256"] = dataset_metadata["sha256"]
     save_xgb_model(xgb_model)
+
+    print("Training XGBoost margin (spread) model...")
+    margin_model = train_xgb_margin(rows, holdout_seasons=[])
+    margin_model["dataset_sha256"] = dataset_metadata["sha256"]
+    save_xgb_margin_model(margin_model)
+    print(f"  Margin model — MAE: {margin_model['margin_mae']:.2f} pts  "
+          f"residual_std: {margin_model['residual_std']:.2f} pts")
 
     print(f"Canonical dataset: {dataset_metadata['games']} games")
     print(json.dumps(report["overall"], indent=2))

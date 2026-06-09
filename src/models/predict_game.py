@@ -23,7 +23,10 @@ from src.models.closing_lineup_model import predict_close_game_edge
 from src.models.foul_trouble_simulator import simulate_foul_trouble_scenarios
 from src.models.game_model import (
     load_model as _load_game_model,
+    load_xgb_margin_model as _load_margin_model,
     load_xgb_model as _load_xgb_model,
+    margin_to_probability as _margin_to_prob,
+    predict_margin as _predict_margin,
     predict_win_probability as _ml_win_prob,
     predict_xgb_win_probability as _xgb_win_prob,
 )
@@ -392,6 +395,7 @@ def _schedule_context_rows(
 
 _GAME_MODEL_BUNDLE: dict[str, Any] | None = None
 _XGB_MODEL_BUNDLE: dict[str, Any] | None = None
+_MARGIN_MODEL_BUNDLE: dict[str, Any] | None = None
 _META_MODEL_BUNDLE: dict[str, Any] | None = None
 
 
@@ -410,6 +414,16 @@ def _get_xgb_model() -> dict[str, Any] | None:
         except Exception:
             _XGB_MODEL_BUNDLE = {}  # sentinel: tried and failed, don't retry
     return _XGB_MODEL_BUNDLE if _XGB_MODEL_BUNDLE else None
+
+
+def _get_margin_model() -> dict[str, Any] | None:
+    global _MARGIN_MODEL_BUNDLE
+    if _MARGIN_MODEL_BUNDLE is None:
+        try:
+            _MARGIN_MODEL_BUNDLE = _load_margin_model()
+        except Exception:
+            _MARGIN_MODEL_BUNDLE = {}
+    return _MARGIN_MODEL_BUNDLE if _MARGIN_MODEL_BUNDLE else None
 
 
 def _get_meta_model() -> dict[str, Any] | None:
@@ -1054,6 +1068,17 @@ def predict_game(
         xgb_row=xgb_row,
     )
     team_b_probability = round(1.0 - team_a_probability, 4)
+
+    # --- Spread / margin prediction (independent regression model) ---
+    spread_margin: float | None = None
+    spread_std: float | None = None
+    spread_implied_prob: float | None = None
+    if xgb_row is not None:
+        margin_bundle = _get_margin_model()
+        if margin_bundle is not None:
+            spread_margin, spread_std = _predict_margin(xgb_row, margin_bundle)
+            spread_implied_prob = round(_margin_to_prob(spread_margin, spread_std), 4)
+
     projected_pace = _pace_from_profiles(inputs["playstyle_profiles"], team_a, team_b)
 
     # --- Score projection ---
@@ -1134,6 +1159,9 @@ def predict_game(
         "baseline_model_predictions": baseline_predictions,
         "weights": weights,
         "combination_method": combination_method,
+        "spread_margin": spread_margin,
+        "spread_std": spread_std,
+        "spread_implied_probability": spread_implied_prob,
     }
 
 

@@ -1,0 +1,33 @@
+{
+  "feature_cols": [
+    "regular_net_rating_diff",
+    "blended_net_rating_diff",
+    "regular_efg_pct_diff",
+    "blended_efg_pct_diff",
+    "regular_tov_pct_diff",
+    "blended_tov_pct_diff",
+    "regular_oreb_pct_diff",
+    "blended_oreb_pct_diff",
+    "regular_fta_rate_diff",
+    "blended_fta_rate_diff",
+    "regular_pace_diff",
+    "blended_pace_diff",
+    "recent_net_rating_diff",
+    "travel_miles_diff",
+    "travel_data_available",
+    "home_court",
+    "rest_diff",
+    "playoff_experience_diff",
+    "injury_strength_diff",
+    "injury_data_available",
+    "regular_off_rating_diff",
+    "blended_off_rating_diff",
+    "regular_def_rating_diff",
+    "blended_def_rating_diff"
+  ],
+  "residual_std": 14.875,
+  "margin_mae": 11.802,
+  "margin_std_raw": 15.775,
+  "dataset_sha256": "557cbb1642d0cf3c8e89b40642e43bd794c8af261dc64c1e0d6a4d8a0a6c69ef",
+  "binary_artifact": "xgb_margin_model.joblib"
+}

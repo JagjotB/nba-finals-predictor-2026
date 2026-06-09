@@ -67,6 +67,9 @@ XGB_FEATURE_COLS = FEATURE_COLS + [
 XGB_MODEL_PATH = MODEL_PATH.parent / "xgb_game_model.json"
 XGB_MODEL_BINARY_PATH = MODEL_PATH.parent / "xgb_game_model.joblib"
 
+XGB_MARGIN_MODEL_PATH = MODEL_PATH.parent / "xgb_margin_model.json"
+XGB_MARGIN_BINARY_PATH = MODEL_PATH.parent / "xgb_margin_model.joblib"
+
 HOME_MARGIN_POINTS = 2.2
 REST_MARGIN_POINTS_PER_DAY = 0.35
 MAX_REST_MARGIN_POINTS = 2.0
@@ -300,6 +303,114 @@ def predict_xgb_win_probability(
     feat = bundle.get("feature_cols", XGB_FEATURE_COLS)
     X = np.array([[float(row.get(f, 0) or 0) for f in feat]])
     return float(xgb.predict_proba(X)[0, 1])
+
+
+def train_xgb_margin(
+    rows: list[dict[str, Any]],
+    holdout_seasons: list[str] | None = None,
+) -> dict[str, Any]:
+    """Train an XGBoost regression model to predict point margin (team_a - team_b).
+
+    Uses the same features as the XGB classifier.  Cross-validated residuals
+    give an honest estimate of prediction uncertainty (residual_std) used to
+    build the spread confidence interval displayed on the dashboard.
+    """
+    import numpy as np
+    from sklearn.model_selection import GroupKFold
+    from xgboost import XGBRegressor
+
+    if holdout_seasons is None:
+        holdout_seasons = ["2024-25"]
+
+    train_rows = [r for r in rows if r.get("season") not in holdout_seasons]
+    if len(train_rows) < 50:
+        raise ValueError(f"Not enough training rows: {len(train_rows)}")
+
+    X = np.array([[float(r.get(f, 0) or 0) for f in XGB_FEATURE_COLS] for r in train_rows])
+    y = np.array([
+        float(r.get("team_score", 0)) - float(r.get("opponent_score", 0))
+        for r in train_rows
+    ])
+    groups = np.array([
+        f"{r.get('season', '')}:{r.get('game_id', i)}"
+        for i, r in enumerate(train_rows)
+    ])
+
+    # Cross-validated residuals — honest out-of-fold margin std
+    model_params = dict(
+        n_estimators=300, max_depth=3, learning_rate=0.05,
+        subsample=0.8, colsample_bytree=0.8, min_child_weight=5,
+        reg_lambda=2.0, random_state=42, verbosity=0,
+    )
+    oof_preds = np.zeros(len(y))
+    for train_idx, val_idx in GroupKFold(n_splits=5).split(X, y, groups):
+        m = XGBRegressor(**model_params)
+        m.fit(X[train_idx], y[train_idx])
+        oof_preds[val_idx] = m.predict(X[val_idx])
+
+    residuals = y - oof_preds
+    residual_std = float(np.std(residuals))
+    mae = float(np.mean(np.abs(residuals)))
+
+    # Final model trained on all training data
+    final_model = XGBRegressor(**model_params)
+    final_model.fit(X, y)
+
+    return {
+        "feature_cols": XGB_FEATURE_COLS,
+        "residual_std": round(residual_std, 3),
+        "margin_mae": round(mae, 3),
+        "margin_std_raw": round(float(np.std(y)), 3),
+        "_margin_model_ref": final_model,
+    }
+
+
+def save_xgb_margin_model(bundle: dict[str, Any]) -> None:
+    import joblib
+    XGB_MARGIN_BINARY_PATH.parent.mkdir(parents=True, exist_ok=True)
+    joblib.dump(bundle, XGB_MARGIN_BINARY_PATH)
+    serializable = {k: v for k, v in bundle.items() if not k.startswith("_")}
+    serializable["binary_artifact"] = XGB_MARGIN_BINARY_PATH.name
+    XGB_MARGIN_MODEL_PATH.write_text(json.dumps(serializable, indent=2), encoding="utf-8")
+
+
+def load_xgb_margin_model() -> dict[str, Any] | None:
+    if not XGB_MARGIN_BINARY_PATH.exists():
+        return None
+    try:
+        import joblib
+        return joblib.load(XGB_MARGIN_BINARY_PATH)
+    except Exception:
+        return None
+
+
+def predict_margin(row: dict[str, Any], bundle: dict[str, Any]) -> tuple[float, float]:
+    """Return (predicted_margin, residual_std) for team_a perspective.
+
+    predicted_margin > 0  →  team_a projected to win by that many points.
+    residual_std is the cross-validated uncertainty (68% of actual outcomes
+    will land within ±residual_std of the prediction).
+    """
+    import math
+    import numpy as np
+    model = bundle.get("_margin_model_ref")
+    if model is None:
+        return 0.0, bundle.get("residual_std", 14.0)
+    feat = bundle.get("feature_cols", XGB_FEATURE_COLS)
+    X = np.array([[float(row.get(f, 0) or 0) for f in feat]])
+    raw = float(model.predict(X)[0])
+    # Cap to realistic playoff range
+    predicted = round(max(-35.0, min(35.0, raw)), 1)
+    return predicted, bundle.get("residual_std", 14.0)
+
+
+def margin_to_probability(predicted_margin: float, residual_std: float) -> float:
+    """Convert predicted margin to win probability via normal CDF."""
+    import math
+    if residual_std <= 0:
+        return 0.5
+    z = predicted_margin / residual_std
+    return round(0.5 * (1.0 + math.erf(z / math.sqrt(2))), 4)
 
 
 def _logit(probability: float) -> float:

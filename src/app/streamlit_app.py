@@ -1200,6 +1200,55 @@ def render_next_game(bundle: dict[str, Any]) -> None:
             f"Game 1 actual was NYK 105, SAS 95 (200 total, slower than average)."
         )
 
+    # --- Spread / margin model ---
+    spread_margin = game.get("spread_margin")
+    if spread_margin is not None:
+        st.markdown("---")
+        st.markdown("### Projected Spread")
+        spread_std = _as_float(game.get("spread_std"), 14.9)
+        spread_implied = game.get("spread_implied_probability")
+
+        # Express as a standard market spread: negative = team is favored
+        if spread_margin >= 0:
+            spread_label = f"{team_a} -{abs(spread_margin):.1f}"
+            dog_label = f"{team_b} +{abs(spread_margin):.1f}"
+        else:
+            spread_label = f"{team_b} -{abs(spread_margin):.1f}"
+            dog_label = f"{team_a} +{abs(spread_margin):.1f}"
+
+        ci_low = round(spread_margin - spread_std, 1)
+        ci_high = round(spread_margin + spread_std, 1)
+        ci_str = (
+            f"{team_a} by {ci_low:.1f} to {ci_high:.1f}"
+            if ci_low >= 0
+            else f"{team_a} by {ci_low:.1f} to {team_b} by {abs(ci_low):.1f}"
+            if ci_high >= 0
+            else f"{team_b} by {abs(ci_high):.1f} to {abs(ci_low):.1f}"
+        )
+
+        spr1, spr2, spr3 = st.columns(3)
+        with spr1:
+            st.metric("Model line", spread_label, delta=dog_label, delta_color="off")
+        with spr2:
+            st.metric("68% range", ci_str, delta="±1 std dev", delta_color="off")
+        with spr3:
+            if spread_implied is not None:
+                ensemble_prob = prob_a
+                gap = round((ensemble_prob - spread_implied) * 100, 1)
+                gap_str = f"{gap:+.1f}% vs spread model"
+                st.metric(
+                    "Spread-implied prob",
+                    _pct(spread_implied),
+                    delta=gap_str,
+                    delta_color="off",
+                )
+        st.caption(
+            f"Spread model: independently trained XGBoost regression on historical playoff margins "
+            f"(MAE ≈ 11.8 pts, residual std ≈ {spread_std:.1f} pts). "
+            f"Win-prob model says **{_pct(prob_a)} {team_a}**; spread model implies **{_pct(spread_implied) if spread_implied else '?'} {team_a}**. "
+            "Agreement between them strengthens the call; divergence flags uncertainty."
+        )
+
     st.markdown("---")
 
     # --- How it was predicted: component breakdown ---
