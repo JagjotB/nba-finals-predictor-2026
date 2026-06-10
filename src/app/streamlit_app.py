@@ -1091,11 +1091,9 @@ def render_ml_panel(bundle: dict[str, Any]) -> None:
 
     st.markdown("---")
 
-    # ── 8. What-if scenarios ──────────────────────────────────────────────────
-    st.markdown("### What-If Scenarios")
-    st.caption(
-        "Toggle scenarios in the sidebar to see how the series odds shift under different conditions — "
-        "foul trouble, player absence, style adjustments."
+    st.info(
+        "**What-if scenarios** are in the **Deep Stats** tab — "
+        "toggle foul trouble, pace, shooting, and other conditions to see how the series odds shift."
     )
 
 
