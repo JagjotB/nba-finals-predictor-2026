@@ -344,40 +344,42 @@ def render_the_pick(bundle: dict[str, Any]) -> None:
     # Hero banner
     st.markdown("## Who wins the 2026 NBA Finals?")
 
+    nyk_w = series_score.get(team_a, 0)
+    sas_w = series_score.get(team_b, 0)
+    score_html = (
+        f"<span style='background:#1a3a1a; color:#2ecc71; font-size:1.4rem; font-weight:800; "
+        f"padding:4px 18px; border-radius:20px; margin:0 6px;'>{team_a} {nyk_w}</span>"
+        f"<span style='color:#888; font-size:1.1rem;'>–</span>"
+        f"<span style='background:#3a1a1a; color:#e74c3c; font-size:1.4rem; font-weight:800; "
+        f"padding:4px 18px; border-radius:20px; margin:0 6px;'>{team_b} {sas_w}</span>"
+    ) if completed else ""
+
     col_fav, col_vs, col_und = st.columns([2, 1, 2])
     with col_fav:
         st.markdown(
-            f"<div style='text-align:center; font-size:3rem; font-weight:900;'>{favorite}</div>"
-            f"<div style='text-align:center; font-size:1.8rem; color:#2ecc71; font-weight:700;'>{_pct(fav_pct, 0)} chance</div>",
+            f"<div style='text-align:center; font-size:3rem; font-weight:900; letter-spacing:-1px;'>{favorite}</div>"
+            f"<div style='text-align:center; font-size:2rem; color:#2ecc71; font-weight:800; margin-top:4px;'>{_pct(fav_pct, 0)}</div>"
+            f"<div style='text-align:center; font-size:0.85rem; color:#888; margin-top:2px;'>to win the series</div>",
             unsafe_allow_html=True,
         )
     with col_vs:
         st.markdown(
-            "<div style='text-align:center; font-size:2rem; padding-top:0.8rem;'>vs</div>",
+            f"<div style='text-align:center; padding-top:0.6rem;'>"
+            f"<div style='font-size:1.8rem; color:#555;'>vs</div>"
+            f"<div style='margin-top:10px;'>{score_html}</div>"
+            f"</div>",
             unsafe_allow_html=True,
         )
     with col_und:
         st.markdown(
-            f"<div style='text-align:center; font-size:3rem; font-weight:900;'>{underdog}</div>"
-            f"<div style='text-align:center; font-size:1.8rem; color:#e74c3c; font-weight:700;'>{_pct(min(fav_prob, und_prob), 0)} chance</div>",
+            f"<div style='text-align:center; font-size:3rem; font-weight:900; letter-spacing:-1px;'>{underdog}</div>"
+            f"<div style='text-align:center; font-size:2rem; color:#e74c3c; font-weight:800; margin-top:4px;'>{_pct(min(fav_prob, und_prob), 0)}</div>"
+            f"<div style='text-align:center; font-size:0.85rem; color:#888; margin-top:2px;'>to win the series</div>",
             unsafe_allow_html=True,
         )
 
+    st.markdown("<div style='margin-top:1.4rem;'></div>", unsafe_allow_html=True)
     st.markdown("---")
-
-    # Series score if games played
-    if completed:
-        nyk_w = series_score.get(team_a, 0)
-        sas_w = series_score.get(team_b, 0)
-        st.markdown(
-            f"### Current Series Score: **{team_a} leads {nyk_w}–{sas_w}**"
-            if nyk_w > sas_w else
-            f"### Current Series Score: **{team_b} leads {sas_w}–{nyk_w}**"
-            if sas_w > nyk_w else
-            f"### Series Tied {nyk_w}–{sas_w}"
-        )
-        st.caption(f"{len(completed)} game(s) played and factored into predictions")
-        st.markdown("---")
 
     # Key stats in plain English
     most_likely = series["most_likely_result"]
@@ -442,28 +444,32 @@ def render_the_pick(bundle: dict[str, Any]) -> None:
 
     # Result distribution as a simple table
     st.markdown("### How does each outcome play out?")
-    dist = series.get("result_distribution", [])
-    rows = []
+    dist = sorted(
+        [r for r in series.get("result_distribution", []) if float(r["probability"]) >= 0.01],
+        key=lambda r: -float(r["probability"]),
+    )
     for row in dist:
         prob = float(row["probability"])
-        if prob < 0.01:
-            continue
-        winner = row["result"].split(" in ")[0]
-        games_num = row["result"].split(" in ")[1]
-        bar = "█" * int(prob * 30)
-        rows.append({
-            "Outcome": row["result"],
-            "Chance": row["percentage"],
-            "Likelihood bar": bar,
-            "Winner": winner,
-        })
-    df_dist = pd.DataFrame(rows)
-    if not df_dist.empty:
-        st.dataframe(df_dist[["Outcome", "Chance", "Likelihood bar"]], use_container_width=True, hide_index=True)
-
+        result = row["result"]
+        winner = result.split(" in ")[0]
+        bar_w = int(prob * 100)
+        is_fav_win = winner == favorite
+        bar_color = "#2ecc71" if is_fav_win else "#e74c3c"
+        text_color = "#2ecc71" if is_fav_win else "#e74c3c"
+        st.markdown(
+            f"<div style='display:flex; align-items:center; gap:12px; margin-bottom:8px;'>"
+            f"<div style='width:120px; font-weight:700; color:{text_color};'>{result}</div>"
+            f"<div style='flex:1; background:#222; border-radius:4px; height:22px; position:relative;'>"
+            f"<div style='width:{bar_w}%; background:{bar_color}; height:100%; border-radius:4px; opacity:0.85;'></div>"
+            f"<span style='position:absolute; left:8px; top:2px; font-size:0.8rem; font-weight:700; color:#fff;'>"
+            f"{row['percentage']}</span>"
+            f"</div>"
+            f"</div>",
+            unsafe_allow_html=True,
+        )
     st.caption(
-        "These odds update automatically after each game is played. "
-        "Click 'Refresh data' in the sidebar after any game to see the latest numbers."
+        "Odds update automatically after each game. "
+        "Hit 'Refresh data' in the sidebar after any game is played."
     )
 
 
@@ -545,6 +551,17 @@ def render_game_by_game(bundle: dict[str, Any]) -> None:
         "Future games show what the model expects."
     )
 
+    # Pre-load actual results for completed games
+    _actuals: dict[int, dict] = {}
+    for _gn in completed:
+        try:
+            from src.models.update_after_game import _load_game_actuals
+            _actuals[_gn] = _load_game_actuals(_gn)
+        except Exception:
+            pass
+
+    series_xf = _series_xfactors_from_data(bundle)
+
     for game in predictions:
         gn = int(game["game_number"])
         home = str(game.get("home_team", ""))
@@ -556,39 +573,69 @@ def render_game_by_game(bundle: dict[str, Any]) -> None:
         score_a = game.get("expected_score_team_a", 0)
         score_b = game.get("expected_score_team_b", 0)
         date = str(game.get("date", ""))[:10]
-
         is_done = gn in completed
-        status_icon = "✅" if is_done else "📅"
-        status_label = "PLAYED" if is_done else "UPCOMING"
 
         with st.container(border=True):
             c1, c2, c3, c4 = st.columns([1, 2, 2, 2])
             with c1:
                 st.markdown(f"### G{gn}")
-                st.caption(f"{status_icon} {status_label}")
                 if date:
                     st.caption(date)
-            with c2:
-                st.markdown(f"**{home}** (home) vs **{away}**")
-                if not is_done:
-                    st.markdown(f"Projected score: **{home} {score_a if home == team_a else score_b} – {away} {score_b if away == team_b else score_a}**")
-            with c3:
-                st.markdown(f"Model picks: **{fav}**")
-                st.progress(fav_pct, text=f"{_pct(fav_pct)} confidence")
-            with c4:
-                edges = game.get("top_edges") or []
-                if edges:
-                    st.markdown("**Key edge:**")
-                    st.caption(edges[0])
-                rng = game.get("team_a_win_probability_range") or {}
-                low_p = _as_float(rng.get("low"), prob_a)
-                high_p = _as_float(rng.get("high"), prob_a)
-                st.caption(
-                    f"Uncertainty range: {_pct(low_p, 0)}–{_pct(high_p, 0)} for {team_a}"
-                )
-            if not is_done:
+
+            if is_done:
+                actual = _actuals.get(gn, {})
+                scores = actual.get("actual_scores", {})
+                winner = max(scores, key=scores.get) if scores else None
+                model_correct = winner == fav if winner else None
+                sa_actual = scores.get(team_a, "?")
+                sb_actual = scores.get(team_b, "?")
+
+                with c2:
+                    st.markdown(f"**{away}** @ **{home}**")
+                    if winner:
+                        badge_color = "#2ecc71" if model_correct else "#e74c3c"
+                        badge_text = "MODEL CORRECT" if model_correct else "MODEL WRONG"
+                        st.markdown(
+                            f"<span style='background:{badge_color}22; color:{badge_color}; "
+                            f"font-size:0.75rem; font-weight:700; padding:2px 10px; border-radius:10px; "
+                            f"border:1px solid {badge_color}55;'>{badge_text}</span>",
+                            unsafe_allow_html=True,
+                        )
+                with c3:
+                    if scores:
+                        st.markdown(
+                            f"<div style='font-size:1.5rem; font-weight:800; margin-top:4px;'>"
+                            f"{team_a} {sa_actual} – {team_b} {sb_actual}</div>",
+                            unsafe_allow_html=True,
+                        )
+                        st.caption(f"Winner: **{winner}**")
+                    else:
+                        st.caption("Result not available")
+                with c4:
+                    st.caption(f"Model had picked: **{fav}** at {_pct(fav_pct)}")
+                    rng = game.get("team_a_win_probability_range") or {}
+                    low_p = _as_float(rng.get("low"), prob_a)
+                    high_p = _as_float(rng.get("high"), prob_a)
+                    st.caption(f"Range: {_pct(low_p, 0)}–{_pct(high_p, 0)} for {team_a}")
+            else:
+                with c2:
+                    st.markdown(f"**{away}** @ **{home}**")
+                    proj_home = score_a if home == team_a else score_b
+                    proj_away = score_b if home == team_a else score_a
+                    st.caption(f"Projected: {home} {proj_home} – {away} {proj_away}")
+                with c3:
+                    st.markdown(f"Model: **{fav}** wins")
+                    st.progress(fav_pct, text=f"{_pct(fav_pct)} confidence")
+                with c4:
+                    edges = game.get("top_edges") or []
+                    if edges:
+                        st.caption(edges[0][:90])
+                    rng = game.get("team_a_win_probability_range") or {}
+                    low_p = _as_float(rng.get("low"), prob_a)
+                    high_p = _as_float(rng.get("high"), prob_a)
+                    st.caption(f"Range: {_pct(low_p, 0)}–{_pct(high_p, 0)} for {team_a}")
                 with st.expander("Why does the model say this?"):
-                    _render_game_reasoning(game, team_a, team_b, series_xf=_series_xfactors_from_data(bundle))
+                    _render_game_reasoning(game, team_a, team_b, series_xf=series_xf)
 
     st.markdown("---")
 
@@ -1117,13 +1164,18 @@ def render_deep_stats(bundle: dict[str, Any], selected_scenarios: tuple[str, ...
 
     st.markdown("---")
     st.markdown("## Scenario Simulator")
-    st.caption(
-        "Run what-if scenarios to see how the series odds change. "
-        "Toggle scenarios in the sidebar on the left."
-    )
+    st.caption("Toggle scenarios below to see how the series odds shift under different conditions.")
+
+    _selected: list[str] = []
+    sc_cols = st.columns(3)
+    for i, (label, sid) in enumerate(SCENARIO_TOGGLES.items()):
+        default = label in {"Hot shooting", "Foul trouble", "Slow pace", "Rebounding dominance"}
+        if sc_cols[i % 3].checkbox(label, value=default, key=f"sc_{sid}"):
+            _selected.append(sid)
+    selected_scenarios = tuple(_selected)
 
     if not selected_scenarios:
-        st.info("Select at least one scenario in the sidebar to run simulations.")
+        st.info("Select at least one scenario above to run simulations.")
         return
 
     report = run_scenario_suite(
@@ -1209,34 +1261,48 @@ def render_next_game(bundle: dict[str, Any]) -> None:
     baseline = _as_float(game.get("baseline_probability_team_a"), prob_a)
     post_shift = game.get("postgame_probability_shift_team_a")
 
-    # --- Game header ---
-    st.markdown(
-        f"<h2 style='text-align:center; margin-bottom:0;'>Game {gnum}</h2>"
-        f"<p style='text-align:center; color:#888; margin-top:4px;'>"
-        f"{date_str} &nbsp;·&nbsp; {away} @ {home}"
-        f"</p>",
-        unsafe_allow_html=True,
-    )
-
-    # Series context banner
     sa = series_score.get(team_a, 0)
     sb = series_score.get(team_b, 0)
-    if sa > 0 or sb > 0:
-        leader = team_a if sa > sb else (team_b if sb > sa else None)
-        deficit_team = team_b if sa > sb else team_a
-        if leader:
-            pct_overcome = "12%" if abs(sa - sb) >= 2 else "32%"
-            overturn_text = (
-                f" A team that goes down 0-2 has recovered to win only {pct_overcome} "
-                f"of Finals series." if abs(sa - sb) >= 2 else ""
-            )
-            st.info(
-                f"**Series: {team_a} {sa}–{sb} {team_b}.** "
-                f"{leader} leads and can go up {max(sa,sb)+1}–{min(sa,sb)} with a win."
-                f"{overturn_text}"
-            )
-        else:
-            st.info(f"**Series tied {sa}–{sb}.** Winner takes the series lead.")
+    fav_game = team_a if prob_a >= 0.5 else team_b
+    dog_game = team_b if fav_game == team_a else team_a
+    fav_prob_game = max(prob_a, prob_b)
+    dog_prob_game = 1.0 - fav_prob_game
+    home_label = f"{'home' if home == fav_game else 'away'}"
+
+    # ── Hero pre-game card ────────────────────────────────────────────────────
+    st.markdown(
+        f"<div style='background:linear-gradient(135deg,#0d1f2d 0%,#1a2a3a 100%); "
+        f"border:1px solid #2a4a6a; border-radius:12px; padding:24px 28px; margin-bottom:18px;'>"
+        f"<div style='text-align:center; color:#8ab4cc; font-size:0.85rem; margin-bottom:8px; letter-spacing:2px;'>"
+        f"GAME {gnum} &nbsp;·&nbsp; {date_str} &nbsp;·&nbsp; {away} @ {home}</div>"
+        f"<div style='display:flex; justify-content:space-around; align-items:center; margin:12px 0;'>"
+        # Team A
+        f"<div style='text-align:center;'>"
+        f"<div style='font-size:2.6rem; font-weight:900; letter-spacing:-1px;'>{team_a}</div>"
+        f"<div style='font-size:1.8rem; font-weight:800; color:{'#2ecc71' if prob_a >= 0.5 else '#e74c3c'}; margin-top:4px;'>{_pct(prob_a, 0)}</div>"
+        f"<div style='font-size:0.8rem; color:#888; margin-top:2px;'>{'HOME' if home == team_a else 'AWAY'}</div>"
+        f"</div>"
+        # Score
+        f"<div style='text-align:center;'>"
+        f"<div style='font-size:2.2rem; font-weight:900; color:#aaa;'>{score_a}–{score_b}</div>"
+        f"<div style='font-size:0.75rem; color:#666; margin-top:4px;'>Projected</div>"
+        f"<div style='font-size:0.75rem; color:#888; margin-top:8px;'>"
+        f"{'Series: ' + team_a + ' leads ' + str(sa) + '–' + str(sb) if sa > sb else 'Series: ' + team_b + ' leads ' + str(sb) + '–' + str(sa) if sb > sa else 'Series tied ' + str(sa) + '–' + str(sb)}"
+        f"</div>"
+        f"</div>"
+        # Team B
+        f"<div style='text-align:center;'>"
+        f"<div style='font-size:2.6rem; font-weight:900; letter-spacing:-1px;'>{team_b}</div>"
+        f"<div style='font-size:1.8rem; font-weight:800; color:{'#2ecc71' if prob_b >= 0.5 else '#e74c3c'}; margin-top:4px;'>{_pct(prob_b, 0)}</div>"
+        f"<div style='font-size:0.8rem; color:#888; margin-top:2px;'>{'HOME' if home == team_b else 'AWAY'}</div>"
+        f"</div>"
+        f"</div>"
+        f"<div style='text-align:center; color:#8ab4cc; font-size:0.8rem; margin-top:8px;'>"
+        f"Model: <strong>{fav_game}</strong> favored at {_pct(fav_prob_game, 0)} · {home_label} court advantage"
+        f"</div>"
+        f"</div>",
+        unsafe_allow_html=True,
+    )
 
     st.markdown("---")
 
@@ -1303,7 +1369,16 @@ def render_next_game(bundle: dict[str, Any]) -> None:
 
     # --- Spread / margin model ---
     spread_margin = game.get("spread_margin")
-    if spread_margin is not None:
+    _spread_implied = game.get("spread_implied_probability")
+    _spread_gap = abs(prob_a - _spread_implied) if _spread_implied else 0.0
+
+    if spread_margin is not None and _spread_gap <= 0.03:
+        fav_dir = team_a if spread_margin >= 0 else team_b
+        st.caption(
+            f"Spread model: **{fav_dir} by {abs(spread_margin):.1f} pts** · "
+            f"Implied {_pct(_spread_implied)} — models agree (gap: {_spread_gap*100:.1f} pts)."
+        )
+    elif spread_margin is not None:
         st.markdown("---")
         st.markdown("### Projected Spread")
         spread_std = _as_float(game.get("spread_std"), 14.9)
@@ -2088,20 +2163,15 @@ def render_dashboard() -> None:
 
     series_simulations = configured_simulations
     scenario_simulations = min(DEFAULT_SCENARIO_SIMULATIONS, configured_simulations)
+    selected_scenarios: tuple[str, ...] = ()  # scenarios now live in Deep Stats tab
 
-    st.sidebar.subheader("What-if scenarios")
-    selected = []
-    for label, sid in SCENARIO_TOGGLES.items():
-        default = label in {"Hot shooting", "Foul trouble", "Slow pace", "Rebounding dominance"}
-        if st.sidebar.checkbox(label, value=default):
-            selected.append(sid)
-    selected_scenarios = tuple(selected)
-
-    st.sidebar.divider()
     if st.sidebar.button("Refresh data", type="primary", use_container_width=True,
                          help="Reload predictions after a game is played"):
         load_dashboard_bundle.clear()
         st.rerun()
+
+    st.sidebar.divider()
+    st.sidebar.caption("What-if scenarios and deep analysis are available in the **Deep Stats** tab.")
 
     st.title("🏀 NBA Finals Predictor 2026")
     bundle = load_dashboard_bundle(int(series_simulations), _data_ver=_data_version())
