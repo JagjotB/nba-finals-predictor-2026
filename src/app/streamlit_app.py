@@ -1178,24 +1178,55 @@ def render_deep_stats(bundle: dict[str, Any], selected_scenarios: tuple[str, ...
         st.info("Select at least one scenario above to run simulations.")
         return
 
-    report = run_scenario_suite(
-        scenarios=list(selected_scenarios),
-        game_predictions=bundle["game_predictions"],
-        finals_context=bundle["context"],
-        scenario_settings={
-            "simulations": scenario_sims,
-            "random_seed": int(bundle["settings"].get("project", {}).get("random_seed", 42)),
-        },
+    with st.spinner("Running simulations..."):
+        report = run_scenario_suite(
+            scenarios=list(selected_scenarios),
+            game_predictions=bundle["game_predictions"],
+            finals_context=bundle["context"],
+            scenario_settings={
+                "simulations": scenario_sims,
+                "random_seed": int(bundle["settings"].get("project", {}).get("random_seed", 42)),
+            },
+        )
+
+    baseline_prob = float(
+        bundle["series_simulation"].get("team_a_series_win_probability", 0.5)
     )
-    summary = pd.DataFrame(report["summary"]).rename(columns={
-        "scenario": "Scenario",
-        "team_a_series_win_percentage": f"{team_a} Series Win %",
-        "team_a_delta_from_base_label": "Change from baseline",
-        "most_likely_result": "Most likely result",
-    })
-    cols_show = ["Scenario", f"{team_a} Series Win %", "Change from baseline", "Most likely result"]
-    cols_show = [c for c in cols_show if c in summary.columns]
-    st.dataframe(summary[cols_show], use_container_width=True, hide_index=True)
+    st.markdown(
+        f"**Baseline:** {team_a} wins series at **{_pct(baseline_prob)}** · "
+        f"Each scenario below shows how that changes if the condition holds all series."
+    )
+    st.markdown("")
+
+    sc_cols = st.columns(2)
+    for i, row in enumerate(report.get("summary", [])):
+        scenario_label = str(row.get("scenario", "")).replace("_", " ").title()
+        prob_str = str(row.get("team_a_series_win_percentage", "")).replace("%", "")
+        try:
+            prob_val = float(prob_str) / 100
+        except ValueError:
+            prob_val = baseline_prob
+        delta = prob_val - baseline_prob
+        most_likely = str(row.get("most_likely_result", ""))
+        bar_color = "#2ecc71" if delta > 0.01 else "#e74c3c" if delta < -0.01 else "#888"
+        delta_str = f"{delta*100:+.1f} pts" if abs(delta) > 0.005 else "No change"
+        arrow = "▲" if delta > 0.01 else "▼" if delta < -0.01 else "—"
+
+        with sc_cols[i % 2]:
+            with st.container(border=True):
+                st.markdown(
+                    f"<div style='display:flex; justify-content:space-between; align-items:baseline;'>"
+                    f"<span style='font-weight:700; font-size:0.95rem;'>{scenario_label}</span>"
+                    f"<span style='font-size:1.3rem; font-weight:900; color:{bar_color};'>"
+                    f"{_pct(prob_val, 0)}</span>"
+                    f"</div>"
+                    f"<div style='display:flex; justify-content:space-between; margin-top:4px;'>"
+                    f"<span style='font-size:0.8rem; color:{bar_color}; font-weight:700;'>"
+                    f"{arrow} {delta_str} vs baseline</span>"
+                    f"<span style='font-size:0.75rem; color:#888;'>Most likely: {most_likely}</span>"
+                    f"</div>",
+                    unsafe_allow_html=True,
+                )
 
 
 # ---------------------------------------------------------------------------
@@ -1724,6 +1755,122 @@ def _series_xfactors_from_data(bundle: dict[str, Any]) -> list[str]:
     return results
 
 
+def _strategy_audit(
+    pred_source: dict[str, Any],
+    box: dict[str, Any],
+    team_a: str,
+    team_b: str,
+) -> list[tuple[bool, str, str]]:
+    """Compare pre-game predicted edges to what actually happened.
+
+    Returns list of (correct, label, detail) tuples.
+    """
+    items: list[tuple[bool, str, str]] = []
+    team_stats = box.get("team_stats")
+    player_df = box.get("player_stats")
+    adv_df = box.get("team_advanced")
+
+    if team_stats is None or team_stats.empty:
+        return items
+
+    actual: dict[str, Any] = {}
+    for _, row in team_stats.iterrows():
+        actual[str(row["teamTricode"])] = row
+    aa = actual.get(team_a, {})
+    ab = actual.get(team_b, {})
+
+    pred_a = int(pred_source.get("expected_score_team_a") or 0)
+    pred_b = int(pred_source.get("expected_score_team_b") or 0)
+    act_a = int(aa.get("points", 0))
+    act_b = int(ab.get("points", 0))
+    pred_margin = abs(pred_a - pred_b)
+    act_margin = abs(act_a - act_b)
+
+    # 1. Game closeness
+    if pred_margin <= 8 and act_margin <= 8:
+        items.append((True, "Close-game call", f"Predicted {pred_margin}-pt margin — actual was {act_margin} pts"))
+    elif pred_margin <= 8 and act_margin >= 15:
+        items.append((False, "Expected closer", f"Predicted {pred_margin}-pt game — actual blowout by {act_margin}"))
+    elif pred_margin >= 12 and act_margin >= 12:
+        items.append((True, "Dominant-win call", f"Predicted {pred_margin}-pt margin — actual was {act_margin}"))
+
+    # 2. Score line accuracy (each team's projected total)
+    if pred_a > 0 and abs(act_a - pred_a) <= 3:
+        items.append((True, f"{team_a} scoring", f"Projected {pred_a}, actual {act_a} (off by {abs(act_a - pred_a)})"))
+    if pred_b > 0 and abs(act_b - pred_b) <= 3:
+        items.append((True, f"{team_b} scoring", f"Projected {pred_b}, actual {act_b} (off by {abs(act_b - pred_b)})"))
+
+    # 3. Pace accuracy — only check if adv_df has a valid in-range pace value
+    pred_pace = pred_source.get("projected_pace")
+    if pred_pace and adv_df is not None and not adv_df.empty:
+        pace_col = next((c for c in adv_df.columns if "pace" in c.lower()), None)
+        if pace_col:
+            raw_pace = float(adv_df[pace_col].mean())
+            if 85 <= raw_pace <= 115:  # sanity-check the value is real NBA pace
+                pace_err = abs(float(pred_pace) - raw_pace)
+                if pace_err <= 3:
+                    items.append((True, "Pace prediction", f"Projected {float(pred_pace):.0f} possessions — actual {raw_pace:.0f}"))
+                else:
+                    items.append((False, "Pace off", f"Projected {float(pred_pace):.0f} — actual {raw_pace:.0f} ({pace_err:.0f} diff)"))
+
+    # 4. Edge materialization — parse top_edges text
+    oreb_a = int(aa.get("reboundsOffensive", 0))
+    oreb_b = int(ab.get("reboundsOffensive", 0))
+    tov_a = int(aa.get("turnovers", 0))
+    tov_b = int(ab.get("turnovers", 0))
+    fta_a = int(aa.get("freeThrowsAttempted", 0))
+    fta_b = int(ab.get("freeThrowsAttempted", 0))
+
+    _checked_edge_types: set[str] = set()
+    for edge in (pred_source.get("top_edges") or [])[:4]:
+        e = edge.lower()
+        ta_pos = e.find(team_a.lower())
+        tb_pos = e.find(team_b.lower())
+        # Which team is named first? That team has the edge (advantage) or the problem (disadvantage).
+        first_team = team_a if (ta_pos >= 0 and (tb_pos < 0 or ta_pos < tb_pos)) else team_b
+        other_team = team_b if first_team == team_a else team_a
+        has_adv = "advantage" in e
+        has_dis = "disadvantage" in e
+
+        if "offensive rebound" in e and "oreb" not in _checked_edge_types:
+            _checked_edge_types.add("oreb")
+            a_wins = oreb_a > oreb_b
+            pred_a_wins = (first_team == team_a and has_adv) or (first_team == team_b and has_dis)
+            correct = (pred_a_wins and a_wins) or (not pred_a_wins and not a_wins)
+            winner = team_a if a_wins else team_b
+            items.append((correct, "Offensive rebounding", f"{team_a} {oreb_a} vs {team_b} {oreb_b} — {winner} won the glass"))
+
+        elif ("ball security" in e or ("turnover" in e and "forced" in e)) and "tov" not in _checked_edge_types:
+            _checked_edge_types.add("tov")
+            pred_team_has_risk = first_team if has_dis else other_team
+            actual_more_tovs = team_a if tov_a > tov_b else team_b
+            correct = pred_team_has_risk == actual_more_tovs
+            items.append((correct, "Turnover risk", f"{team_a} {tov_a} TOV vs {team_b} {tov_b} TOV — {'matched prediction' if correct else 'opposite of prediction'}"))
+
+        elif "free throw pressure" in e and "fta" not in _checked_edge_types:
+            _checked_edge_types.add("fta")
+            pred_fta_winner = first_team if has_adv else other_team
+            actual_fta_winner = team_a if fta_a > fta_b else team_b
+            correct = pred_fta_winner == actual_fta_winner
+            items.append((correct, "Free throw pressure", f"{team_a} {fta_a} FTA vs {team_b} {fta_b} FTA — {actual_fta_winner} got to the line more"))
+
+    # 5. Foul trouble X-factors
+    if player_df is not None and not player_df.empty:
+        for xf in (pred_source.get("x_factors") or [])[:4]:
+            if "foul trouble" not in xf.lower():
+                continue
+            for _, prow in player_df.iterrows():
+                player_name = str(prow.get("player", ""))
+                last = player_name.split()[-1].lower() if player_name else ""
+                if len(last) > 3 and last in xf.lower():
+                    pf = int(prow.get("foulsPersonal", 0))
+                    if pf >= 4:
+                        items.append((True, f"{player_name} foul trouble", f"Flagged pre-game — picked up {pf} fouls"))
+                    break
+
+    return items
+
+
 def _load_pregame_snapshot(game_number: int) -> dict[str, Any] | None:
     """Return the pre-game prediction dict for game_number from the newest matching snapshot."""
     import json
@@ -1885,6 +2032,39 @@ def render_game_findings(bundle: dict[str, Any]) -> None:
                     )
                 else:
                     st.info("Snapshot needed for accuracy tracking. Future games are saved automatically.")
+
+            # Strategy audit — what the model identified correctly
+            audit = _strategy_audit(pred_source, box, team_a, team_b)
+            if audit:
+                st.markdown("---")
+                st.markdown("**What the model got right (and wrong) beyond the pick**")
+                col_hit, col_miss = st.columns(2)
+                hits = [(l, d) for ok, l, d in audit if ok]
+                misses = [(l, d) for ok, l, d in audit if not ok]
+                with col_hit:
+                    if hits:
+                        st.markdown("<div style='font-size:0.8rem; font-weight:700; color:#2ecc71; margin-bottom:6px;'>IDENTIFIED CORRECTLY</div>", unsafe_allow_html=True)
+                    for label, detail in hits:
+                        st.markdown(
+                            f"<div style='display:flex; gap:8px; margin-bottom:6px; align-items:flex-start;'>"
+                            f"<span style='color:#2ecc71; font-weight:900; font-size:1rem;'>✓</span>"
+                            f"<div><strong style='color:#ddd;'>{label}</strong><br>"
+                            f"<span style='color:#888; font-size:0.8rem;'>{detail}</span></div>"
+                            f"</div>",
+                            unsafe_allow_html=True,
+                        )
+                with col_miss:
+                    if misses:
+                        st.markdown("<div style='font-size:0.8rem; font-weight:700; color:#e74c3c; margin-bottom:6px;'>MISSED / WRONG</div>", unsafe_allow_html=True)
+                    for label, detail in misses:
+                        st.markdown(
+                            f"<div style='display:flex; gap:8px; margin-bottom:6px; align-items:flex-start;'>"
+                            f"<span style='color:#e74c3c; font-weight:900; font-size:1rem;'>✗</span>"
+                            f"<div><strong style='color:#ddd;'>{label}</strong><br>"
+                            f"<span style='color:#888; font-size:0.8rem;'>{detail}</span></div>"
+                            f"</div>",
+                            unsafe_allow_html=True,
+                        )
 
             st.markdown("---")
 
